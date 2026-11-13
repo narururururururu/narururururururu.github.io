@@ -63,7 +63,7 @@ body.access-locked {
   padding: 20px;
   color: var(--text);
   background: #030405;
-  transition: opacity 650ms steps(7, end), visibility 650ms ease;
+  transition: transform 420ms cubic-bezier(0.76, 0, 0.24, 1), visibility 420ms linear;
 }
 
 .access-gate[hidden] {
@@ -72,7 +72,7 @@ body.access-locked {
 
 .access-gate.is-complete {
   visibility: hidden;
-  opacity: 0;
+  transform: translateY(-102%);
 }
 
 .access-gate__noise {
@@ -850,24 +850,51 @@ button {
   opacity: 0;
   pointer-events: none;
   background:
-    repeating-radial-gradient(circle at 23% 42%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 4px),
+    radial-gradient(circle at 22% 40%, rgba(var(--noise-rgb, 116,232,255), 0.54), transparent 36%),
+    repeating-radial-gradient(circle at 23% 42%, rgba(var(--noise-rgb, 116,232,255), 0.82) 0 1px, transparent 1px 3px),
     #030405;
-  background-size: 9px 7px, auto;
+  background-size: auto, 5px 4px, auto;
+}
+
+.noise-transition::before,
+.noise-transition::after {
+  content: "";
+  position: absolute;
+  inset: -15%;
+  background-image:
+    repeating-radial-gradient(circle, rgba(255,255,255,0.9) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(var(--noise-rgb, 116,232,255), 0.34) 3px 4px);
+  background-size: 7px 6px, 100% 5px;
+  mix-blend-mode: screen;
+}
+
+.noise-transition::after {
+  opacity: 0.58;
+  filter: contrast(2.2);
+  transform: scale(1.15);
 }
 
 .noise-transition.is-active {
   visibility: visible;
-  animation: glitch-in 640ms steps(2, end) both;
+  animation: static-burst 460ms steps(5, end) both;
+}
+
+.noise-transition.is-active::before {
+  animation: static-rush 65ms steps(2, end) infinite;
+}
+
+.noise-transition.is-active::after {
+  animation: static-rush-reverse 85ms steps(2, end) infinite;
 }
 
 .noise-transition__bars {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(transparent 38%, rgba(116, 232, 255, 0.72) 39% 41%, transparent 42%),
-    linear-gradient(transparent 63%, rgba(255, 93, 162, 0.55) 64% 66%, transparent 67%);
+    linear-gradient(transparent 38%, rgba(var(--noise-rgb, 116,232,255), 0.92) 39% 41%, transparent 42%),
+    linear-gradient(transparent 63%, var(--noise-secondary, #ff5da2) 64% 65%, transparent 66%);
   mix-blend-mode: screen;
-  animation: bars-shift 180ms steps(2, end) infinite;
+  animation: bars-shift 70ms steps(2, end) infinite;
 }
 
 .noise-transition__label {
@@ -880,13 +907,23 @@ button {
   letter-spacing: 0.18em;
 }
 
-@keyframes glitch-in {
-  0% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateX(0); }
-  18% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(7px); }
-  30% { transform: translateX(-6px); filter: hue-rotate(30deg); }
-  45% { transform: translateX(2px); }
-  72% { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; transform: translateX(0); }
+@keyframes static-burst {
+  0% { opacity: 0; clip-path: inset(100% 0 0 0); }
+  12% { opacity: 1; clip-path: inset(0); }
+  76% { opacity: 1; clip-path: inset(0); }
+  100% { opacity: 0; visibility: hidden; clip-path: inset(0 0 100% 0); }
+}
+
+@keyframes static-rush {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(6%, -4%); }
+  100% { transform: translate(-5%, 5%); }
+}
+
+@keyframes static-rush-reverse {
+  0% { transform: translate(4%, 3%) scale(1.12); }
+  50% { transform: translate(-6%, -5%) scale(1.18); }
+  100% { transform: translate(2%, 6%) scale(1.14); }
 }
 
 @keyframes bars-shift {
@@ -1028,13 +1065,13 @@ button {
 
 .character-detail__visual img {
   position: absolute;
-  bottom: var(--detail-y, 0%);
-  left: 50%;
-  width: 100%;
-  height: auto;
-  max-width: 900px;
-  transform: translateX(-50%) scale(var(--detail-scale, 1));
-  transform-origin: center bottom;
+  inset: 54px 24px 20px;
+  width: calc(100% - 48px);
+  height: calc(100% - 74px);
+  object-fit: contain;
+  object-position: center var(--detail-y, 50%);
+  transform: scale(var(--detail-scale, 1));
+  transform-origin: center;
   filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
 }
 
@@ -1170,6 +1207,107 @@ button {
 .character-detail__nav button:hover { background: rgba(var(--detail-rgb), 0.09); }
 .character-detail__nav span { color: var(--muted); font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.12em; }
 .character-detail__nav strong { font-size: clamp(1rem, 2vw, 1.5rem); letter-spacing: -0.03em; }
+
+.character-detail__tabs {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.32fr) minmax(0, 1fr);
+  border-left: 1px solid var(--line);
+}
+
+.detail-tabs__nav {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+}
+
+.detail-tabs__nav button {
+  display: flex;
+  gap: 24px;
+  padding: 23px 20px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  background: #080a0d;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.13em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.detail-tabs__nav button span { color: rgba(var(--detail-rgb), 0.56); }
+.detail-tabs__nav button:hover,
+.detail-tabs__nav button.is-active { color: var(--text); background: rgba(var(--detail-rgb), 0.12); }
+.detail-tabs__nav button.is-active { box-shadow: inset 3px 0 0 var(--detail-accent); }
+
+.detail-tabs__body {
+  min-height: 430px;
+  padding: clamp(34px, 5vw, 72px);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: rgba(8,10,13,0.76);
+}
+
+.detail-panel__index {
+  margin: 0 0 16px;
+  color: var(--detail-accent);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.15em;
+}
+
+.detail-panel h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5.6rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+}
+
+.detail-panel__copy {
+  max-width: 760px;
+  margin: 42px 0 0;
+  color: #b8bdc4;
+  font-size: 0.82rem;
+  line-height: 2;
+}
+
+.detail-panel__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.prompt-copy {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 13px 15px;
+  border: 1px solid var(--detail-accent);
+  color: var(--detail-accent);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+.prompt-copy:hover:not(:disabled) { color: #050608; background: var(--detail-accent); }
+.prompt-copy:disabled { opacity: 0.38; cursor: not-allowed; }
+.detail-panel pre {
+  max-height: 390px;
+  margin: 38px 0 0;
+  padding: 24px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  color: #cdd1d6;
+  background: #050608;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.character-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 34px; }
+.character-gallery figure,
+.gallery-placeholder { min-height: 280px; margin: 0; border: 1px solid var(--line); background: #080a0d; }
+.character-gallery figure { position: relative; overflow: hidden; }
+.character-gallery img { width: 100%; height: 320px; object-fit: contain; background: radial-gradient(circle, rgba(var(--detail-rgb),0.18), transparent 65%); }
+.character-gallery figcaption { position: absolute; right: 12px; bottom: 10px; color: var(--muted); font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.1em; }
+.gallery-placeholder { display: grid; place-items: center; color: #555b63; font-family: var(--font-mono); font-size: 0.65rem; line-height: 1.8; letter-spacing: 0.12em; text-align: center; }
 
 .world-view {
   min-height: 100vh;
@@ -1465,7 +1603,9 @@ button {
   }
 
   .character-detail__visual img {
-    width: min(112%, 720px);
+    inset: 48px 14px 14px;
+    width: calc(100% - 28px);
+    height: calc(100% - 62px);
   }
 
   .character-detail__content {
@@ -1499,6 +1639,14 @@ button {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .character-detail__tabs { width: 100%; grid-template-columns: 1fr; }
+  .detail-tabs__nav { flex-direction: row; border-right: 0; }
+  .detail-tabs__nav button { flex: 1; justify-content: center; gap: 9px; padding: 18px 8px; font-size: 0.54rem; }
+  .detail-tabs__nav button.is-active { box-shadow: inset 0 3px 0 var(--detail-accent); }
+  .detail-tabs__body { min-height: 380px; padding: 34px 22px; }
+  .detail-panel__heading { align-items: flex-start; flex-direction: column; }
+  .character-gallery { grid-template-columns: 1fr; }
 
   .site-footer {
     flex-direction: column;
@@ -1557,6 +1705,496 @@ button {
 }
 
 </style>
+    <script defer>
+const worlds = [
+  {
+    id: "imperial-court",
+    index: "001",
+    title: "IMPERIAL COURT",
+    subtitle: "MOONLIT PALACE / EASTERN FANTASY",
+    accent: "#b9efff",
+    secondary: "#697dff",
+    rgb: "185, 239, 255",
+    description:
+      "月白の宮廷に集う武官、医官、人ならざる者たち。静かな回廊の奥で、忠誠と恋情がひそやかに交差する。",
+    facts: { LOCATION: "ROYAL PALACE", GENRE: "EASTERN FANTASY", STATUS: "ONGOING" },
+  },
+  {
+    id: "demon-city",
+    index: "002",
+    title: "DEMON CITY",
+    subtitle: "NEAR FUTURE / SEVEN SINS",
+    accent: "#ff62b0",
+    secondary: "#69e8ff",
+    rgb: "255, 98, 176",
+    description:
+      "悪魔と特殊能力者が暮らす近未来都市。触れられない者、触れることを許された者――異質な力が関係を決定づける。",
+    notice: "この世界観・キャラクターは、友人主催の創作企画に参加しています。",
+    facts: { LOCATION: "NEAR FUTURE", GENRE: "DARK FANTASY", STATUS: "FAN PROJECT" },
+  },
+  {
+    id: "acheron",
+    index: "003",
+    title: "ACHERON",
+    subtitle: "NEW YORK / ORGANIZED CRIME",
+    accent: "#ff365d",
+    secondary: "#7a0f28",
+    rgb: "255, 54, 93",
+    description:
+      "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
+    facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
+  },
+];
+
+const characters = [
+  { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.16, portraitY: "-2%" },
+  { id: "kai", name: "KAI", jp: "カイ", world: "independent", affiliation: "所属なし", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "nox", name: "NOX", jp: "ノクス", world: "independent", affiliation: "所属なし", tags: ["DEVIL", "RED EYES"], monogram: "NX", image: "./assets/characters/nox.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "yumekui", name: "YUMEKUI", jp: "ユメクイ", world: "independent", affiliation: "所属なし", tags: ["DREAM", "BEAST"], monogram: "YU", image: "./assets/characters/yumekui.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "onero", name: "ONERO", jp: "オネロ", world: "nocturne", affiliation: "夜想教徒", tags: ["DREAM", "BEAST"], monogram: "ON", image: "./assets/characters/onero.webp", portraitScale: 1.02, portraitY: "0%" },
+  { id: "unknown", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["SCALES", "STAR"], monogram: "??", image: "./assets/characters/unknown.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "zerv", name: "ZERV", jp: "ゼルヴ", world: "independent", affiliation: "所属なし", tags: ["PYTHON", "SPLIT TONGUE"], monogram: "ZE" },
+  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", affiliation: "所属なし", tags: ["CORAL", "BUNNY"], monogram: "MI" },
+
+  { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
+  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
+  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
+
+  { id: "theia", name: "THEIA", jp: "ティア", world: "demon-city", affiliation: "悪魔", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "demon-city", affiliation: "悪魔", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
+
+  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
+  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
+];
+
+const homeView = document.querySelector("#home-view");
+const worldView = document.querySelector("#world-view");
+const characterView = document.querySelector("#character-view");
+const worldRail = document.querySelector("#world-rail");
+const characterGrid = document.querySelector("#character-grid");
+const worldCharacterGrid = document.querySelector("#world-character-grid");
+const searchInput = document.querySelector("#character-search");
+const resultCount = document.querySelector("#result-count");
+const emptyState = document.querySelector("#empty-state");
+const ambientWord = document.querySelector("#ambient-word");
+const progressBar = document.querySelector("#rail-progress-bar");
+const transitionLayer = document.querySelector(".noise-transition");
+const characterShutter = document.querySelector("#character-shutter");
+const backButton = document.querySelector("#back-button");
+const menuButton = document.querySelector(".menu-button");
+const accessGate = document.querySelector("#access-gate");
+const accessButton = document.querySelector("#access-button");
+const accessStatus = document.querySelector("#access-status");
+const accessPercent = document.querySelector("#access-percent");
+const accessProgressBar = document.querySelector("#access-progress-bar");
+const detailTabButtons = [...document.querySelectorAll("[data-detail-tab]")];
+const detailTabPanels = [...document.querySelectorAll("[data-detail-panel]")];
+const promptCopyButton = document.querySelector("#prompt-copy");
+const promptCode = document.querySelector("#character-prompt-code");
+let activeWorldId = worlds[0].id;
+let activeCharacter = null;
+
+function authorizeAccess() {
+  if (accessGate.classList.contains("is-loading")) return;
+
+  accessGate.classList.add("is-loading");
+  accessButton.disabled = true;
+  accessStatus.textContent = "VERIFYING ARCHIVE";
+  const startedAt = performance.now();
+  const duration = 1850;
+
+  function updateProgress(now) {
+    const elapsed = Math.min((now - startedAt) / duration, 1);
+    const eased = 1 - Math.pow(1 - elapsed, 2.4);
+    const progress = Math.min(100, Math.floor(eased * 100));
+    accessPercent.textContent = `${String(progress).padStart(3, "0")}%`;
+    accessProgressBar.style.transform = `scaleX(${progress / 100})`;
+
+    if (elapsed < 1) {
+      window.requestAnimationFrame(updateProgress);
+      return;
+    }
+
+    accessStatus.textContent = "ACCESS GRANTED";
+    accessPercent.textContent = "100%";
+    accessProgressBar.style.transform = "scaleX(1)";
+    window.setTimeout(() => {
+      accessGate.classList.add("is-complete");
+      document.body.classList.remove("access-locked");
+      window.setTimeout(() => {
+        accessGate.hidden = true;
+      }, 440);
+    }, 120);
+  }
+
+  window.requestAnimationFrame(updateProgress);
+}
+
+function getWorld(id) {
+  return worlds.find((world) => world.id === id);
+}
+
+function getWorldLabel(id) {
+  if (id === "nocturne") return "夜想教徒";
+  if (id === "independent") return "NO AFFILIATION";
+  return getWorld(id)?.title ?? "NO AFFILIATION";
+}
+
+function getCharacterColor(character) {
+  const world = getWorld(character.world);
+  if (character.world === "nocturne") return { accent: "#a68cff", rgb: "166, 140, 255" };
+  if (character.world === "independent") return { accent: "#aab0b7", rgb: "170, 176, 183" };
+  return world
+    ? { accent: world.accent, rgb: world.rgb }
+    : { accent: "#aab0b7", rgb: "170, 176, 183" };
+}
+
+function renderWorlds() {
+  worldRail.innerHTML = worlds
+    .map(
+      (world, index) => `
+        <button
+          class="world-card${index === 0 ? " is-active" : ""}"
+          type="button"
+          data-world="${world.id}"
+          style="--card-accent:${world.accent};--card-rgb:${world.rgb}"
+          aria-label="${world.title}の世界観ページを開く"
+        >
+          <span class="world-card__number">${world.index.slice(-1)}</span>
+          <span class="world-card__top">
+            <span>WORLD FILE / ${world.index}</span>
+            <span>${String(characters.filter((character) => character.world === world.id).length).padStart(2, "0")} CHARACTERS</span>
+          </span>
+          <span class="world-card__bottom">
+            <span>
+              <h3>${world.title}</h3>
+              <span class="world-card__subtitle">${world.subtitle}</span>
+            </span>
+            <span class="world-card__open">OPEN FILE ↗</span>
+          </span>
+        </button>
+      `,
+    )
+    .join("");
+
+  worldRail.querySelectorAll(".world-card").forEach((card) => {
+    card.addEventListener("click", () => openWorld(card.dataset.world));
+  });
+}
+
+function characterCard(character, index) {
+  const color = getCharacterColor(character);
+  const portrait = character.image
+    ? `<img
+        class="character-card__portrait"
+        src="${character.image}"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        style="--portrait-scale:${character.portraitScale ?? 1};--portrait-y:${character.portraitY ?? "0%"}"
+      />`
+    : `<span class="character-card__monogram">${character.monogram}</span>`;
+  return `
+    <article
+      class="character-card"
+      style="--character-accent:${color.accent};--character-rgb:${color.rgb}"
+      data-character="${character.id}"
+      role="button"
+      tabindex="0"
+      aria-label="${character.jp}のキャラクターファイルを開く"
+    >
+      <div class="character-card__visual">
+        <span class="character-card__number">FILE ${String(index + 1).padStart(3, "0")}</span>
+        <span class="character-card__world">${getWorldLabel(character.world)}</span>
+        ${portrait}
+      </div>
+      <div class="character-card__body">
+        <div class="character-card__name">
+          <h3>${character.name}</h3>
+          <span class="character-card__arrow">↗</span>
+        </div>
+        <span class="character-card__jp">${character.jp}</span>
+        <div class="character-card__tags">
+          ${character.tags.map((tag) => `<span>${tag}</span>`).join("")}
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderCharacters(list = characters) {
+  characterGrid.innerHTML = list.map(characterCard).join("");
+  bindCharacterCards(characterGrid);
+  resultCount.textContent = `${String(list.length).padStart(2, "0")} FILES`;
+  emptyState.hidden = list.length !== 0;
+}
+
+function bindCharacterCards(scope) {
+  scope.querySelectorAll(".character-card").forEach((card) => {
+    const open = () => openCharacter(card.dataset.character);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+function setTheme(world) {
+  const root = document.documentElement;
+  root.style.setProperty("--accent", world.accent);
+  root.style.setProperty("--accent-rgb", world.rgb);
+  root.style.setProperty("--accent-secondary", world.secondary);
+  ambientWord.textContent = world.title;
+  ambientWord.style.transform = "translateX(2%)";
+  window.setTimeout(() => {
+    ambientWord.style.transform = "translateX(0)";
+  }, 60);
+}
+
+function updateRailTheme() {
+  const cards = [...worldRail.querySelectorAll(".world-card")];
+  const railRect = worldRail.getBoundingClientRect();
+  const railCenter = railRect.left + railRect.width / 2;
+  let activeIndex = 0;
+  let closestDistance = Infinity;
+
+  cards.forEach((card, index) => {
+    const rect = card.getBoundingClientRect();
+    const distance = Math.abs(rect.left + rect.width / 2 - railCenter);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      activeIndex = index;
+    }
+  });
+
+  cards.forEach((card, index) => card.classList.toggle("is-active", index === activeIndex));
+  setTheme(worlds[activeIndex]);
+  const maxScroll = worldRail.scrollWidth - worldRail.clientWidth;
+  const ratio = maxScroll > 0 ? worldRail.scrollLeft / maxScroll : 0;
+  progressBar.style.transform = `translateX(${ratio * 200}%)`;
+}
+
+function runTransition(world, callback) {
+  const theme = world ?? worlds[0];
+  transitionLayer.style.setProperty("--noise-color", theme.accent);
+  transitionLayer.style.setProperty("--noise-rgb", theme.rgb);
+  transitionLayer.style.setProperty("--noise-secondary", theme.secondary);
+  transitionLayer.classList.remove("is-active");
+  void transitionLayer.offsetWidth;
+  transitionLayer.classList.add("is-active");
+  window.setTimeout(callback, 155);
+}
+
+function runCharacterTransition(character, callback) {
+  const color = getCharacterColor(character);
+  characterShutter.style.setProperty("--shutter-color", color.accent);
+  characterShutter.style.setProperty("--shutter-rgb", color.rgb);
+  characterShutter.querySelector(".character-shutter__code").textContent = `FILE / ${character.name}`;
+  characterShutter.classList.remove("is-active");
+  void characterShutter.offsetWidth;
+  characterShutter.classList.add("is-active");
+  window.setTimeout(callback, 420);
+}
+
+function openCharacter(characterId, skipHash = false) {
+  const character = characters.find((item) => item.id === characterId);
+  if (!character) return;
+  const index = characters.indexOf(character);
+  const color = getCharacterColor(character);
+  activeCharacter = character;
+
+  runCharacterTransition(character, () => {
+    document.documentElement.style.setProperty("--accent", color.accent);
+    document.documentElement.style.setProperty("--accent-rgb", color.rgb);
+    homeView.hidden = true;
+    worldView.hidden = true;
+    characterView.hidden = false;
+    characterView.style.setProperty("--detail-accent", color.accent);
+    characterView.style.setProperty("--detail-rgb", color.rgb);
+    document.querySelector("#character-file-number").textContent = `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
+    document.querySelector("#character-affiliation").textContent = character.affiliation ?? getWorldLabel(character.world);
+    document.querySelector("#character-detail-name").textContent = character.name;
+    document.querySelector("#character-detail-jp").textContent = character.jp;
+    document.querySelector("#character-detail-tags").innerHTML = character.tags.map((tag) => `<span>${tag}</span>`).join("");
+    document.querySelector("#character-detail-world").textContent = getWorldLabel(character.world);
+    document.querySelector("#character-detail-status").textContent = character.image ? "PORTRAIT REGISTERED" : "PORTRAIT PENDING";
+    const detailImage = character.detailImage ?? character.image;
+    const visual = document.querySelector("#character-detail-visual");
+    visual.innerHTML = detailImage
+      ? `<img src="${detailImage}" alt="${character.jp}" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "50%"}" />`
+      : `<span class="character-detail__monogram">${character.monogram}</span>`;
+
+    document.querySelector("#character-profile-title").textContent = `${character.name} / PROFILE`;
+    document.querySelector("#character-profile-copy").textContent = character.profile ?? "プロフィールデータは準備中です。設定を受け取り次第、このページへ追加します。";
+    promptCode.textContent = character.prompt || "PROMPT DATA PENDING";
+    promptCopyButton.disabled = !character.prompt;
+    promptCopyButton.querySelector("span").textContent = character.prompt ? "COPY ALL" : "NOT REGISTERED";
+    const gallery = document.querySelector("#character-gallery-grid");
+    gallery.innerHTML = detailImage
+      ? `<figure><img src="${detailImage}" alt="${character.jp}"><figcaption>PORTRAIT / 001</figcaption></figure><div class="gallery-placeholder">MORE FILES<br>COMING SOON</div>`
+      : `<div class="gallery-placeholder">GALLERY DATA PENDING</div>`;
+    setCharacterTab("profile");
+
+    const previous = characters[(index - 1 + characters.length) % characters.length];
+    const next = characters[(index + 1) % characters.length];
+    const previousButton = document.querySelector("#character-previous");
+    const nextButton = document.querySelector("#character-next");
+    previousButton.dataset.character = previous.id;
+    nextButton.dataset.character = next.id;
+    previousButton.querySelector("strong").textContent = previous.name;
+    nextButton.querySelector("strong").textContent = next.name;
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (!skipHash) history.pushState({ character: character.id }, "", `#character-${character.id}`);
+  });
+}
+
+function openWorld(worldId, skipHash = false) {
+  const world = getWorld(worldId);
+  if (!world) return;
+
+  runTransition(world, () => {
+    activeWorldId = world.id;
+    setTheme(world);
+    homeView.hidden = true;
+    characterView.hidden = true;
+    worldView.hidden = false;
+    document.querySelector("#world-file-number").textContent = `WORLD FILE ${world.index}`;
+    document.querySelector("#world-title").textContent = world.title;
+    document.querySelector("#world-description").textContent = world.description;
+    const worldNotice = document.querySelector("#world-notice");
+    worldNotice.textContent = world.notice ?? "";
+    worldNotice.hidden = !world.notice;
+    document.querySelector("#world-facts").innerHTML = Object.entries(world.facts)
+      .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
+      .join("");
+    const cast = characters.filter((character) => character.world === world.id);
+    worldCharacterGrid.innerHTML = cast.map(characterCard).join("");
+    bindCharacterCards(worldCharacterGrid);
+    document.querySelector("#world-count").textContent = `${String(cast.length).padStart(2, "0")} REGISTERED CHARACTERS`;
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (!skipHash) history.pushState({ world: world.id }, "", `#world-${world.id}`);
+  });
+}
+
+function showHome(updateHistory = true) {
+  runTransition(getWorld(activeWorldId), () => {
+    worldView.hidden = true;
+    characterView.hidden = true;
+    homeView.hidden = false;
+    setTheme(worlds[0]);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (updateHistory) history.pushState({}, "", "#home");
+  });
+}
+
+function setCharacterTab(tabId) {
+  detailTabButtons.forEach((button) => {
+    const active = button.dataset.detailTab === tabId;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  detailTabPanels.forEach((panel) => {
+    panel.hidden = panel.dataset.detailPanel !== tabId;
+  });
+}
+
+async function copyCharacterPrompt() {
+  const prompt = activeCharacter?.prompt;
+  if (!prompt) return;
+  try {
+    await navigator.clipboard.writeText(prompt);
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = prompt;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.append(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+  promptCopyButton.querySelector("span").textContent = "COPIED";
+  window.setTimeout(() => {
+    if (activeCharacter?.prompt) promptCopyButton.querySelector("span").textContent = "COPY ALL";
+  }, 1400);
+}
+
+function handleHash() {
+  const characterMatch = window.location.hash.match(/^#character-(.+)$/);
+  if (characterMatch && characters.some((character) => character.id === characterMatch[1])) {
+    openCharacter(characterMatch[1], true);
+    return;
+  }
+  const match = window.location.hash.match(/^#world-(.+)$/);
+  if (match && getWorld(match[1])) {
+    openWorld(match[1], true);
+    return;
+  }
+  worldView.hidden = true;
+  characterView.hidden = true;
+  homeView.hidden = false;
+}
+
+function updateClock() {
+  const formatter = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  document.querySelector("#clock").textContent = formatter.format(new Date());
+}
+
+renderWorlds();
+renderCharacters();
+setTheme(worlds[0]);
+handleHash();
+updateClock();
+window.setInterval(updateClock, 1000);
+
+let railFrame;
+worldRail.addEventListener("scroll", () => {
+  window.cancelAnimationFrame(railFrame);
+  railFrame = window.requestAnimationFrame(updateRailTheme);
+});
+
+searchInput.addEventListener("input", (event) => {
+  const query = event.target.value.trim().toLowerCase();
+  const filtered = characters.filter((character) => {
+    const target = [character.name, character.jp, getWorldLabel(character.world), ...character.tags]
+      .join(" ")
+      .toLowerCase();
+    return target.includes(query);
+  });
+  renderCharacters(filtered);
+});
+
+menuButton.addEventListener("click", () => {
+  if (homeView.hidden) showHome(false);
+  window.setTimeout(() => {
+    searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    searchInput.focus({ preventScroll: true });
+  }, homeView.hidden ? 350 : 0);
+});
+
+backButton.addEventListener("click", () => showHome());
+document.querySelector("#character-back").addEventListener("click", () => showHome());
+document.querySelector("#character-previous").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
+document.querySelector("#character-next").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
+detailTabButtons.forEach((button) => button.addEventListener("click", () => setCharacterTab(button.dataset.detailTab)));
+promptCopyButton.addEventListener("click", copyCharacterPrompt);
+accessButton.addEventListener("click", authorizeAccess);
+window.addEventListener("popstate", handleHash);
+
+</script>
   </head>
   <body class="access-locked">
     <div class="access-gate" id="access-gate" role="dialog" aria-modal="true" aria-labelledby="access-title">
@@ -1724,6 +2362,32 @@ button {
           </div>
         </div>
       </section>
+      <section class="character-detail__tabs section-shell">
+        <div class="detail-tabs__nav" role="tablist" aria-label="キャラクター詳細">
+          <button class="is-active" type="button" role="tab" aria-selected="true" data-detail-tab="profile"><span>01</span>PROFILE</button>
+          <button type="button" role="tab" aria-selected="false" data-detail-tab="prompt"><span>02</span>PROMPT</button>
+          <button type="button" role="tab" aria-selected="false" data-detail-tab="gallery"><span>03</span>GALLERY</button>
+        </div>
+        <div class="detail-tabs__body">
+          <section class="detail-panel" role="tabpanel" data-detail-panel="profile">
+            <p class="detail-panel__index">SUBJECT INFORMATION</p>
+            <h2 id="character-profile-title">CHARACTER / PROFILE</h2>
+            <p class="detail-panel__copy" id="character-profile-copy">プロフィールデータは準備中です。</p>
+          </section>
+          <section class="detail-panel detail-panel--prompt" role="tabpanel" data-detail-panel="prompt" hidden>
+            <div class="detail-panel__heading">
+              <div><p class="detail-panel__index">GENERATION DATA</p><h2>CHARACTER PROMPT</h2></div>
+              <button class="prompt-copy" id="prompt-copy" type="button"><span>COPY ALL</span><b aria-hidden="true">▣</b></button>
+            </div>
+            <pre><code id="character-prompt-code">PROMPT DATA PENDING</code></pre>
+          </section>
+          <section class="detail-panel" role="tabpanel" data-detail-panel="gallery" hidden>
+            <p class="detail-panel__index">VISUAL ARCHIVE</p>
+            <h2>GALLERY</h2>
+            <div class="character-gallery" id="character-gallery-grid"></div>
+          </section>
+        </div>
+      </section>
       <nav class="character-detail__nav section-shell" aria-label="キャラクターファイル移動">
         <button id="character-previous" type="button"><span>← PREVIOUS FILE</span><strong></strong></button>
         <button id="character-next" type="button"><span>NEXT FILE →</span><strong></strong></button>
@@ -1735,440 +2399,5 @@ button {
       <span>ALL CHARACTER FILES / PRIVATE COLLECTION</span>
       <a href="#home">BACK TO TOP ↑</a>
     </footer>
-  <script>
-const worlds = [
-  {
-    id: "imperial-court",
-    index: "001",
-    title: "IMPERIAL COURT",
-    subtitle: "MOONLIT PALACE / EASTERN FANTASY",
-    accent: "#b9efff",
-    secondary: "#697dff",
-    rgb: "185, 239, 255",
-    description:
-      "月白の宮廷に集う武官、医官、人ならざる者たち。静かな回廊の奥で、忠誠と恋情がひそやかに交差する。",
-    facts: { LOCATION: "ROYAL PALACE", GENRE: "EASTERN FANTASY", STATUS: "ONGOING" },
-  },
-  {
-    id: "demon-city",
-    index: "002",
-    title: "DEMON CITY",
-    subtitle: "NEAR FUTURE / SEVEN SINS",
-    accent: "#ff62b0",
-    secondary: "#69e8ff",
-    rgb: "255, 98, 176",
-    description:
-      "悪魔と特殊能力者が暮らす近未来都市。触れられない者、触れることを許された者――異質な力が関係を決定づける。",
-    notice: "この世界観・キャラクターは、友人主催の創作企画に参加しています。",
-    facts: { LOCATION: "NEAR FUTURE", GENRE: "DARK FANTASY", STATUS: "FAN PROJECT" },
-  },
-  {
-    id: "acheron",
-    index: "003",
-    title: "ACHERON",
-    subtitle: "NEW YORK / ORGANIZED CRIME",
-    accent: "#ff365d",
-    secondary: "#7a0f28",
-    rgb: "255, 54, 93",
-    description:
-      "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
-    facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
-  },
-];
-
-const characters = [
-  { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "kai", name: "KAI", jp: "カイ", world: "independent", affiliation: "所属なし", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "nox", name: "NOX", jp: "ノクス", world: "independent", affiliation: "所属なし", tags: ["DEVIL", "RED EYES"], monogram: "NX", image: "./assets/characters/nox.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yumekui", name: "YUMEKUI", jp: "ユメクイ", world: "independent", affiliation: "所属なし", tags: ["DREAM", "BEAST"], monogram: "YU", image: "./assets/characters/yumekui.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "onero", name: "ONERO", jp: "オネロ", world: "nocturne", affiliation: "夜想教徒", tags: ["DREAM", "BEAST"], monogram: "ON", image: "./assets/characters/onero.webp", portraitScale: 1.02, portraitY: "0%" },
-  { id: "unknown", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["SCALES", "STAR"], monogram: "??", image: "./assets/characters/unknown.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yuan", name: "YUAN", jp: "ユアン", world: "independent", affiliation: "所属なし", tags: ["CASINO", "RED HAIR"], monogram: "YU" },
-  { id: "zerv", name: "ZERV", jp: "ゼルヴ", world: "independent", affiliation: "所属なし", tags: ["PYTHON", "SPLIT TONGUE"], monogram: "ZE" },
-  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", affiliation: "所属なし", tags: ["CORAL", "BUNNY"], monogram: "MI" },
-
-  { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
-  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "xinxin", name: "XINXIN", jp: "シンシン", world: "imperial-court", affiliation: "王宮", tags: ["FOX", "300 YEARS"], monogram: "XX" },
-  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
-  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
-
-  { id: "theia", name: "THEIA", jp: "ティア", world: "demon-city", affiliation: "悪魔", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "demon-city", affiliation: "悪魔", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
-  { id: "d", name: "D", jp: "ディー", world: "demon-city", affiliation: "悪魔", tags: ["DEMON", "UNTOUCHABLE"], monogram: "D" },
-
-  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
-  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
-];
-
-const homeView = document.querySelector("#home-view");
-const worldView = document.querySelector("#world-view");
-const characterView = document.querySelector("#character-view");
-const worldRail = document.querySelector("#world-rail");
-const characterGrid = document.querySelector("#character-grid");
-const worldCharacterGrid = document.querySelector("#world-character-grid");
-const searchInput = document.querySelector("#character-search");
-const resultCount = document.querySelector("#result-count");
-const emptyState = document.querySelector("#empty-state");
-const ambientWord = document.querySelector("#ambient-word");
-const progressBar = document.querySelector("#rail-progress-bar");
-const transitionLayer = document.querySelector(".noise-transition");
-const characterShutter = document.querySelector("#character-shutter");
-const backButton = document.querySelector("#back-button");
-const menuButton = document.querySelector(".menu-button");
-const accessGate = document.querySelector("#access-gate");
-const accessButton = document.querySelector("#access-button");
-const accessStatus = document.querySelector("#access-status");
-const accessPercent = document.querySelector("#access-percent");
-const accessProgressBar = document.querySelector("#access-progress-bar");
-
-function authorizeAccess() {
-  if (accessGate.classList.contains("is-loading")) return;
-
-  accessGate.classList.add("is-loading");
-  accessButton.disabled = true;
-  accessStatus.textContent = "VERIFYING ARCHIVE";
-  const startedAt = performance.now();
-  const duration = 1850;
-
-  function updateProgress(now) {
-    const elapsed = Math.min((now - startedAt) / duration, 1);
-    const eased = 1 - Math.pow(1 - elapsed, 2.4);
-    const progress = Math.min(100, Math.floor(eased * 100));
-    accessPercent.textContent = `${String(progress).padStart(3, "0")}%`;
-    accessProgressBar.style.transform = `scaleX(${progress / 100})`;
-
-    if (elapsed < 1) {
-      window.requestAnimationFrame(updateProgress);
-      return;
-    }
-
-    accessStatus.textContent = "ACCESS GRANTED";
-    accessPercent.textContent = "100%";
-    accessProgressBar.style.transform = "scaleX(1)";
-    window.setTimeout(() => {
-      accessGate.classList.add("is-complete");
-      document.body.classList.remove("access-locked");
-      window.setTimeout(() => {
-        accessGate.hidden = true;
-      }, 700);
-    }, 280);
-  }
-
-  window.requestAnimationFrame(updateProgress);
-}
-
-function getWorld(id) {
-  return worlds.find((world) => world.id === id);
-}
-
-function getWorldLabel(id) {
-  if (id === "nocturne") return "夜想教徒";
-  if (id === "independent") return "NO AFFILIATION";
-  return getWorld(id)?.title ?? "NO AFFILIATION";
-}
-
-function getCharacterColor(character) {
-  const world = getWorld(character.world);
-  if (character.world === "nocturne") return { accent: "#a68cff", rgb: "166, 140, 255" };
-  if (character.world === "independent") return { accent: "#aab0b7", rgb: "170, 176, 183" };
-  return world
-    ? { accent: world.accent, rgb: world.rgb }
-    : { accent: "#aab0b7", rgb: "170, 176, 183" };
-}
-
-function renderWorlds() {
-  worldRail.innerHTML = worlds
-    .map(
-      (world, index) => `
-        <button
-          class="world-card${index === 0 ? " is-active" : ""}"
-          type="button"
-          data-world="${world.id}"
-          style="--card-accent:${world.accent};--card-rgb:${world.rgb}"
-          aria-label="${world.title}の世界観ページを開く"
-        >
-          <span class="world-card__number">${world.index.slice(-1)}</span>
-          <span class="world-card__top">
-            <span>WORLD FILE / ${world.index}</span>
-            <span>${String(characters.filter((character) => character.world === world.id).length).padStart(2, "0")} CHARACTERS</span>
-          </span>
-          <span class="world-card__bottom">
-            <span>
-              <h3>${world.title}</h3>
-              <span class="world-card__subtitle">${world.subtitle}</span>
-            </span>
-            <span class="world-card__open">OPEN FILE ↗</span>
-          </span>
-        </button>
-      `,
-    )
-    .join("");
-
-  worldRail.querySelectorAll(".world-card").forEach((card) => {
-    card.addEventListener("click", () => openWorld(card.dataset.world));
-  });
-}
-
-function characterCard(character, index) {
-  const color = getCharacterColor(character);
-  const portrait = character.image
-    ? `<img
-        class="character-card__portrait"
-        src="${character.image}"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        style="--portrait-scale:${character.portraitScale ?? 1};--portrait-y:${character.portraitY ?? "0%"}"
-      />`
-    : `<span class="character-card__monogram">${character.monogram}</span>`;
-  return `
-    <article
-      class="character-card"
-      style="--character-accent:${color.accent};--character-rgb:${color.rgb}"
-      data-character="${character.id}"
-      role="button"
-      tabindex="0"
-      aria-label="${character.jp}のキャラクターファイルを開く"
-    >
-      <div class="character-card__visual">
-        <span class="character-card__number">FILE ${String(index + 1).padStart(3, "0")}</span>
-        <span class="character-card__world">${getWorldLabel(character.world)}</span>
-        ${portrait}
-      </div>
-      <div class="character-card__body">
-        <div class="character-card__name">
-          <h3>${character.name}</h3>
-          <span class="character-card__arrow">↗</span>
-        </div>
-        <span class="character-card__jp">${character.jp}</span>
-        <div class="character-card__tags">
-          ${character.tags.map((tag) => `<span>${tag}</span>`).join("")}
-        </div>
-      </div>
-    </article>
-  `;
-}
-
-function renderCharacters(list = characters) {
-  characterGrid.innerHTML = list.map(characterCard).join("");
-  bindCharacterCards(characterGrid);
-  resultCount.textContent = `${String(list.length).padStart(2, "0")} FILES`;
-  emptyState.hidden = list.length !== 0;
-}
-
-function bindCharacterCards(scope) {
-  scope.querySelectorAll(".character-card").forEach((card) => {
-    const open = () => openCharacter(card.dataset.character);
-    card.addEventListener("click", open);
-    card.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        open();
-      }
-    });
-  });
-}
-
-function setTheme(world) {
-  const root = document.documentElement;
-  root.style.setProperty("--accent", world.accent);
-  root.style.setProperty("--accent-rgb", world.rgb);
-  root.style.setProperty("--accent-secondary", world.secondary);
-  ambientWord.textContent = world.title;
-  ambientWord.style.transform = "translateX(2%)";
-  window.setTimeout(() => {
-    ambientWord.style.transform = "translateX(0)";
-  }, 60);
-}
-
-function updateRailTheme() {
-  const cards = [...worldRail.querySelectorAll(".world-card")];
-  const railRect = worldRail.getBoundingClientRect();
-  const railCenter = railRect.left + railRect.width / 2;
-  let activeIndex = 0;
-  let closestDistance = Infinity;
-
-  cards.forEach((card, index) => {
-    const rect = card.getBoundingClientRect();
-    const distance = Math.abs(rect.left + rect.width / 2 - railCenter);
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      activeIndex = index;
-    }
-  });
-
-  cards.forEach((card, index) => card.classList.toggle("is-active", index === activeIndex));
-  setTheme(worlds[activeIndex]);
-  const maxScroll = worldRail.scrollWidth - worldRail.clientWidth;
-  const ratio = maxScroll > 0 ? worldRail.scrollLeft / maxScroll : 0;
-  progressBar.style.transform = `translateX(${ratio * 200}%)`;
-}
-
-function runTransition(callback) {
-  transitionLayer.classList.remove("is-active");
-  void transitionLayer.offsetWidth;
-  transitionLayer.classList.add("is-active");
-  window.setTimeout(callback, 250);
-}
-
-function runCharacterTransition(character, callback) {
-  const color = getCharacterColor(character);
-  characterShutter.style.setProperty("--shutter-color", color.accent);
-  characterShutter.style.setProperty("--shutter-rgb", color.rgb);
-  characterShutter.querySelector(".character-shutter__code").textContent = `FILE / ${character.name}`;
-  characterShutter.classList.remove("is-active");
-  void characterShutter.offsetWidth;
-  characterShutter.classList.add("is-active");
-  window.setTimeout(callback, 420);
-}
-
-function openCharacter(characterId, skipHash = false) {
-  const character = characters.find((item) => item.id === characterId);
-  if (!character) return;
-  const index = characters.indexOf(character);
-  const color = getCharacterColor(character);
-
-  runCharacterTransition(character, () => {
-    document.documentElement.style.setProperty("--accent", color.accent);
-    document.documentElement.style.setProperty("--accent-rgb", color.rgb);
-    homeView.hidden = true;
-    worldView.hidden = true;
-    characterView.hidden = false;
-    characterView.style.setProperty("--detail-accent", color.accent);
-    characterView.style.setProperty("--detail-rgb", color.rgb);
-    document.querySelector("#character-file-number").textContent = `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
-    document.querySelector("#character-affiliation").textContent = character.affiliation ?? getWorldLabel(character.world);
-    document.querySelector("#character-detail-name").textContent = character.name;
-    document.querySelector("#character-detail-jp").textContent = character.jp;
-    document.querySelector("#character-detail-tags").innerHTML = character.tags.map((tag) => `<span>${tag}</span>`).join("");
-    document.querySelector("#character-detail-world").textContent = getWorldLabel(character.world);
-    document.querySelector("#character-detail-status").textContent = character.image ? "PORTRAIT REGISTERED" : "PORTRAIT PENDING";
-    const visual = document.querySelector("#character-detail-visual");
-    visual.innerHTML = character.image
-      ? `<img src="${character.image}" alt="${character.jp}" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "0%"}" />`
-      : `<span class="character-detail__monogram">${character.monogram}</span>`;
-
-    const previous = characters[(index - 1 + characters.length) % characters.length];
-    const next = characters[(index + 1) % characters.length];
-    const previousButton = document.querySelector("#character-previous");
-    const nextButton = document.querySelector("#character-next");
-    previousButton.dataset.character = previous.id;
-    nextButton.dataset.character = next.id;
-    previousButton.querySelector("strong").textContent = previous.name;
-    nextButton.querySelector("strong").textContent = next.name;
-    window.scrollTo({ top: 0, behavior: "instant" });
-    if (!skipHash) history.pushState({ character: character.id }, "", `#character-${character.id}`);
-  });
-}
-
-function openWorld(worldId, skipHash = false) {
-  const world = getWorld(worldId);
-  if (!world) return;
-
-  runTransition(() => {
-    setTheme(world);
-    homeView.hidden = true;
-    characterView.hidden = true;
-    worldView.hidden = false;
-    document.querySelector("#world-file-number").textContent = `WORLD FILE ${world.index}`;
-    document.querySelector("#world-title").textContent = world.title;
-    document.querySelector("#world-description").textContent = world.description;
-    const worldNotice = document.querySelector("#world-notice");
-    worldNotice.textContent = world.notice ?? "";
-    worldNotice.hidden = !world.notice;
-    document.querySelector("#world-facts").innerHTML = Object.entries(world.facts)
-      .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
-      .join("");
-    const cast = characters.filter((character) => character.world === world.id);
-    worldCharacterGrid.innerHTML = cast.map(characterCard).join("");
-    bindCharacterCards(worldCharacterGrid);
-    document.querySelector("#world-count").textContent = `${String(cast.length).padStart(2, "0")} REGISTERED CHARACTERS`;
-    window.scrollTo({ top: 0, behavior: "instant" });
-    if (!skipHash) history.pushState({ world: world.id }, "", `#world-${world.id}`);
-  });
-}
-
-function showHome(updateHistory = true) {
-  runTransition(() => {
-    worldView.hidden = true;
-    characterView.hidden = true;
-    homeView.hidden = false;
-    setTheme(worlds[0]);
-    window.scrollTo({ top: 0, behavior: "instant" });
-    if (updateHistory) history.pushState({}, "", "#home");
-  });
-}
-
-function handleHash() {
-  const characterMatch = window.location.hash.match(/^#character-(.+)$/);
-  if (characterMatch && characters.some((character) => character.id === characterMatch[1])) {
-    openCharacter(characterMatch[1], true);
-    return;
-  }
-  const match = window.location.hash.match(/^#world-(.+)$/);
-  if (match && getWorld(match[1])) {
-    openWorld(match[1], true);
-    return;
-  }
-  worldView.hidden = true;
-  characterView.hidden = true;
-  homeView.hidden = false;
-}
-
-function updateClock() {
-  const formatter = new Intl.DateTimeFormat("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  });
-  document.querySelector("#clock").textContent = formatter.format(new Date());
-}
-
-renderWorlds();
-renderCharacters();
-setTheme(worlds[0]);
-handleHash();
-updateClock();
-window.setInterval(updateClock, 1000);
-
-let railFrame;
-worldRail.addEventListener("scroll", () => {
-  window.cancelAnimationFrame(railFrame);
-  railFrame = window.requestAnimationFrame(updateRailTheme);
-});
-
-searchInput.addEventListener("input", (event) => {
-  const query = event.target.value.trim().toLowerCase();
-  const filtered = characters.filter((character) => {
-    const target = [character.name, character.jp, getWorldLabel(character.world), ...character.tags]
-      .join(" ")
-      .toLowerCase();
-    return target.includes(query);
-  });
-  renderCharacters(filtered);
-});
-
-menuButton.addEventListener("click", () => {
-  if (homeView.hidden) showHome(false);
-  window.setTimeout(() => {
-    searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
-    searchInput.focus({ preventScroll: true });
-  }, homeView.hidden ? 350 : 0);
-});
-
-backButton.addEventListener("click", () => showHome());
-document.querySelector("#character-back").addEventListener("click", () => showHome());
-document.querySelector("#character-previous").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
-document.querySelector("#character-next").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
-accessButton.addEventListener("click", authorizeAccess);
-window.addEventListener("popstate", handleHash);
-
-</script>
-</body>
+  </body>
 </html>
