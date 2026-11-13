@@ -1,0 +1,1360 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050608" />
+    <meta
+      name="description"
+      content="NARU ARCHIVE — original character and world archive."
+    />
+    <title>NARU ARCHIVE</title>
+    <style>
+:root {
+  color-scheme: dark;
+  --bg: #050608;
+  --surface: #0a0c0f;
+  --surface-strong: #0f1216;
+  --text: #f5f7f8;
+  --muted: #868c94;
+  --line: rgba(255, 255, 255, 0.16);
+  --line-strong: rgba(255, 255, 255, 0.42);
+  --cyan: #74e8ff;
+  --pink: #ff5da2;
+  --accent: var(--cyan);
+  --accent-rgb: 116, 232, 255;
+  --accent-secondary: var(--pink);
+  --header-height: 72px;
+  font-family: Inter, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--text);
+  background: var(--bg);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  border: 0;
+}
+
+::selection {
+  color: #050608;
+  background: var(--accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ambient {
+  position: fixed;
+  z-index: -2;
+  inset: 0;
+  overflow: hidden;
+  background: #050608;
+}
+
+.ambient__color {
+  position: absolute;
+  inset: -20%;
+  opacity: 0.38;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(var(--accent-rgb), 0.22), transparent 29%),
+    radial-gradient(circle at 85% 70%, color-mix(in srgb, var(--accent-secondary) 17%, transparent), transparent 35%);
+  filter: blur(22px) saturate(0.8);
+  transition: background 750ms ease, opacity 600ms ease;
+}
+
+.ambient__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 88%);
+}
+
+.ambient__word {
+  position: absolute;
+  right: -0.05em;
+  top: 14vh;
+  color: transparent;
+  font-size: clamp(7rem, 22vw, 24rem);
+  font-weight: 900;
+  letter-spacing: -0.09em;
+  line-height: 0.8;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(var(--accent-rgb), 0.1);
+  opacity: 0.75;
+  user-select: none;
+  transition: opacity 500ms ease, transform 750ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-header {
+  position: sticky;
+  z-index: 50;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 6, 8, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.brand__mark,
+.brand__name,
+.header-meta,
+.menu-button {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.brand__mark {
+  width: 74px;
+  justify-content: center;
+  border-right: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.brand__name {
+  padding: 0 22px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.header-meta {
+  gap: 22px;
+  padding: 0 24px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+}
+
+.menu-button {
+  width: 72px;
+  justify-content: center;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.menu-button:hover,
+.menu-button:focus-visible {
+  color: var(--bg);
+  background: var(--accent);
+  outline: none;
+}
+
+.section-shell {
+  width: min(100% - 48px, 1500px);
+  margin-inline: auto;
+}
+
+.intro {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 64px 36px;
+}
+
+.intro__eyebrow,
+.intro__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.14em;
+}
+
+.intro h1 {
+  display: flex;
+  flex-direction: column;
+  margin: clamp(48px, 9vh, 110px) 0;
+  font-size: clamp(3.9rem, 10.2vw, 10.8rem);
+  font-weight: 850;
+  letter-spacing: -0.075em;
+  line-height: 0.77;
+}
+
+.intro h1 span:nth-child(2) {
+  align-self: center;
+}
+
+.intro h1 .title-accent {
+  align-self: flex-end;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.68);
+}
+
+.title-dot {
+  color: var(--accent);
+  -webkit-text-stroke: 0;
+}
+
+.intro__footer {
+  align-items: flex-end;
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.intro__footer p {
+  margin: 0;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+}
+
+.worlds,
+.characters,
+.world-cast {
+  padding-block: 110px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 34px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-heading > div:first-child {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 3.1rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.section-index {
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+
+.section-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.world-rail-wrap {
+  position: relative;
+}
+
+.world-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min(78vw, 880px), 1fr);
+  gap: 18px;
+  overflow-x: auto;
+  padding: 0 max(0px, calc((100vw - min(100% - 48px, 1500px)) / 2)) 28px 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+}
+
+.world-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.world-card {
+  position: relative;
+  min-height: clamp(370px, 52vw, 650px);
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  scroll-snap-align: start;
+  text-align: left;
+  background: #080a0d;
+  cursor: pointer;
+  isolation: isolate;
+}
+
+.world-card::before,
+.world-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.world-card::before {
+  background:
+    linear-gradient(115deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.18) 68%),
+    radial-gradient(circle at 72% 45%, rgba(var(--card-rgb), 0.5), transparent 36%),
+    repeating-linear-gradient(105deg, transparent 0 32px, rgba(255, 255, 255, 0.035) 33px 34px);
+  transform: scale(1.03);
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 500ms ease;
+}
+
+.world-card::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 58%);
+}
+
+.world-card:hover::before,
+.world-card:focus-visible::before,
+.world-card.is-active::before {
+  transform: scale(1.08);
+  filter: saturate(1.25);
+}
+
+.world-card:focus-visible {
+  outline: 1px solid var(--card-accent);
+  outline-offset: 4px;
+}
+
+.world-card__top,
+.world-card__bottom {
+  position: absolute;
+  z-index: 2;
+  left: clamp(22px, 4vw, 58px);
+  right: clamp(22px, 4vw, 58px);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.world-card__top {
+  top: clamp(22px, 4vw, 48px);
+  color: rgba(255, 255, 255, 0.64);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+}
+
+.world-card__bottom {
+  bottom: clamp(24px, 4vw, 52px);
+  align-items: flex-end;
+}
+
+.world-card__number {
+  position: absolute;
+  top: 50%;
+  right: 4%;
+  z-index: 0;
+  color: transparent;
+  font-size: clamp(10rem, 28vw, 24rem);
+  font-weight: 900;
+  line-height: 0.7;
+  transform: translateY(-50%);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+}
+
+.world-card h3 {
+  margin: 0;
+  font-size: clamp(2.7rem, 7.5vw, 7.4rem);
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+}
+
+.world-card__subtitle {
+  display: block;
+  margin-top: 14px;
+  color: var(--card-accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(0.64rem, 1vw, 0.78rem);
+  letter-spacing: 0.16em;
+}
+
+.world-card__open {
+  flex: 0 0 auto;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+}
+
+.rail-progress {
+  height: 1px;
+  background: var(--line);
+}
+
+.rail-progress span {
+  display: block;
+  width: 33.333%;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform 300ms ease, background 500ms ease;
+}
+
+.section-heading--characters {
+  align-items: center;
+}
+
+.character-tools {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: min(360px, 32vw);
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  background: rgba(5, 6, 8, 0.56);
+}
+
+.search-box:focus-within {
+  border-color: var(--accent);
+}
+
+.search-box input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.search-box input::placeholder {
+  color: #5f646b;
+}
+
+.result-count {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.character-card {
+  position: relative;
+  min-width: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: rgba(8, 10, 13, 0.64);
+  transition: background 250ms ease;
+}
+
+.character-card:hover {
+  background: rgba(var(--character-rgb), 0.08);
+}
+
+.character-card__visual {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, rgba(var(--character-rgb), 0.35), rgba(0, 0, 0, 0.2) 56%),
+    repeating-linear-gradient(120deg, transparent 0 22px, rgba(255, 255, 255, 0.025) 23px 24px),
+    #0a0c0f;
+}
+
+.character-card__visual::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.character-card__monogram {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: transparent;
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -0.09em;
+  transform: translate(-50%, -50%);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+}
+
+.character-card__number,
+.character-card__world {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  color: rgba(255, 255, 255, 0.74);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+
+.character-card__number {
+  left: 14px;
+}
+
+.character-card__world {
+  right: 14px;
+  text-align: right;
+}
+
+.character-card__body {
+  padding: 18px 16px 19px;
+}
+
+.character-card__name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.character-card h3 {
+  overflow: hidden;
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.45rem);
+  letter-spacing: -0.035em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.character-card__arrow {
+  color: var(--character-accent);
+}
+
+.character-card__jp {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.character-card__tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.character-card__tags span {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  color: #a6abb1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.empty-state {
+  padding: 80px 20px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  text-align: center;
+}
+
+.noise-transition {
+  position: fixed;
+  z-index: 999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    repeating-radial-gradient(circle at 23% 42%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 4px),
+    #030405;
+  background-size: 9px 7px, auto;
+}
+
+.noise-transition.is-active {
+  visibility: visible;
+  animation: glitch-in 640ms steps(2, end) both;
+}
+
+.noise-transition__bars {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(transparent 38%, rgba(116, 232, 255, 0.72) 39% 41%, transparent 42%),
+    linear-gradient(transparent 63%, rgba(255, 93, 162, 0.55) 64% 66%, transparent 67%);
+  mix-blend-mode: screen;
+  animation: bars-shift 180ms steps(2, end) infinite;
+}
+
+.noise-transition__label {
+  z-index: 2;
+  padding: 10px 14px;
+  color: var(--text);
+  background: #050608;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+}
+
+@keyframes glitch-in {
+  0% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateX(0); }
+  18% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(7px); }
+  30% { transform: translateX(-6px); filter: hue-rotate(30deg); }
+  45% { transform: translateX(2px); }
+  72% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; transform: translateX(0); }
+}
+
+@keyframes bars-shift {
+  from { transform: translateY(-7%); }
+  to { transform: translateY(9%); }
+}
+
+.world-view {
+  min-height: 100vh;
+  padding-top: 30px;
+}
+
+.back-button {
+  position: relative;
+  z-index: 3;
+  margin-left: max(24px, calc((100vw - min(100% - 48px, 1500px)) / 2));
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: rgba(5, 6, 8, 0.64);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.back-button:hover,
+.back-button:focus-visible {
+  color: var(--bg);
+  background: var(--accent);
+  outline: none;
+}
+
+.world-hero {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 62px;
+}
+
+.world-hero__meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+}
+
+.world-hero h1 {
+  margin: 12vh 0 10vh;
+  font-size: clamp(4.3rem, 15vw, 15rem);
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  line-height: 0.72;
+}
+
+.world-hero__info {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+  gap: min(8vw, 120px);
+  align-items: end;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.world-hero__info > p {
+  max-width: 760px;
+  margin: 0;
+  color: #c3c7cc;
+  font-size: clamp(0.84rem, 1.5vw, 1.08rem);
+  line-height: 2;
+}
+
+.world-hero dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 9px 18px;
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+}
+
+.world-hero dt {
+  color: var(--muted);
+}
+
+.world-hero dd {
+  margin: 0;
+  color: var(--text);
+  text-align: right;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 28px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.09em;
+}
+
+.site-footer a:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 980px) {
+  .header-meta span:first-child,
+  .header-meta span:last-child {
+    display: none;
+  }
+
+  .character-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --header-height: 60px;
+  }
+
+  .section-shell {
+    width: min(100% - 28px, 1500px);
+  }
+
+  .brand__mark {
+    width: 58px;
+  }
+
+  .brand__name {
+    padding: 0 13px;
+    font-size: 0.66rem;
+  }
+
+  .header-meta {
+    display: none;
+  }
+
+  .site-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .menu-button {
+    width: 58px;
+  }
+
+  .intro {
+    min-height: calc(92svh - var(--header-height));
+    padding-block: 38px 22px;
+  }
+
+  .intro__eyebrow span:last-child,
+  .scroll-cue {
+    display: none;
+  }
+
+  .intro h1 {
+    margin: 15vh 0 13vh;
+    font-size: clamp(3.35rem, 17vw, 6rem);
+    line-height: 0.8;
+  }
+
+  .intro h1 span:nth-child(2) {
+    align-self: flex-start;
+    margin-left: 7vw;
+  }
+
+  .intro__footer p {
+    font-size: 0.72rem;
+  }
+
+  .worlds,
+  .characters,
+  .world-cast {
+    padding-block: 76px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .section-heading p {
+    align-self: flex-end;
+  }
+
+  .world-rail {
+    grid-auto-columns: 87vw;
+    gap: 10px;
+    padding-right: 14px;
+  }
+
+  .world-card {
+    min-height: 470px;
+  }
+
+  .world-card__top,
+  .world-card__bottom {
+    left: 22px;
+    right: 22px;
+  }
+
+  .world-card__bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .world-card__open {
+    align-self: flex-end;
+  }
+
+  .section-heading--characters {
+    align-items: stretch;
+  }
+
+  .character-tools {
+    width: 100%;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .character-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .character-card__body {
+    padding: 14px 12px 15px;
+  }
+
+  .character-card__tags span:nth-child(n + 2) {
+    display: none;
+  }
+
+  .world-hero {
+    min-height: auto;
+    padding-block: 70px 100px;
+  }
+
+  .world-hero h1 {
+    margin: 14vh 0 12vh;
+    font-size: clamp(4rem, 22vw, 8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .world-hero__info {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .site-footer span:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .intro h1 {
+    font-size: 15vw;
+  }
+
+  .world-card {
+    min-height: 420px;
+  }
+
+  .world-card h3 {
+    font-size: 2.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+    </style>
+    <script>
+const worlds = [
+  {
+    id: "acheron",
+    index: "001",
+    title: "ACHERON",
+    subtitle: "NEW YORK / ORGANIZED CRIME",
+    accent: "#ff365d",
+    secondary: "#7a0f28",
+    rgb: "255, 54, 93",
+    description:
+      "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
+    facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
+  },
+  {
+    id: "imperial-court",
+    index: "002",
+    title: "IMPERIAL COURT",
+    subtitle: "MOONLIT PALACE / EASTERN FANTASY",
+    accent: "#b9efff",
+    secondary: "#697dff",
+    rgb: "185, 239, 255",
+    description:
+      "月白の宮廷に集う武官、医官、人ならざる者たち。静かな回廊の奥で、忠誠と恋情がひそやかに交差する。",
+    facts: { LOCATION: "ROYAL PALACE", GENRE: "EASTERN FANTASY", STATUS: "ONGOING" },
+  },
+  {
+    id: "demon-city",
+    index: "003",
+    title: "DEMON CITY",
+    subtitle: "NEAR FUTURE / SEVEN SINS",
+    accent: "#ff62b0",
+    secondary: "#69e8ff",
+    rgb: "255, 98, 176",
+    description:
+      "悪魔と特殊能力者が暮らす近未来都市。触れられない者、触れることを許された者――異質な力が関係を決定づける。",
+    facts: { LOCATION: "NEAR FUTURE", GENRE: "DARK FANTASY", STATUS: "ONGOING" },
+  },
+];
+
+const characters = [
+  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
+  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
+  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", tags: ["COURT", "LOTUS"], monogram: "FY" },
+  { id: "xinxin", name: "XINXIN", jp: "シンシン", world: "imperial-court", tags: ["FOX", "300 YEARS"], monogram: "XX" },
+  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS" },
+  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルオイェン", world: "imperial-court", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY" },
+  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "demon-city", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
+  { id: "d", name: "D", jp: "ディー", world: "demon-city", tags: ["DEMON", "UNTOUCHABLE"], monogram: "D" },
+  { id: "yuan", name: "YUAN", jp: "ユアン", world: "independent", tags: ["CASINO", "RED HAIR"], monogram: "YU" },
+  { id: "kai", name: "KAI", jp: "カイ", world: "independent", tags: ["BLACK CAT", "RED COLLAR"], monogram: "KA" },
+  { id: "zerv", name: "ZERV", jp: "ゼルヴ", world: "independent", tags: ["PYTHON", "SPLIT TONGUE"], monogram: "ZE" },
+  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", tags: ["CORAL", "BUNNY"], monogram: "MI" },
+];
+
+const homeView = document.querySelector("#home-view");
+const worldView = document.querySelector("#world-view");
+const worldRail = document.querySelector("#world-rail");
+const characterGrid = document.querySelector("#character-grid");
+const worldCharacterGrid = document.querySelector("#world-character-grid");
+const searchInput = document.querySelector("#character-search");
+const resultCount = document.querySelector("#result-count");
+const emptyState = document.querySelector("#empty-state");
+const ambientWord = document.querySelector("#ambient-word");
+const progressBar = document.querySelector("#rail-progress-bar");
+const transitionLayer = document.querySelector(".noise-transition");
+const backButton = document.querySelector("#back-button");
+const menuButton = document.querySelector(".menu-button");
+
+function getWorld(id) {
+  return worlds.find((world) => world.id === id);
+}
+
+function getWorldLabel(id) {
+  return getWorld(id)?.title ?? "NO WORLD";
+}
+
+function getCharacterColor(character) {
+  const world = getWorld(character.world);
+  return world
+    ? { accent: world.accent, rgb: world.rgb }
+    : { accent: "#f5f7f8", rgb: "245, 247, 248" };
+}
+
+function renderWorlds() {
+  worldRail.innerHTML = worlds
+    .map(
+      (world, index) => `
+        <button
+          class="world-card${index === 0 ? " is-active" : ""}"
+          type="button"
+          data-world="${world.id}"
+          style="--card-accent:${world.accent};--card-rgb:${world.rgb}"
+          aria-label="${world.title}の世界観ページを開く"
+        >
+          <span class="world-card__number">${world.index.slice(-1)}</span>
+          <span class="world-card__top">
+            <span>WORLD FILE / ${world.index}</span>
+            <span>${String(characters.filter((character) => character.world === world.id).length).padStart(2, "0")} CHARACTERS</span>
+          </span>
+          <span class="world-card__bottom">
+            <span>
+              <h3>${world.title}</h3>
+              <span class="world-card__subtitle">${world.subtitle}</span>
+            </span>
+            <span class="world-card__open">OPEN FILE ↗</span>
+          </span>
+        </button>
+      `,
+    )
+    .join("");
+
+  worldRail.querySelectorAll(".world-card").forEach((card) => {
+    card.addEventListener("click", () => openWorld(card.dataset.world));
+  });
+}
+
+function characterCard(character, index) {
+  const color = getCharacterColor(character);
+  return `
+    <article
+      class="character-card"
+      style="--character-accent:${color.accent};--character-rgb:${color.rgb}"
+      data-character="${character.id}"
+    >
+      <div class="character-card__visual">
+        <span class="character-card__number">FILE ${String(index + 1).padStart(3, "0")}</span>
+        <span class="character-card__world">${getWorldLabel(character.world)}</span>
+        <span class="character-card__monogram">${character.monogram}</span>
+      </div>
+      <div class="character-card__body">
+        <div class="character-card__name">
+          <h3>${character.name}</h3>
+          <span class="character-card__arrow">↗</span>
+        </div>
+        <span class="character-card__jp">${character.jp}</span>
+        <div class="character-card__tags">
+          ${character.tags.map((tag) => `<span>${tag}</span>`).join("")}
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderCharacters(list = characters) {
+  characterGrid.innerHTML = list.map(characterCard).join("");
+  resultCount.textContent = `${String(list.length).padStart(2, "0")} FILES`;
+  emptyState.hidden = list.length !== 0;
+}
+
+function setTheme(world) {
+  const root = document.documentElement;
+  root.style.setProperty("--accent", world.accent);
+  root.style.setProperty("--accent-rgb", world.rgb);
+  root.style.setProperty("--accent-secondary", world.secondary);
+  ambientWord.textContent = world.title;
+  ambientWord.style.transform = "translateX(2%)";
+  window.setTimeout(() => {
+    ambientWord.style.transform = "translateX(0)";
+  }, 60);
+}
+
+function updateRailTheme() {
+  const cards = [...worldRail.querySelectorAll(".world-card")];
+  const railRect = worldRail.getBoundingClientRect();
+  const railCenter = railRect.left + railRect.width / 2;
+  let activeIndex = 0;
+  let closestDistance = Infinity;
+
+  cards.forEach((card, index) => {
+    const rect = card.getBoundingClientRect();
+    const distance = Math.abs(rect.left + rect.width / 2 - railCenter);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      activeIndex = index;
+    }
+  });
+
+  cards.forEach((card, index) => card.classList.toggle("is-active", index === activeIndex));
+  setTheme(worlds[activeIndex]);
+  const maxScroll = worldRail.scrollWidth - worldRail.clientWidth;
+  const ratio = maxScroll > 0 ? worldRail.scrollLeft / maxScroll : 0;
+  progressBar.style.transform = `translateX(${ratio * 200}%)`;
+}
+
+function runTransition(callback) {
+  transitionLayer.classList.remove("is-active");
+  void transitionLayer.offsetWidth;
+  transitionLayer.classList.add("is-active");
+  window.setTimeout(callback, 250);
+}
+
+function openWorld(worldId, skipHash = false) {
+  const world = getWorld(worldId);
+  if (!world) return;
+
+  runTransition(() => {
+    setTheme(world);
+    homeView.hidden = true;
+    worldView.hidden = false;
+    document.querySelector("#world-file-number").textContent = `WORLD FILE ${world.index}`;
+    document.querySelector("#world-title").textContent = world.title;
+    document.querySelector("#world-description").textContent = world.description;
+    document.querySelector("#world-facts").innerHTML = Object.entries(world.facts)
+      .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
+      .join("");
+    const cast = characters.filter((character) => character.world === world.id);
+    worldCharacterGrid.innerHTML = cast.map(characterCard).join("");
+    document.querySelector("#world-count").textContent = `${String(cast.length).padStart(2, "0")} REGISTERED CHARACTERS`;
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (!skipHash) history.pushState({ world: world.id }, "", `#world-${world.id}`);
+  });
+}
+
+function showHome(updateHistory = true) {
+  runTransition(() => {
+    worldView.hidden = true;
+    homeView.hidden = false;
+    setTheme(worlds[0]);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (updateHistory) history.pushState({}, "", "#home");
+  });
+}
+
+function handleHash() {
+  const match = window.location.hash.match(/^#world-(.+)$/);
+  if (match && getWorld(match[1])) {
+    openWorld(match[1], true);
+    return;
+  }
+  worldView.hidden = true;
+  homeView.hidden = false;
+}
+
+function updateClock() {
+  const formatter = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  document.querySelector("#clock").textContent = formatter.format(new Date());
+}
+
+renderWorlds();
+renderCharacters();
+setTheme(worlds[0]);
+handleHash();
+updateClock();
+window.setInterval(updateClock, 1000);
+
+let railFrame;
+worldRail.addEventListener("scroll", () => {
+  window.cancelAnimationFrame(railFrame);
+  railFrame = window.requestAnimationFrame(updateRailTheme);
+});
+
+searchInput.addEventListener("input", (event) => {
+  const query = event.target.value.trim().toLowerCase();
+  const filtered = characters.filter((character) => {
+    const target = [character.name, character.jp, getWorldLabel(character.world), ...character.tags]
+      .join(" ")
+      .toLowerCase();
+    return target.includes(query);
+  });
+  renderCharacters(filtered);
+});
+
+menuButton.addEventListener("click", () => {
+  if (homeView.hidden) showHome(false);
+  window.setTimeout(() => {
+    searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    searchInput.focus({ preventScroll: true });
+  }, homeView.hidden ? 350 : 0);
+});
+
+backButton.addEventListener("click", () => showHome());
+window.addEventListener("popstate", handleHash);
+
+    </script>
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient__color"></div>
+      <div class="ambient__grid"></div>
+      <div class="ambient__word" id="ambient-word">ARCHIVE</div>
+    </div>
+
+    <div class="noise-transition" aria-hidden="true">
+      <div class="noise-transition__bars"></div>
+      <div class="noise-transition__label">ACCESSING WORLD FILE</div>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="NARU ARCHIVE ホーム">
+        <span class="brand__mark">N//A</span>
+        <span class="brand__name">NARU ARCHIVE</span>
+      </a>
+      <div class="header-meta">
+        <span>OC DATABASE</span>
+        <span id="clock" aria-label="現在時刻">00:00:00</span>
+        <span>JP</span>
+      </div>
+      <button class="menu-button" type="button" aria-label="検索欄へ移動">⌕</button>
+    </header>
+
+    <main id="home-view">
+      <section class="intro section-shell" aria-labelledby="site-title">
+        <div class="intro__eyebrow">
+          <span>PERSONAL CHARACTER DATABASE</span>
+          <span>EST. 2026</span>
+        </div>
+        <h1 id="site-title">
+          <span>ORIGINAL</span>
+          <span>CHARACTER</span>
+          <span class="title-accent">ARCHIVE<span class="title-dot">.</span></span>
+        </h1>
+        <div class="intro__footer">
+          <p>世界と人物、その間にある物語の記録。</p>
+          <span class="scroll-cue">SCROLL TO EXPLORE ↓</span>
+        </div>
+      </section>
+
+      <section class="worlds section-shell" aria-labelledby="worlds-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">01</span>
+            <h2 id="worlds-title">WORLD FILES</h2>
+          </div>
+          <p>横にスワイプして世界観を選択</p>
+        </div>
+
+        <div class="world-rail-wrap">
+          <div class="world-rail" id="world-rail" tabindex="0" aria-label="世界観一覧"></div>
+          <div class="rail-progress" aria-hidden="true">
+            <span id="rail-progress-bar"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="characters section-shell" aria-labelledby="characters-title">
+        <div class="section-heading section-heading--characters">
+          <div>
+            <span class="section-index">02</span>
+            <h2 id="characters-title">ALL CHARACTERS</h2>
+          </div>
+          <div class="character-tools">
+            <label class="search-box">
+              <span class="sr-only">キャラクターを検索</span>
+              <span aria-hidden="true">⌕</span>
+              <input id="character-search" type="search" placeholder="SEARCH NAME / WORLD" />
+            </label>
+            <span class="result-count" id="result-count">00 FILES</span>
+          </div>
+        </div>
+
+        <div class="character-grid" id="character-grid"></div>
+        <p class="empty-state" id="empty-state" hidden>該当するキャラクターが見つかりません。</p>
+      </section>
+    </main>
+
+    <main id="world-view" class="world-view" hidden aria-live="polite">
+      <button class="back-button" id="back-button" type="button">← RETURN TO ARCHIVE</button>
+      <section class="world-hero section-shell">
+        <div class="world-hero__meta">
+          <span id="world-file-number">WORLD FILE 001</span>
+          <span id="world-status">ACCESS GRANTED</span>
+        </div>
+        <h1 id="world-title">ACHERON</h1>
+        <div class="world-hero__info">
+          <p id="world-description"></p>
+          <dl id="world-facts"></dl>
+        </div>
+      </section>
+      <section class="world-cast section-shell">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">CAST</span>
+            <h2>CHARACTER FILES</h2>
+          </div>
+          <p id="world-count"></p>
+        </div>
+        <div class="character-grid" id="world-character-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <span>NARU ARCHIVE © 2026</span>
+      <span>ALL CHARACTER FILES / PRIVATE COLLECTION</span>
+      <a href="#home">BACK TO TOP ↑</a>
+    </footer>
+  </body>
+</html>
