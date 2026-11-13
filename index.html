@@ -1705,7 +1705,8 @@ button {
 }
 
 </style>
-    <script defer>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
 const worlds = [
   {
     id: "imperial-court",
@@ -2194,6 +2195,7 @@ promptCopyButton.addEventListener("click", copyCharacterPrompt);
 accessButton.addEventListener("click", authorizeAccess);
 window.addEventListener("popstate", handleHash);
 
+});
 </script>
   </head>
   <body class="access-locked">
