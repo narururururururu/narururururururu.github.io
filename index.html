@@ -964,6 +964,118 @@ button {
 }
 
     </style>
+
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient__color"></div>
+      <div class="ambient__grid"></div>
+      <div class="ambient__word" id="ambient-word">ARCHIVE</div>
+    </div>
+
+    <div class="noise-transition" aria-hidden="true">
+      <div class="noise-transition__bars"></div>
+      <div class="noise-transition__label">ACCESSING WORLD FILE</div>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="NARU ARCHIVE ホーム">
+        <span class="brand__mark">N//A</span>
+        <span class="brand__name">NARU ARCHIVE</span>
+      </a>
+      <div class="header-meta">
+        <span>OC DATABASE</span>
+        <span id="clock" aria-label="現在時刻">00:00:00</span>
+        <span>JP</span>
+      </div>
+      <button class="menu-button" type="button" aria-label="検索欄へ移動">⌕</button>
+    </header>
+
+    <main id="home-view">
+      <section class="intro section-shell" aria-labelledby="site-title">
+        <div class="intro__eyebrow">
+          <span>PERSONAL CHARACTER DATABASE</span>
+          <span>EST. 2026</span>
+        </div>
+        <h1 id="site-title">
+          <span>ORIGINAL</span>
+          <span>CHARACTER</span>
+          <span class="title-accent">ARCHIVE<span class="title-dot">.</span></span>
+        </h1>
+        <div class="intro__footer">
+          <p>世界と人物、その間にある物語の記録。</p>
+          <span class="scroll-cue">SCROLL TO EXPLORE ↓</span>
+        </div>
+      </section>
+
+      <section class="worlds section-shell" aria-labelledby="worlds-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">01</span>
+            <h2 id="worlds-title">WORLD FILES</h2>
+          </div>
+          <p>横にスワイプして世界観を選択</p>
+        </div>
+
+        <div class="world-rail-wrap">
+          <div class="world-rail" id="world-rail" tabindex="0" aria-label="世界観一覧"></div>
+          <div class="rail-progress" aria-hidden="true">
+            <span id="rail-progress-bar"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="characters section-shell" aria-labelledby="characters-title">
+        <div class="section-heading section-heading--characters">
+          <div>
+            <span class="section-index">02</span>
+            <h2 id="characters-title">ALL CHARACTERS</h2>
+          </div>
+          <div class="character-tools">
+            <label class="search-box">
+              <span class="sr-only">キャラクターを検索</span>
+              <span aria-hidden="true">⌕</span>
+              <input id="character-search" type="search" placeholder="SEARCH NAME / WORLD" />
+            </label>
+            <span class="result-count" id="result-count">00 FILES</span>
+          </div>
+        </div>
+
+        <div class="character-grid" id="character-grid"></div>
+        <p class="empty-state" id="empty-state" hidden>該当するキャラクターが見つかりません。</p>
+      </section>
+    </main>
+
+    <main id="world-view" class="world-view" hidden aria-live="polite">
+      <button class="back-button" id="back-button" type="button">← RETURN TO ARCHIVE</button>
+      <section class="world-hero section-shell">
+        <div class="world-hero__meta">
+          <span id="world-file-number">WORLD FILE 001</span>
+          <span id="world-status">ACCESS GRANTED</span>
+        </div>
+        <h1 id="world-title">ACHERON</h1>
+        <div class="world-hero__info">
+          <p id="world-description"></p>
+          <dl id="world-facts"></dl>
+        </div>
+      </section>
+      <section class="world-cast section-shell">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">CAST</span>
+            <h2>CHARACTER FILES</h2>
+          </div>
+          <p id="world-count"></p>
+        </div>
+        <div class="character-grid" id="world-character-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <span>NARU ARCHIVE © 2026</span>
+      <span>ALL CHARACTER FILES / PRIVATE COLLECTION</span>
+      <a href="#home">BACK TO TOP ↑</a>
+    </footer>
     <script>
 const worlds = [
   {
@@ -1245,116 +1357,5 @@ backButton.addEventListener("click", () => showHome());
 window.addEventListener("popstate", handleHash);
 
     </script>
-  </head>
-  <body>
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient__color"></div>
-      <div class="ambient__grid"></div>
-      <div class="ambient__word" id="ambient-word">ARCHIVE</div>
-    </div>
-
-    <div class="noise-transition" aria-hidden="true">
-      <div class="noise-transition__bars"></div>
-      <div class="noise-transition__label">ACCESSING WORLD FILE</div>
-    </div>
-
-    <header class="site-header">
-      <a class="brand" href="#home" aria-label="NARU ARCHIVE ホーム">
-        <span class="brand__mark">N//A</span>
-        <span class="brand__name">NARU ARCHIVE</span>
-      </a>
-      <div class="header-meta">
-        <span>OC DATABASE</span>
-        <span id="clock" aria-label="現在時刻">00:00:00</span>
-        <span>JP</span>
-      </div>
-      <button class="menu-button" type="button" aria-label="検索欄へ移動">⌕</button>
-    </header>
-
-    <main id="home-view">
-      <section class="intro section-shell" aria-labelledby="site-title">
-        <div class="intro__eyebrow">
-          <span>PERSONAL CHARACTER DATABASE</span>
-          <span>EST. 2026</span>
-        </div>
-        <h1 id="site-title">
-          <span>ORIGINAL</span>
-          <span>CHARACTER</span>
-          <span class="title-accent">ARCHIVE<span class="title-dot">.</span></span>
-        </h1>
-        <div class="intro__footer">
-          <p>世界と人物、その間にある物語の記録。</p>
-          <span class="scroll-cue">SCROLL TO EXPLORE ↓</span>
-        </div>
-      </section>
-
-      <section class="worlds section-shell" aria-labelledby="worlds-title">
-        <div class="section-heading">
-          <div>
-            <span class="section-index">01</span>
-            <h2 id="worlds-title">WORLD FILES</h2>
-          </div>
-          <p>横にスワイプして世界観を選択</p>
-        </div>
-
-        <div class="world-rail-wrap">
-          <div class="world-rail" id="world-rail" tabindex="0" aria-label="世界観一覧"></div>
-          <div class="rail-progress" aria-hidden="true">
-            <span id="rail-progress-bar"></span>
-          </div>
-        </div>
-      </section>
-
-      <section class="characters section-shell" aria-labelledby="characters-title">
-        <div class="section-heading section-heading--characters">
-          <div>
-            <span class="section-index">02</span>
-            <h2 id="characters-title">ALL CHARACTERS</h2>
-          </div>
-          <div class="character-tools">
-            <label class="search-box">
-              <span class="sr-only">キャラクターを検索</span>
-              <span aria-hidden="true">⌕</span>
-              <input id="character-search" type="search" placeholder="SEARCH NAME / WORLD" />
-            </label>
-            <span class="result-count" id="result-count">00 FILES</span>
-          </div>
-        </div>
-
-        <div class="character-grid" id="character-grid"></div>
-        <p class="empty-state" id="empty-state" hidden>該当するキャラクターが見つかりません。</p>
-      </section>
-    </main>
-
-    <main id="world-view" class="world-view" hidden aria-live="polite">
-      <button class="back-button" id="back-button" type="button">← RETURN TO ARCHIVE</button>
-      <section class="world-hero section-shell">
-        <div class="world-hero__meta">
-          <span id="world-file-number">WORLD FILE 001</span>
-          <span id="world-status">ACCESS GRANTED</span>
-        </div>
-        <h1 id="world-title">ACHERON</h1>
-        <div class="world-hero__info">
-          <p id="world-description"></p>
-          <dl id="world-facts"></dl>
-        </div>
-      </section>
-      <section class="world-cast section-shell">
-        <div class="section-heading">
-          <div>
-            <span class="section-index">CAST</span>
-            <h2>CHARACTER FILES</h2>
-          </div>
-          <p id="world-count"></p>
-        </div>
-        <div class="character-grid" id="world-character-grid"></div>
-      </section>
-    </main>
-
-    <footer class="site-footer section-shell">
-      <span>NARU ARCHIVE © 2026</span>
-      <span>ALL CHARACTER FILES / PRIVATE COLLECTION</span>
-      <a href="#home">BACK TO TOP ↑</a>
-    </footer>
   </body>
 </html>
