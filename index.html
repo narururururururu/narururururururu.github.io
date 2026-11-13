@@ -696,10 +696,19 @@ button {
   border-bottom: 1px solid var(--line);
   background: rgba(8, 10, 13, 0.64);
   transition: background 250ms ease;
+  cursor: pointer;
 }
 
-.character-card:hover {
+.character-card:hover,
+.character-card:focus-visible {
   background: rgba(var(--character-rgb), 0.08);
+  outline: 1px solid var(--character-accent);
+  outline-offset: -1px;
+}
+
+.character-card:hover .character-card__portrait,
+.character-card:focus-visible .character-card__portrait {
+  transform: translateX(-50%) scale(calc(var(--portrait-scale, 1) + 0.025));
 }
 
 .character-card__visual {
@@ -741,6 +750,7 @@ button {
   transform-origin: center top;
   filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.44));
   pointer-events: none;
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .character-card__monogram {
@@ -884,6 +894,283 @@ button {
   to { transform: translateY(9%); }
 }
 
+.character-shutter {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.character-shutter__panel {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,0.15) 50%, transparent 50.2%),
+    linear-gradient(180deg, rgba(0,0,0,0.18), transparent 45%),
+    var(--shutter-color, #555b62);
+  transform: translateY(100%);
+}
+
+.character-shutter__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(0,0,0,0.28) 8px 9px);
+}
+
+.character-shutter__scan {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: white;
+  box-shadow: 0 0 28px 10px rgba(var(--shutter-rgb, 170,176,183), 0.72);
+  transform: translateY(100vh);
+}
+
+.character-shutter__code {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 48%;
+  padding: 8px 12px;
+  color: #07080a;
+  background: rgba(255,255,255,0.92);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  transform: translate(-50%, 40px);
+  opacity: 0;
+}
+
+.character-shutter.is-active {
+  visibility: visible;
+}
+
+.character-shutter.is-active .character-shutter__panel {
+  animation: shutter-lift 980ms cubic-bezier(0.72, 0, 0.18, 1) both;
+}
+
+.character-shutter.is-active .character-shutter__scan {
+  animation: shutter-scan 980ms cubic-bezier(0.72, 0, 0.18, 1) both;
+}
+
+.character-shutter.is-active .character-shutter__code {
+  animation: shutter-code 980ms ease both;
+}
+
+@keyframes shutter-lift {
+  0% { transform: translateY(100%); }
+  34%, 52% { transform: translateY(0); }
+  100% { transform: translateY(-102%); }
+}
+
+@keyframes shutter-scan {
+  0% { transform: translateY(100vh); }
+  34%, 52% { transform: translateY(0); }
+  100% { transform: translateY(-100vh); }
+}
+
+@keyframes shutter-code {
+  0%, 22% { opacity: 0; transform: translate(-50%, 40px); }
+  35%, 54% { opacity: 1; transform: translate(-50%, 0); }
+  72%, 100% { opacity: 0; transform: translate(-50%, -40px); }
+}
+
+.character-detail {
+  min-height: 100vh;
+  padding-top: 30px;
+}
+
+.character-detail__hero {
+  min-height: calc(100svh - 110px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.94fr) minmax(360px, 1.06fr);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.character-detail__visual {
+  position: relative;
+  min-height: 720px;
+  overflow: hidden;
+  border-right: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(var(--detail-rgb), 0.3), transparent 42%),
+    repeating-linear-gradient(120deg, transparent 0 30px, rgba(255,255,255,0.025) 31px 32px),
+    #090b0e;
+}
+
+.character-detail__visual::before {
+  content: "SUBJECT / REGISTERED";
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 22px;
+  color: var(--detail-accent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.character-detail__visual::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+
+.character-detail__visual img {
+  position: absolute;
+  bottom: var(--detail-y, 0%);
+  left: 50%;
+  width: 100%;
+  height: auto;
+  max-width: 900px;
+  transform: translateX(-50%) scale(var(--detail-scale, 1));
+  transform-origin: center bottom;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+}
+
+.character-detail__monogram {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: transparent;
+  font-size: clamp(7rem, 18vw, 16rem);
+  transform: translate(-50%, -50%);
+  -webkit-text-stroke: 1px rgba(255,255,255,0.28);
+}
+
+.character-detail__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(36px, 6vw, 100px);
+}
+
+.character-detail__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--detail-accent);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+}
+
+.character-detail__kicker {
+  margin: clamp(58px, 9vh, 120px) 0 10px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+}
+
+.character-detail h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 9rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.78;
+  overflow-wrap: anywhere;
+}
+
+.character-detail__jp {
+  margin: 22px 0 0;
+  color: #c9cdd2;
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+}
+
+.character-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.character-detail__tags span {
+  padding: 7px 9px;
+  border: 1px solid rgba(var(--detail-rgb), 0.42);
+  color: var(--detail-accent);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+}
+
+.character-detail__data {
+  margin: clamp(44px, 8vh, 90px) 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.character-detail__data > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.45fr) 1fr;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+
+.character-detail__data dt { color: var(--muted); }
+.character-detail__data dd { margin: 0; text-align: right; }
+
+.character-detail__note {
+  margin-top: 34px;
+  padding-left: 16px;
+  border-left: 2px solid var(--detail-accent);
+}
+
+.character-detail__note span {
+  color: var(--detail-accent);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+}
+
+.character-detail__note p {
+  max-width: 620px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.8;
+}
+
+.character-detail__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-left: 1px solid var(--line);
+}
+
+.character-detail__nav button {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  background: rgba(8,10,13,0.72);
+  text-align: left;
+  cursor: pointer;
+}
+
+.character-detail__nav button:last-child { text-align: right; }
+.character-detail__nav button:hover { background: rgba(var(--detail-rgb), 0.09); }
+.character-detail__nav span { color: var(--muted); font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.12em; }
+.character-detail__nav strong { font-size: clamp(1rem, 2vw, 1.5rem); letter-spacing: -0.03em; }
+
 .world-view {
   min-height: 100vh;
   padding-top: 30px;
@@ -1009,6 +1296,14 @@ button {
 
   .character-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .character-detail__hero {
+    grid-template-columns: minmax(0, 0.9fr) minmax(330px, 1.1fr);
+  }
+
+  .character-detail__visual {
+    min-height: 620px;
   }
 }
 
@@ -1150,6 +1445,61 @@ button {
     gap: 36px;
   }
 
+  .character-detail {
+    padding-top: 18px;
+  }
+
+  .character-detail__back {
+    margin-bottom: 18px;
+  }
+
+  .character-detail__hero {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .character-detail__visual {
+    min-height: 68svh;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .character-detail__visual img {
+    width: min(112%, 720px);
+  }
+
+  .character-detail__content {
+    padding: 38px 24px 52px;
+  }
+
+  .character-detail__meta {
+    font-size: 0.52rem;
+  }
+
+  .character-detail__kicker {
+    margin-top: 54px;
+  }
+
+  .character-detail h1 {
+    font-size: clamp(3.6rem, 19vw, 6.2rem);
+  }
+
+  .character-detail__nav {
+    width: 100%;
+  }
+
+  .character-detail__nav button {
+    min-width: 0;
+    padding: 20px 16px;
+  }
+
+  .character-detail__nav strong {
+    overflow: hidden;
+    font-size: 0.82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .site-footer {
     flex-direction: column;
     gap: 12px;
@@ -1248,6 +1598,12 @@ button {
       <div class="noise-transition__label">ACCESSING WORLD FILE</div>
     </div>
 
+    <div class="character-shutter" id="character-shutter" aria-hidden="true">
+      <div class="character-shutter__panel"></div>
+      <div class="character-shutter__scan"></div>
+      <span class="character-shutter__code">FILE / ACCESS</span>
+    </div>
+
     <header class="site-header">
       <a class="brand" href="#home" aria-label="NARU ARCHIVE ホーム">
         <span class="brand__mark">N//A</span>
@@ -1344,6 +1700,36 @@ button {
       </section>
     </main>
 
+    <main id="character-view" class="character-detail" hidden aria-live="polite">
+      <button class="back-button character-detail__back" id="character-back" type="button">← RETURN TO ARCHIVE</button>
+      <section class="character-detail__hero section-shell">
+        <div class="character-detail__visual" id="character-detail-visual"></div>
+        <div class="character-detail__content">
+          <div class="character-detail__meta">
+            <span id="character-file-number">CHARACTER FILE 001</span>
+            <span id="character-affiliation">NO AFFILIATION</span>
+          </div>
+          <p class="character-detail__kicker">REGISTERED SUBJECT</p>
+          <h1 id="character-detail-name">CHARACTER</h1>
+          <p class="character-detail__jp" id="character-detail-jp">キャラクター</p>
+          <div class="character-detail__tags" id="character-detail-tags"></div>
+          <dl class="character-detail__data">
+            <div><dt>AFFILIATION</dt><dd id="character-detail-world">NO AFFILIATION</dd></div>
+            <div><dt>PROFILE</dt><dd>DATA PENDING</dd></div>
+            <div><dt>STATUS</dt><dd id="character-detail-status">PORTRAIT REGISTERED</dd></div>
+          </dl>
+          <div class="character-detail__note">
+            <span>ARCHIVE NOTE</span>
+            <p>人物紹介・プロフィール・関係性・ギャラリーを追加するためのキャラクターファイル。</p>
+          </div>
+        </div>
+      </section>
+      <nav class="character-detail__nav section-shell" aria-label="キャラクターファイル移動">
+        <button id="character-previous" type="button"><span>← PREVIOUS FILE</span><strong></strong></button>
+        <button id="character-next" type="button"><span>NEXT FILE →</span><strong></strong></button>
+      </nav>
+    </main>
+
     <footer class="site-footer section-shell">
       <span>NARU ARCHIVE © 2026</span>
       <span>ALL CHARACTER FILES / PRIVATE COLLECTION</span>
@@ -1391,23 +1777,36 @@ const worlds = [
 ];
 
 const characters = [
-  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
-  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
-  { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
-  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "xinxin", name: "XINXIN", jp: "シンシン", world: "imperial-court", tags: ["FOX", "300 YEARS"], monogram: "XX" },
-  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
-  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "demon-city", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
-  { id: "d", name: "D", jp: "ディー", world: "demon-city", tags: ["DEMON", "UNTOUCHABLE"], monogram: "D" },
-  { id: "yuan", name: "YUAN", jp: "ユアン", world: "independent", tags: ["CASINO", "RED HAIR"], monogram: "YU" },
-  { id: "kai", name: "KAI", jp: "カイ", world: "independent", tags: ["BLACK CAT", "RED COLLAR"], monogram: "KA" },
-  { id: "zerv", name: "ZERV", jp: "ゼルヴ", world: "independent", tags: ["PYTHON", "SPLIT TONGUE"], monogram: "ZE" },
-  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", tags: ["CORAL", "BUNNY"], monogram: "MI" },
+  { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "kai", name: "KAI", jp: "カイ", world: "independent", affiliation: "所属なし", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "nox", name: "NOX", jp: "ノクス", world: "independent", affiliation: "所属なし", tags: ["DEVIL", "RED EYES"], monogram: "NX", image: "./assets/characters/nox.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "yumekui", name: "YUMEKUI", jp: "ユメクイ", world: "independent", affiliation: "所属なし", tags: ["DREAM", "BEAST"], monogram: "YU", image: "./assets/characters/yumekui.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "onero", name: "ONERO", jp: "オネロ", world: "nocturne", affiliation: "夜想教徒", tags: ["DREAM", "BEAST"], monogram: "ON", image: "./assets/characters/onero.webp", portraitScale: 1.02, portraitY: "0%" },
+  { id: "unknown", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["SCALES", "STAR"], monogram: "??", image: "./assets/characters/unknown.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "yuan", name: "YUAN", jp: "ユアン", world: "independent", affiliation: "所属なし", tags: ["CASINO", "RED HAIR"], monogram: "YU" },
+  { id: "zerv", name: "ZERV", jp: "ゼルヴ", world: "independent", affiliation: "所属なし", tags: ["PYTHON", "SPLIT TONGUE"], monogram: "ZE" },
+  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", affiliation: "所属なし", tags: ["CORAL", "BUNNY"], monogram: "MI" },
+
+  { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
+  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "xinxin", name: "XINXIN", jp: "シンシン", world: "imperial-court", affiliation: "王宮", tags: ["FOX", "300 YEARS"], monogram: "XX" },
+  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
+  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
+
+  { id: "theia", name: "THEIA", jp: "ティア", world: "demon-city", affiliation: "悪魔", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "demon-city", affiliation: "悪魔", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
+  { id: "d", name: "D", jp: "ディー", world: "demon-city", affiliation: "悪魔", tags: ["DEMON", "UNTOUCHABLE"], monogram: "D" },
+
+  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
+  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
 ];
 
 const homeView = document.querySelector("#home-view");
 const worldView = document.querySelector("#world-view");
+const characterView = document.querySelector("#character-view");
 const worldRail = document.querySelector("#world-rail");
 const characterGrid = document.querySelector("#character-grid");
 const worldCharacterGrid = document.querySelector("#world-character-grid");
@@ -1417,6 +1816,7 @@ const emptyState = document.querySelector("#empty-state");
 const ambientWord = document.querySelector("#ambient-word");
 const progressBar = document.querySelector("#rail-progress-bar");
 const transitionLayer = document.querySelector(".noise-transition");
+const characterShutter = document.querySelector("#character-shutter");
 const backButton = document.querySelector("#back-button");
 const menuButton = document.querySelector(".menu-button");
 const accessGate = document.querySelector("#access-gate");
@@ -1466,14 +1866,18 @@ function getWorld(id) {
 }
 
 function getWorldLabel(id) {
-  return getWorld(id)?.title ?? "NO WORLD";
+  if (id === "nocturne") return "夜想教徒";
+  if (id === "independent") return "NO AFFILIATION";
+  return getWorld(id)?.title ?? "NO AFFILIATION";
 }
 
 function getCharacterColor(character) {
   const world = getWorld(character.world);
+  if (character.world === "nocturne") return { accent: "#a68cff", rgb: "166, 140, 255" };
+  if (character.world === "independent") return { accent: "#aab0b7", rgb: "170, 176, 183" };
   return world
     ? { accent: world.accent, rgb: world.rgb }
-    : { accent: "#f5f7f8", rgb: "245, 247, 248" };
+    : { accent: "#aab0b7", rgb: "170, 176, 183" };
 }
 
 function renderWorlds() {
@@ -1526,6 +1930,9 @@ function characterCard(character, index) {
       class="character-card"
       style="--character-accent:${color.accent};--character-rgb:${color.rgb}"
       data-character="${character.id}"
+      role="button"
+      tabindex="0"
+      aria-label="${character.jp}のキャラクターファイルを開く"
     >
       <div class="character-card__visual">
         <span class="character-card__number">FILE ${String(index + 1).padStart(3, "0")}</span>
@@ -1548,8 +1955,22 @@ function characterCard(character, index) {
 
 function renderCharacters(list = characters) {
   characterGrid.innerHTML = list.map(characterCard).join("");
+  bindCharacterCards(characterGrid);
   resultCount.textContent = `${String(list.length).padStart(2, "0")} FILES`;
   emptyState.hidden = list.length !== 0;
+}
+
+function bindCharacterCards(scope) {
+  scope.querySelectorAll(".character-card").forEach((card) => {
+    const open = () => openCharacter(card.dataset.character);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open();
+      }
+    });
+  });
 }
 
 function setTheme(world) {
@@ -1594,6 +2015,56 @@ function runTransition(callback) {
   window.setTimeout(callback, 250);
 }
 
+function runCharacterTransition(character, callback) {
+  const color = getCharacterColor(character);
+  characterShutter.style.setProperty("--shutter-color", color.accent);
+  characterShutter.style.setProperty("--shutter-rgb", color.rgb);
+  characterShutter.querySelector(".character-shutter__code").textContent = `FILE / ${character.name}`;
+  characterShutter.classList.remove("is-active");
+  void characterShutter.offsetWidth;
+  characterShutter.classList.add("is-active");
+  window.setTimeout(callback, 420);
+}
+
+function openCharacter(characterId, skipHash = false) {
+  const character = characters.find((item) => item.id === characterId);
+  if (!character) return;
+  const index = characters.indexOf(character);
+  const color = getCharacterColor(character);
+
+  runCharacterTransition(character, () => {
+    document.documentElement.style.setProperty("--accent", color.accent);
+    document.documentElement.style.setProperty("--accent-rgb", color.rgb);
+    homeView.hidden = true;
+    worldView.hidden = true;
+    characterView.hidden = false;
+    characterView.style.setProperty("--detail-accent", color.accent);
+    characterView.style.setProperty("--detail-rgb", color.rgb);
+    document.querySelector("#character-file-number").textContent = `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
+    document.querySelector("#character-affiliation").textContent = character.affiliation ?? getWorldLabel(character.world);
+    document.querySelector("#character-detail-name").textContent = character.name;
+    document.querySelector("#character-detail-jp").textContent = character.jp;
+    document.querySelector("#character-detail-tags").innerHTML = character.tags.map((tag) => `<span>${tag}</span>`).join("");
+    document.querySelector("#character-detail-world").textContent = getWorldLabel(character.world);
+    document.querySelector("#character-detail-status").textContent = character.image ? "PORTRAIT REGISTERED" : "PORTRAIT PENDING";
+    const visual = document.querySelector("#character-detail-visual");
+    visual.innerHTML = character.image
+      ? `<img src="${character.image}" alt="${character.jp}" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "0%"}" />`
+      : `<span class="character-detail__monogram">${character.monogram}</span>`;
+
+    const previous = characters[(index - 1 + characters.length) % characters.length];
+    const next = characters[(index + 1) % characters.length];
+    const previousButton = document.querySelector("#character-previous");
+    const nextButton = document.querySelector("#character-next");
+    previousButton.dataset.character = previous.id;
+    nextButton.dataset.character = next.id;
+    previousButton.querySelector("strong").textContent = previous.name;
+    nextButton.querySelector("strong").textContent = next.name;
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (!skipHash) history.pushState({ character: character.id }, "", `#character-${character.id}`);
+  });
+}
+
 function openWorld(worldId, skipHash = false) {
   const world = getWorld(worldId);
   if (!world) return;
@@ -1601,6 +2072,7 @@ function openWorld(worldId, skipHash = false) {
   runTransition(() => {
     setTheme(world);
     homeView.hidden = true;
+    characterView.hidden = true;
     worldView.hidden = false;
     document.querySelector("#world-file-number").textContent = `WORLD FILE ${world.index}`;
     document.querySelector("#world-title").textContent = world.title;
@@ -1613,6 +2085,7 @@ function openWorld(worldId, skipHash = false) {
       .join("");
     const cast = characters.filter((character) => character.world === world.id);
     worldCharacterGrid.innerHTML = cast.map(characterCard).join("");
+    bindCharacterCards(worldCharacterGrid);
     document.querySelector("#world-count").textContent = `${String(cast.length).padStart(2, "0")} REGISTERED CHARACTERS`;
     window.scrollTo({ top: 0, behavior: "instant" });
     if (!skipHash) history.pushState({ world: world.id }, "", `#world-${world.id}`);
@@ -1622,6 +2095,7 @@ function openWorld(worldId, skipHash = false) {
 function showHome(updateHistory = true) {
   runTransition(() => {
     worldView.hidden = true;
+    characterView.hidden = true;
     homeView.hidden = false;
     setTheme(worlds[0]);
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -1630,12 +2104,18 @@ function showHome(updateHistory = true) {
 }
 
 function handleHash() {
+  const characterMatch = window.location.hash.match(/^#character-(.+)$/);
+  if (characterMatch && characters.some((character) => character.id === characterMatch[1])) {
+    openCharacter(characterMatch[1], true);
+    return;
+  }
   const match = window.location.hash.match(/^#world-(.+)$/);
   if (match && getWorld(match[1])) {
     openWorld(match[1], true);
     return;
   }
   worldView.hidden = true;
+  characterView.hidden = true;
   homeView.hidden = false;
 }
 
@@ -1683,6 +2163,9 @@ menuButton.addEventListener("click", () => {
 });
 
 backButton.addEventListener("click", () => showHome());
+document.querySelector("#character-back").addEventListener("click", () => showHome());
+document.querySelector("#character-previous").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
+document.querySelector("#character-next").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
 accessButton.addEventListener("click", authorizeAccess);
 window.addEventListener("popstate", handleHash);
 
