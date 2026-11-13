@@ -712,11 +712,35 @@ button {
     #0a0c0f;
 }
 
+.character-card__visual::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 27%, rgba(var(--character-rgb), 0.28), transparent 40%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.46), transparent 42%);
+}
+
 .character-card__visual::after {
   content: "";
   position: absolute;
   inset: 8%;
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.character-card__portrait {
+  position: absolute;
+  z-index: 1;
+  top: var(--portrait-y, 0%);
+  left: 50%;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  transform: translateX(-50%) scale(var(--portrait-scale, 1));
+  transform-origin: center top;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.44));
+  pointer-events: none;
 }
 
 .character-card__monogram {
@@ -1182,7 +1206,7 @@ button {
   }
 }
 
-    </style>
+</style>
   </head>
   <body class="access-locked">
     <div class="access-gate" id="access-gate" role="dialog" aria-modal="true" aria-labelledby="access-title">
@@ -1325,7 +1349,7 @@ button {
       <span>ALL CHARACTER FILES / PRIVATE COLLECTION</span>
       <a href="#home">BACK TO TOP ↑</a>
     </footer>
-    <script>
+  <script>
 const worlds = [
   {
     id: "imperial-court",
@@ -1369,10 +1393,11 @@ const worlds = [
 const characters = [
   { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
   { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
-  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", tags: ["COURT", "LOTUS"], monogram: "FY" },
+  { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
+  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "xinxin", name: "XINXIN", jp: "シンシン", world: "imperial-court", tags: ["FOX", "300 YEARS"], monogram: "XX" },
-  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS" },
-  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルオイェン", world: "imperial-court", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY" },
+  { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
+  { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルオイェン", world: "imperial-court", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "demon-city", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
   { id: "d", name: "D", jp: "ディー", world: "demon-city", tags: ["DEMON", "UNTOUCHABLE"], monogram: "D" },
   { id: "yuan", name: "YUAN", jp: "ユアン", world: "independent", tags: ["CASINO", "RED HAIR"], monogram: "YU" },
@@ -1486,6 +1511,16 @@ function renderWorlds() {
 
 function characterCard(character, index) {
   const color = getCharacterColor(character);
+  const portrait = character.image
+    ? `<img
+        class="character-card__portrait"
+        src="${character.image}"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        style="--portrait-scale:${character.portraitScale ?? 1};--portrait-y:${character.portraitY ?? "0%"}"
+      />`
+    : `<span class="character-card__monogram">${character.monogram}</span>`;
   return `
     <article
       class="character-card"
@@ -1495,7 +1530,7 @@ function characterCard(character, index) {
       <div class="character-card__visual">
         <span class="character-card__number">FILE ${String(index + 1).padStart(3, "0")}</span>
         <span class="character-card__world">${getWorldLabel(character.world)}</span>
-        <span class="character-card__monogram">${character.monogram}</span>
+        ${portrait}
       </div>
       <div class="character-card__body">
         <div class="character-card__name">
@@ -1651,6 +1686,6 @@ backButton.addEventListener("click", () => showHome());
 accessButton.addEventListener("click", authorizeAccess);
 window.addEventListener("popstate", handleHash);
 
-    </script>
-  </body>
+</script>
+</body>
 </html>
