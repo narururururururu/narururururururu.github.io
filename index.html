@@ -25,7 +25,10 @@
   --accent-rgb: 116, 232, 255;
   --accent-secondary: var(--pink);
   --header-height: 72px;
-  font-family: Inter, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+  --font-display: "Bodoni 72", Didot, "Times New Roman", "Noto Serif JP", serif;
+  --font-ui: "Avenir Next Condensed", "Arial Narrow", "Noto Sans JP", sans-serif;
+  --font-mono: "SFMono-Regular", Menlo, Consolas, monospace;
+  font-family: var(--font-ui);
   font-synthesis: none;
 }
 
@@ -45,6 +48,181 @@ body {
   overflow-x: hidden;
   color: var(--text);
   background: var(--bg);
+}
+
+body.access-locked {
+  overflow: hidden;
+}
+
+.access-gate {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  color: var(--text);
+  background: #030405;
+  transition: opacity 650ms steps(7, end), visibility 650ms ease;
+}
+
+.access-gate[hidden] {
+  display: none;
+}
+
+.access-gate.is-complete {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.access-gate__noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+  pointer-events: none;
+  background:
+    repeating-radial-gradient(circle at 28% 16%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 4px),
+    linear-gradient(rgba(116, 232, 255, 0.04), transparent 38%);
+  background-size: 8px 7px, auto;
+  animation: gate-noise 200ms steps(2, end) infinite;
+}
+
+.access-gate__frame {
+  position: relative;
+  width: min(100%, 920px);
+  min-height: min(640px, calc(100svh - 40px));
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 4vw, 48px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(4, 5, 7, 0.9);
+  box-shadow: 0 0 100px rgba(var(--accent-rgb), 0.08);
+}
+
+.access-gate__frame::before,
+.access-gate__frame::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--accent);
+}
+
+.access-gate__frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.access-gate__frame::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+}
+
+.access-gate__top,
+.access-progress__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+}
+
+.access-gate__top {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.access-gate__body {
+  margin-block: auto;
+}
+
+.access-gate__eyebrow,
+.access-gate__copy {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+}
+
+.access-gate h1 {
+  margin: 20px 0 18px;
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 10vw, 8.8rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.78;
+}
+
+.access-button {
+  width: min(100%, 360px);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 42px;
+  padding: 17px 18px;
+  border: 1px solid var(--accent);
+  color: var(--text);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+}
+
+.access-button:hover,
+.access-button:focus-visible {
+  color: var(--bg);
+  background: var(--accent);
+  outline: none;
+}
+
+.access-button:disabled {
+  color: var(--muted);
+  border-color: var(--line);
+  cursor: wait;
+}
+
+.access-progress {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.access-progress__meta {
+  color: var(--muted);
+}
+
+.access-progress__track {
+  height: 3px;
+  margin-top: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.access-progress__track span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.access-gate.is-loading .access-gate__frame {
+  animation: gate-scan 900ms steps(3, end) infinite;
+}
+
+@keyframes gate-noise {
+  from { transform: translate(0, 0); }
+  to { transform: translate(3px, -2px); }
+}
+
+@keyframes gate-scan {
+  0%, 100% { box-shadow: 0 0 100px rgba(var(--accent-rgb), 0.08); }
+  50% { box-shadow: 0 0 130px rgba(var(--accent-rgb), 0.18); }
 }
 
 button,
@@ -205,11 +383,11 @@ button {
 }
 
 .intro {
-  min-height: calc(100vh - var(--header-height));
+  min-height: clamp(500px, 68svh, 720px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-block: 64px 36px;
+  padding-block: 42px 28px;
 }
 
 .intro__eyebrow,
@@ -226,11 +404,12 @@ button {
 .intro h1 {
   display: flex;
   flex-direction: column;
-  margin: clamp(48px, 9vh, 110px) 0;
-  font-size: clamp(3.9rem, 10.2vw, 10.8rem);
-  font-weight: 850;
-  letter-spacing: -0.075em;
-  line-height: 0.77;
+  margin: clamp(34px, 5vh, 64px) 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.9rem, 9.2vw, 9.6rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.8;
 }
 
 .intro h1 span:nth-child(2) {
@@ -266,7 +445,7 @@ button {
 .worlds,
 .characters,
 .world-cast {
-  padding-block: 110px;
+  padding-block: 62px;
 }
 
 .section-heading {
@@ -288,7 +467,9 @@ button {
 .section-heading h2 {
   margin: 0;
   font-size: clamp(1.65rem, 3vw, 3.1rem);
-  letter-spacing: -0.045em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.025em;
   line-height: 1;
 }
 
@@ -328,7 +509,7 @@ button {
 
 .world-card {
   position: relative;
-  min-height: clamp(370px, 52vw, 650px);
+  min-height: clamp(210px, 27vw, 340px);
   overflow: hidden;
   padding: 0;
   border: 1px solid var(--line);
@@ -385,7 +566,7 @@ button {
 }
 
 .world-card__top {
-  top: clamp(22px, 4vw, 48px);
+  top: clamp(18px, 2.5vw, 30px);
   color: rgba(255, 255, 255, 0.64);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.62rem;
@@ -393,7 +574,7 @@ button {
 }
 
 .world-card__bottom {
-  bottom: clamp(24px, 4vw, 52px);
+  bottom: clamp(18px, 2.5vw, 30px);
   align-items: flex-end;
 }
 
@@ -403,7 +584,9 @@ button {
   right: 4%;
   z-index: 0;
   color: transparent;
-  font-size: clamp(10rem, 28vw, 24rem);
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 18vw, 15rem);
+  font-weight: 400;
   font-weight: 900;
   line-height: 0.7;
   transform: translateY(-50%);
@@ -412,8 +595,10 @@ button {
 
 .world-card h3 {
   margin: 0;
-  font-size: clamp(2.7rem, 7.5vw, 7.4rem);
-  letter-spacing: -0.07em;
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5vw, 5.2rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
   line-height: 0.82;
 }
 
@@ -721,8 +906,9 @@ button {
 .world-hero h1 {
   margin: 12vh 0 10vh;
   font-size: clamp(4.3rem, 15vw, 15rem);
-  font-weight: 900;
-  letter-spacing: -0.085em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.055em;
   line-height: 0.72;
 }
 
@@ -735,12 +921,24 @@ button {
   border-top: 1px solid var(--line);
 }
 
-.world-hero__info > p {
+.world-hero__copy > p:first-child {
   max-width: 760px;
   margin: 0;
   color: #c3c7cc;
   font-size: clamp(0.84rem, 1.5vw, 1.08rem);
   line-height: 2;
+}
+
+.world-notice {
+  max-width: 760px;
+  margin: 18px 0 0;
+  padding: 13px 15px;
+  border-left: 2px solid var(--accent);
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.07);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
 }
 
 .world-hero dl {
@@ -821,8 +1019,8 @@ button {
   }
 
   .intro {
-    min-height: calc(92svh - var(--header-height));
-    padding-block: 38px 22px;
+    min-height: 58svh;
+    padding-block: 28px 20px;
   }
 
   .intro__eyebrow span:last-child,
@@ -831,8 +1029,8 @@ button {
   }
 
   .intro h1 {
-    margin: 15vh 0 13vh;
-    font-size: clamp(3.35rem, 17vw, 6rem);
+    margin: 7vh 0 6vh;
+    font-size: clamp(3.2rem, 15.5vw, 5.6rem);
     line-height: 0.8;
   }
 
@@ -848,7 +1046,7 @@ button {
   .worlds,
   .characters,
   .world-cast {
-    padding-block: 76px;
+    padding-block: 44px;
   }
 
   .section-heading {
@@ -869,7 +1067,7 @@ button {
   }
 
   .world-card {
-    min-height: 470px;
+    min-height: 245px;
   }
 
   .world-card__top,
@@ -879,12 +1077,12 @@ button {
   }
 
   .world-card__bottom {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: flex-end;
+    flex-direction: row;
   }
 
   .world-card__open {
-    align-self: flex-end;
+    padding: 10px 11px;
   }
 
   .section-heading--characters {
@@ -944,11 +1142,32 @@ button {
   }
 
   .world-card {
-    min-height: 420px;
+    min-height: 225px;
   }
 
   .world-card h3 {
-    font-size: 2.6rem;
+    font-size: 2.35rem;
+  }
+
+  .world-card__open {
+    font-size: 0;
+  }
+
+  .world-card__open::after {
+    content: "OPEN ↗";
+    font-size: 0.58rem;
+  }
+
+  .access-gate {
+    padding: 10px;
+  }
+
+  .access-gate__frame {
+    min-height: calc(100svh - 20px);
+  }
+
+  .access-gate h1 {
+    font-size: 15.5vw;
   }
 }
 
@@ -964,9 +1183,36 @@ button {
 }
 
     </style>
-
   </head>
-  <body>
+  <body class="access-locked">
+    <div class="access-gate" id="access-gate" role="dialog" aria-modal="true" aria-labelledby="access-title">
+      <div class="access-gate__noise" aria-hidden="true"></div>
+      <div class="access-gate__frame">
+        <div class="access-gate__top">
+          <span>N//A SECURE TERMINAL</span>
+          <span>AUTH / 2026</span>
+        </div>
+        <div class="access-gate__body">
+          <p class="access-gate__eyebrow">PRIVATE CHARACTER DATABASE</p>
+          <h1 id="access-title">IDENTITY<br />VERIFICATION</h1>
+          <p class="access-gate__copy">記録へのアクセスには認証が必要です。</p>
+          <button class="access-button" id="access-button" type="button">
+            <span>AUTHORIZE ACCESS</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <div class="access-progress" aria-live="polite">
+          <div class="access-progress__meta">
+            <span id="access-status">STANDBY</span>
+            <span id="access-percent">000%</span>
+          </div>
+          <div class="access-progress__track" aria-hidden="true">
+            <span id="access-progress-bar"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="ambient" aria-hidden="true">
       <div class="ambient__color"></div>
       <div class="ambient__grid"></div>
@@ -1055,7 +1301,10 @@ button {
         </div>
         <h1 id="world-title">ACHERON</h1>
         <div class="world-hero__info">
-          <p id="world-description"></p>
+          <div class="world-hero__copy">
+            <p id="world-description"></p>
+            <p class="world-notice" id="world-notice" hidden></p>
+          </div>
           <dl id="world-facts"></dl>
         </div>
       </section>
@@ -1079,20 +1328,8 @@ button {
     <script>
 const worlds = [
   {
-    id: "acheron",
-    index: "001",
-    title: "ACHERON",
-    subtitle: "NEW YORK / ORGANIZED CRIME",
-    accent: "#ff365d",
-    secondary: "#7a0f28",
-    rgb: "255, 54, 93",
-    description:
-      "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
-    facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
-  },
-  {
     id: "imperial-court",
-    index: "002",
+    index: "001",
     title: "IMPERIAL COURT",
     subtitle: "MOONLIT PALACE / EASTERN FANTASY",
     accent: "#b9efff",
@@ -1104,7 +1341,7 @@ const worlds = [
   },
   {
     id: "demon-city",
-    index: "003",
+    index: "002",
     title: "DEMON CITY",
     subtitle: "NEAR FUTURE / SEVEN SINS",
     accent: "#ff62b0",
@@ -1112,7 +1349,20 @@ const worlds = [
     rgb: "255, 98, 176",
     description:
       "悪魔と特殊能力者が暮らす近未来都市。触れられない者、触れることを許された者――異質な力が関係を決定づける。",
-    facts: { LOCATION: "NEAR FUTURE", GENRE: "DARK FANTASY", STATUS: "ONGOING" },
+    notice: "この世界観・キャラクターは、友人主催の創作企画に参加しています。",
+    facts: { LOCATION: "NEAR FUTURE", GENRE: "DARK FANTASY", STATUS: "FAN PROJECT" },
+  },
+  {
+    id: "acheron",
+    index: "003",
+    title: "ACHERON",
+    subtitle: "NEW YORK / ORGANIZED CRIME",
+    accent: "#ff365d",
+    secondary: "#7a0f28",
+    rgb: "255, 54, 93",
+    description:
+      "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
+    facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
   },
 ];
 
@@ -1144,6 +1394,47 @@ const progressBar = document.querySelector("#rail-progress-bar");
 const transitionLayer = document.querySelector(".noise-transition");
 const backButton = document.querySelector("#back-button");
 const menuButton = document.querySelector(".menu-button");
+const accessGate = document.querySelector("#access-gate");
+const accessButton = document.querySelector("#access-button");
+const accessStatus = document.querySelector("#access-status");
+const accessPercent = document.querySelector("#access-percent");
+const accessProgressBar = document.querySelector("#access-progress-bar");
+
+function authorizeAccess() {
+  if (accessGate.classList.contains("is-loading")) return;
+
+  accessGate.classList.add("is-loading");
+  accessButton.disabled = true;
+  accessStatus.textContent = "VERIFYING ARCHIVE";
+  const startedAt = performance.now();
+  const duration = 1850;
+
+  function updateProgress(now) {
+    const elapsed = Math.min((now - startedAt) / duration, 1);
+    const eased = 1 - Math.pow(1 - elapsed, 2.4);
+    const progress = Math.min(100, Math.floor(eased * 100));
+    accessPercent.textContent = `${String(progress).padStart(3, "0")}%`;
+    accessProgressBar.style.transform = `scaleX(${progress / 100})`;
+
+    if (elapsed < 1) {
+      window.requestAnimationFrame(updateProgress);
+      return;
+    }
+
+    accessStatus.textContent = "ACCESS GRANTED";
+    accessPercent.textContent = "100%";
+    accessProgressBar.style.transform = "scaleX(1)";
+    window.setTimeout(() => {
+      accessGate.classList.add("is-complete");
+      document.body.classList.remove("access-locked");
+      window.setTimeout(() => {
+        accessGate.hidden = true;
+      }, 700);
+    }, 280);
+  }
+
+  window.requestAnimationFrame(updateProgress);
+}
 
 function getWorld(id) {
   return worlds.find((world) => world.id === id);
@@ -1279,6 +1570,9 @@ function openWorld(worldId, skipHash = false) {
     document.querySelector("#world-file-number").textContent = `WORLD FILE ${world.index}`;
     document.querySelector("#world-title").textContent = world.title;
     document.querySelector("#world-description").textContent = world.description;
+    const worldNotice = document.querySelector("#world-notice");
+    worldNotice.textContent = world.notice ?? "";
+    worldNotice.hidden = !world.notice;
     document.querySelector("#world-facts").innerHTML = Object.entries(world.facts)
       .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
       .join("");
@@ -1354,6 +1648,7 @@ menuButton.addEventListener("click", () => {
 });
 
 backButton.addEventListener("click", () => showHome());
+accessButton.addEventListener("click", authorizeAccess);
 window.addEventListener("popstate", handleHash);
 
     </script>
