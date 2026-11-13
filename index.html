@@ -1791,7 +1791,7 @@ const worlds = [
 const characters = [
   { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.16, portraitY: "-2%" },
   { id: "kai", name: "KAI", jp: "カイ", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU" },
+  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", worldOnly: true },
   { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
@@ -1799,8 +1799,10 @@ const characters = [
   { id: "yumekui", name: "YUMEKUI", jp: "ユメクイ", world: "independent", affiliation: "所属なし", tags: ["DREAM", "BEAST"], monogram: "YU", image: "./assets/characters/yumekui.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "onero", name: "ONERO", jp: "オネロ", world: "nocturne", affiliation: "夜想教徒", tags: ["DREAM", "BEAST"], monogram: "ON", image: "./assets/characters/onero.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "unknown", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["SCALES", "STAR"], monogram: "??", image: "./assets/characters/unknown.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "zerv", name: "ZERV", jp: "ゼルヴ", world: "independent", affiliation: "所属なし", tags: ["PYTHON", "SPLIT TONGUE"], monogram: "ZE" },
-  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", affiliation: "所属なし", tags: ["CORAL", "BUNNY"], monogram: "MI" },
+  { id: "zelv", name: "ZELV", jp: "ゼルヴ", world: "independent", affiliation: "所属なし", tags: ["SNAKE", "LONG HAIR"], monogram: "ZE", image: "./assets/characters/zelv.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "milo", name: "MILO", jp: "ミロ", world: "independent", affiliation: "所属なし", tags: ["RABBIT", "BOY"], monogram: "MI", image: "./assets/characters/milo.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "unknown-galaxy", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["GALAXY"], monogram: "??", image: "./assets/characters/unknown-galaxy.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "lin-junheng", name: "LIN JUNHENG", jp: "リン・ジュンホン", world: "independent", affiliation: "所属なし", tags: ["GLASSES", "MOLE"], monogram: "LJ", image: "./assets/characters/lin-junheng.webp", portraitScale: 1.0, portraitY: "0%" },
 
   { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
   { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
@@ -1808,11 +1810,15 @@ const characters = [
   { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
 
   { id: "theia", name: "THEIA", jp: "ティア", world: "devil-mate", affiliation: "悪魔の番", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR", "ABILITY"], monogram: "LS" },
+  { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR"], monogram: "LS", image: "./assets/characters/livia.webp", portraitScale: 1.0, portraitY: "0%" },
 
   { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
   { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
 ];
+
+// Characters marked worldOnly belong to a world page but are not part of
+// NARU ARCHIVE's main collection or its continuous file numbering.
+const archiveCharacters = characters.filter((character) => !character.worldOnly);
 
 const homeView = document.querySelector("#home-view");
 const worldView = document.querySelector("#world-view");
@@ -1933,6 +1939,10 @@ function renderWorlds() {
 
 function characterCard(character, index) {
   const color = getCharacterColor(character);
+  const archiveIndex = archiveCharacters.indexOf(character);
+  const fileLabel = character.worldOnly
+    ? "GUEST FILE"
+    : `FILE ${String(archiveIndex + 1).padStart(3, "0")}`;
   const portrait = character.image
     ? `<img
         class="character-card__portrait"
@@ -1953,7 +1963,7 @@ function characterCard(character, index) {
       aria-label="${character.jp}のキャラクターファイルを開く"
     >
       <div class="character-card__visual">
-        <span class="character-card__number">FILE ${String(index + 1).padStart(3, "0")}</span>
+        <span class="character-card__number">${fileLabel}</span>
         <span class="character-card__world">${getWorldLabel(character.world)}</span>
         ${portrait}
       </div>
@@ -1971,7 +1981,7 @@ function characterCard(character, index) {
   `;
 }
 
-function renderCharacters(list = characters) {
+function renderCharacters(list = archiveCharacters) {
   characterGrid.innerHTML = list.map(characterCard).join("");
   bindCharacterCards(characterGrid);
   resultCount.textContent = `${String(list.length).padStart(2, "0")} FILES`;
@@ -2051,7 +2061,7 @@ function runCharacterTransition(character, callback) {
 function openCharacter(characterId, skipHash = false) {
   const character = characters.find((item) => item.id === characterId);
   if (!character) return;
-  const index = characters.indexOf(character);
+  const index = archiveCharacters.indexOf(character);
   const color = getCharacterColor(character);
   activeCharacter = character;
 
@@ -2063,7 +2073,9 @@ function openCharacter(characterId, skipHash = false) {
     characterView.hidden = false;
     characterView.style.setProperty("--detail-accent", color.accent);
     characterView.style.setProperty("--detail-rgb", color.rgb);
-    document.querySelector("#character-file-number").textContent = `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
+    document.querySelector("#character-file-number").textContent = character.worldOnly
+      ? "YUAN × KAI / GUEST FILE"
+      : `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
     document.querySelector("#character-affiliation").textContent = character.affiliation ?? getWorldLabel(character.world);
     document.querySelector("#character-detail-name").textContent = character.name;
     document.querySelector("#character-detail-jp").textContent = character.jp;
@@ -2085,8 +2097,12 @@ function openCharacter(characterId, skipHash = false) {
       : `<div class="gallery-placeholder">GALLERY DATA PENDING</div>`;
     setCharacterTab("profile");
 
-    const previous = characters[(index - 1 + characters.length) % characters.length];
-    const next = characters[(index + 1) % characters.length];
+    const navigationList = character.worldOnly
+      ? characters.filter((item) => item.world === character.world)
+      : archiveCharacters;
+    const navigationIndex = navigationList.indexOf(character);
+    const previous = navigationList[(navigationIndex - 1 + navigationList.length) % navigationList.length];
+    const next = navigationList[(navigationIndex + 1) % navigationList.length];
     const previousButton = document.querySelector("#character-previous");
     const nextButton = document.querySelector("#character-next");
     previousButton.dataset.character = previous.id;
@@ -2213,7 +2229,7 @@ worldRail.addEventListener("scroll", () => {
 
 searchInput.addEventListener("input", (event) => {
   const query = event.target.value.trim().toLowerCase();
-  const filtered = characters.filter((character) => {
+  const filtered = archiveCharacters.filter((character) => {
     const target = [character.name, character.jp, getWorldLabel(character.world), ...character.tags]
       .join(" ")
       .toLowerCase();
