@@ -998,6 +998,8 @@ button {
     linear-gradient(145deg, rgba(var(--character-rgb), 0.35), rgba(0, 0, 0, 0.2) 56%),
     repeating-linear-gradient(120deg, transparent 0 22px, rgba(255, 255, 255, 0.025) 23px 24px),
     #0a0c0f;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .character-card__visual::before {
@@ -1029,6 +1031,8 @@ button {
   transform-origin: center top;
   filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.44));
   pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
   transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -1346,6 +1350,8 @@ button {
     radial-gradient(circle at 50% 30%, rgba(var(--detail-rgb), 0.3), transparent 42%),
     repeating-linear-gradient(120deg, transparent 0 30px, rgba(255,255,255,0.025) 31px 32px),
     #090b0e;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .character-detail__visual::before {
@@ -1378,6 +1384,9 @@ button {
   transform: scale(var(--detail-scale, 1));
   transform-origin: center;
   filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .character-detail__monogram {
@@ -1641,6 +1650,16 @@ button {
 .project-participants__list > div:last-child { border-right: 0; }
 .project-participants__list strong { color: #d7dbe0; font-family: var(--font-mono); font-size: .78rem; font-weight: 400; letter-spacing: .08em; }
 .project-participants__list small { color: #5f666e; }
+.project-participants__list nav { display: flex; flex-wrap: wrap; gap: 12px; }
+.project-participants__list a {
+  color: #6d747d;
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  letter-spacing: .1em;
+  text-decoration: none;
+}
+.project-participants__list a:hover,
+.project-participants__list a:focus-visible { color: var(--accent); }
 
 .world-guests {
   padding-block: clamp(72px, 9vw, 130px);
@@ -1655,7 +1674,7 @@ button {
   line-height: 1.9;
 }
 .world-guests .character-card { border-color: rgba(var(--accent-rgb), .24); }
-.world-guests .character-card__visual { filter: saturate(.42); }
+.world-guests .character-card__visual { filter: none; }
 
 .character-detail__credit {
   display: grid;
@@ -1673,6 +1692,21 @@ button {
 .character-detail__credit > small,
 .character-detail__credit > a { color: #747a82; font-size: .52rem; letter-spacing: .1em; }
 .character-detail__credit > a:hover { color: var(--detail-accent); }
+.character-detail__credit-links {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+}
+.character-detail__credit-links a {
+  color: #747a82;
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  letter-spacing: .1em;
+  text-decoration: none;
+}
+.character-detail__credit-links a:hover,
+.character-detail__credit-links a:focus-visible { color: var(--detail-accent); }
 
 .detail-panel__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .prompt-variant-count {
@@ -1745,7 +1779,8 @@ button {
 .character-gallery figure,
 .gallery-placeholder { min-height: 280px; margin: 0; border: 1px solid var(--line); background: #080a0d; }
 .character-gallery figure { position: relative; overflow: hidden; }
-.character-gallery img { width: 100%; height: 320px; object-fit: contain; background: radial-gradient(circle, rgba(var(--detail-rgb),0.18), transparent 65%); }
+.character-gallery figure { -webkit-touch-callout: none; user-select: none; }
+.character-gallery img { width: 100%; height: 320px; object-fit: contain; background: radial-gradient(circle, rgba(var(--detail-rgb),0.18), transparent 65%); pointer-events: none; -webkit-user-drag: none; user-select: none; }
 .character-gallery figcaption { position: absolute; right: 12px; bottom: 10px; color: var(--muted); font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.1em; }
 .gallery-placeholder { display: grid; place-items: center; color: #555b63; font-family: var(--font-mono); font-size: 0.65rem; line-height: 1.8; letter-spacing: 0.12em; text-align: center; }
 
@@ -2622,7 +2657,7 @@ const worlds = [
 const characters = [
   { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.16, portraitY: "-2%" },
   { id: "kai", name: "KAI", jp: "カイ", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", worldOnly: true, noPrompt: true },
+  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", image: "./assets/characters/yuan.webp", portraitScale: 1.0, portraitY: "0%", worldOnly: true, noPrompt: true },
   { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
@@ -2640,19 +2675,19 @@ const characters = [
   { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
   { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
 
-  { id: "imperial-guest-01", name: "GUEST FILE 01", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "01", worldOnly: true, guest: true, guestIndex: 1, noPrompt: true },
-  { id: "imperial-guest-02", name: "GUEST FILE 02", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "02", worldOnly: true, guest: true, guestIndex: 2, noPrompt: true },
-  { id: "imperial-guest-03", name: "GUEST FILE 03", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "03", worldOnly: true, guest: true, guestIndex: 3, noPrompt: true },
-  { id: "imperial-guest-04", name: "GUEST FILE 04", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "04", worldOnly: true, guest: true, guestIndex: 4, noPrompt: true },
-  { id: "imperial-guest-05", name: "GUEST FILE 05", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "05", worldOnly: true, guest: true, guestIndex: 5, noPrompt: true },
-  { id: "imperial-guest-06", name: "GUEST FILE 06", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "06", worldOnly: true, guest: true, guestIndex: 6, noPrompt: true },
-  { id: "imperial-guest-07", name: "GUEST FILE 07", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "07", worldOnly: true, guest: true, guestIndex: 7, noPrompt: true },
+  { id: "imperial-guest-01", name: "YÙLÁN", jp: "玉兰／ユィーラン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 滄瀾"], monogram: "YL", image: "./assets/characters/yulan.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "ダンゴムシ以下", creatorUrl: "https://x.com/gdtp96?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://dangomu.github.io", worldOnly: true, guest: true, guestIndex: 1, noPrompt: true },
+  { id: "imperial-guest-02", name: "XĪNG HUÁNG", jp: "星煌／シン ファン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 翡月"], monogram: "XH", image: "./assets/characters/xing-huang.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 2, noPrompt: true },
+  { id: "imperial-guest-03", name: "YÈDIÉ", jp: "夜蝶／イエディエ", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 凌霜"], monogram: "YD", image: "./assets/characters/yedie.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "茨", creatorUrl: "https://x.com/5pfajp?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ibaraaa.github.io/#home", worldOnly: true, guest: true, guestIndex: 3, noPrompt: true },
+  { id: "imperial-guest-04", name: "LI YU", jp: "李雨／リーユー", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 洛焔"], monogram: "LY", image: "./assets/characters/li-yu.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 4, noPrompt: true },
+  { id: "imperial-guest-05", name: "BÁI MÍNGJÌNG", jp: "白明鏡／バイ ミンジン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST FILE"], monogram: "BM", image: "./assets/characters/bai-mingjing.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 5, noPrompt: true },
+  { id: "imperial-guest-06", name: "MIÁNMIÁN", jp: "绵绵／ミエンミエン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST FILE"], monogram: "MM", image: "./assets/characters/mianmian.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "ダンゴムシ以下", creatorUrl: "https://x.com/gdtp96?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://dangomu.github.io", worldOnly: true, guest: true, guestIndex: 6, noPrompt: true },
+  { id: "imperial-guest-07", name: "QĪNGLÍ", jp: "清璃／チンリー", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST FILE"], monogram: "QL", image: "./assets/characters/qingli.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "茨", creatorUrl: "https://x.com/5pfajp?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ibaraaa.github.io/#home", worldOnly: true, guest: true, guestIndex: 7, noPrompt: true },
 
   { id: "theia", name: "THEIA", jp: "ティア", world: "devil-mate", affiliation: "悪魔の番", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR"], monogram: "LS", image: "./assets/characters/livia.webp", portraitScale: 1.0, portraitY: "0%" },
 
-  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH" },
-  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM" },
+  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH", image: "./assets/characters/dante-harlow.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM", image: "./assets/characters/theo-molden.webp", portraitScale: 1.0, portraitY: "0%" },
 ];
 
 // Characters marked worldOnly belong to a world page but are not part of
@@ -2807,6 +2842,7 @@ function characterCard(character, index) {
         alt=""
         loading="lazy"
         decoding="async"
+        draggable="false"
         style="--portrait-scale:${character.portraitScale ?? 1};--portrait-y:${character.portraitY ?? "0%"}"
       />`
     : `<span class="character-card__monogram">${character.monogram}</span>`;
@@ -2947,12 +2983,15 @@ function openCharacter(characterId, skipHash = false) {
     contributorCredit.innerHTML = character.guest
       ? `<span>PROJECT PARTICIPANT</span>
           <strong>${character.creatorName ?? "USERNAME PENDING"}</strong>
-          ${character.projectUrl ? `<a href="${character.projectUrl}" target="_blank" rel="noopener noreferrer">VISIT PARTICIPANT SITE ↗</a>` : `<small>SITE LINK / PENDING</small>`}`
+          <div class="character-detail__credit-links">
+            ${character.creatorUrl ? `<a href="${character.creatorUrl}" target="_blank" rel="noopener noreferrer">X PROFILE ↗</a>` : ""}
+            ${character.projectUrl ? `<a href="${character.projectUrl}" target="_blank" rel="noopener noreferrer">OC SITE ↗</a>` : ""}
+          </div>`
       : "";
     const detailImage = character.detailImage ?? character.image;
     const visual = document.querySelector("#character-detail-visual");
     visual.innerHTML = detailImage
-      ? `<img src="${detailImage}" alt="${character.jp}" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "50%"}" />`
+      ? `<img src="${detailImage}" alt="${character.jp}" draggable="false" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "50%"}" />`
       : `<span class="character-detail__monogram">${character.monogram}</span>`;
 
     document.querySelector("#character-profile-title").textContent = "PROFILE";
@@ -2967,7 +3006,7 @@ function openCharacter(characterId, skipHash = false) {
     renderCharacterPrompts(character);
     const gallery = document.querySelector("#character-gallery-grid");
     gallery.innerHTML = detailImage
-      ? `<figure><img src="${detailImage}" alt="${character.jp}"><figcaption>PORTRAIT / 001</figcaption></figure><div class="gallery-placeholder">MORE FILES<br>COMING SOON</div>`
+      ? `<figure><img src="${detailImage}" alt="${character.jp}" draggable="false"><figcaption>PORTRAIT / 001</figcaption></figure><div class="gallery-placeholder">MORE FILES<br>COMING SOON</div>`
       : `<div class="gallery-placeholder">GALLERY DATA PENDING</div>`;
     setCharacterTab("profile");
 
@@ -3280,6 +3319,14 @@ acheronAuthorize.addEventListener("click", authorizeAcheron);
 acheronCancel.addEventListener("click", closeAcheronGate);
 window.addEventListener("popstate", handleHash);
 
+const protectedMediaSelector = ".character-card__visual, .character-detail__visual, .character-gallery figure";
+document.addEventListener("contextmenu", (event) => {
+  if (event.target.closest(protectedMediaSelector)) event.preventDefault();
+});
+document.addEventListener("dragstart", (event) => {
+  if (event.target.closest(protectedMediaSelector)) event.preventDefault();
+});
+
 });
 </script>
   </head>
@@ -3446,9 +3493,9 @@ window.addEventListener("popstate", handleHash);
           <p>この世界観には、3名の企画参加者によるゲストキャラクターが含まれます。</p>
         </div>
         <div class="project-participants__list" id="project-participant-list">
-          <div><span>PARTICIPANT 01</span><strong>USERNAME PENDING</strong><small>PROJECT LINK / PENDING</small></div>
-          <div><span>PARTICIPANT 02</span><strong>USERNAME PENDING</strong><small>PROJECT LINK / PENDING</small></div>
-          <div><span>PARTICIPANT 03</span><strong>USERNAME PENDING</strong><small>PROJECT LINK / PENDING</small></div>
+          <div><span>PARTICIPANT 01</span><strong>RIP</strong><nav><a href="https://x.com/rip_zt?s=11&amp;t=6iOo4PdUWuRILwVbg6hoPQ" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://ripmmmrzt.github.io/rip-oc-archive/#home" target="_blank" rel="noopener noreferrer">OC SITE ↗</a></nav></div>
+          <div><span>PARTICIPANT 02</span><strong>ダンゴムシ以下</strong><nav><a href="https://x.com/gdtp96?s=11&amp;t=6iOo4PdUWuRILwVbg6hoPQ" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://dangomu.github.io" target="_blank" rel="noopener noreferrer">OC SITE ↗</a></nav></div>
+          <div><span>PARTICIPANT 03</span><strong>茨</strong><nav><a href="https://x.com/5pfajp?s=11&amp;t=6iOo4PdUWuRILwVbg6hoPQ" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://ibaraaa.github.io/#home" target="_blank" rel="noopener noreferrer">OC SITE ↗</a></nav></div>
         </div>
       </section>
       <section class="yuakai-story section-shell" id="yuakai-story" hidden>
