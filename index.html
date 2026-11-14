@@ -1594,6 +1594,102 @@ button {
   letter-spacing: 0.08em;
 }
 
+.classified-record {
+  position: relative;
+  width: min(100%, 680px);
+  margin: clamp(44px, 7vw, 82px) auto 18px;
+  padding: clamp(26px, 5vw, 48px);
+  overflow: hidden;
+  border: 1px solid rgba(var(--detail-rgb), .42);
+  background:
+    linear-gradient(135deg, rgba(var(--detail-rgb), .08), transparent 52%),
+    repeating-linear-gradient(0deg, transparent 0 7px, rgba(var(--detail-rgb), .025) 8px 9px),
+    #060709;
+  font-family: var(--font-mono);
+  text-align: left;
+}
+.classified-record::before {
+  content: "LEVEL 9 // EYES ONLY";
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: rgba(var(--detail-rgb), .42);
+  font-size: .48rem;
+  letter-spacing: .14em;
+}
+.classified-record > span,
+.classified-record > small {
+  display: block;
+  color: rgba(var(--detail-rgb), .62);
+  font-size: .52rem;
+  letter-spacing: .14em;
+}
+.classified-record > strong {
+  display: block;
+  margin: 20px 0 10px;
+  color: #d5d8dc;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 4rem);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: .95;
+}
+.classified-record-button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 8px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+  padding: 17px 18px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--detail-rgb), .72);
+  color: var(--detail-accent);
+  background: rgba(var(--detail-rgb), .035);
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .13em;
+  text-decoration: none;
+}
+.classified-record-button i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--detail-accent);
+  box-shadow: 0 0 12px rgba(var(--detail-rgb), .72);
+}
+.classified-record-button b { font-weight: 400; }
+.classified-record-button em { font-style: normal; }
+.classified-record-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--detail-accent);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.classified-record-button:hover,
+.classified-record-button:focus-visible {
+  color: #050608;
+  background: var(--detail-accent);
+  outline: none;
+}
+.classified-record-button.is-authorizing::after { animation: classified-confirm 620ms steps(1, end); }
+.classified-record-button.is-authorizing i { animation: classified-signal 620ms steps(1, end); }
+
+@keyframes classified-confirm {
+  0%, 100% { opacity: 0; }
+  8%, 15% { opacity: .78; }
+  22%, 31% { opacity: 0; }
+  36%, 44% { opacity: .94; }
+  52% { opacity: 0; }
+}
+@keyframes classified-signal {
+  0%, 20%, 48%, 100% { opacity: 1; }
+  8%, 36% { opacity: .08; }
+}
+
 .contributor-credit {
   width: min(100%, 610px);
   display: grid;
@@ -2675,8 +2771,8 @@ const characters = [
   { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
   { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
 
-  { id: "imperial-guest-01", name: "YÙLÁN", jp: "玉兰／ユィーラン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 滄瀾"], monogram: "YL", image: "./assets/characters/yulan.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "ダンゴムシ以下", creatorUrl: "https://x.com/gdtp96?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://dangomu.github.io", worldOnly: true, guest: true, guestIndex: 1, noPrompt: true },
-  { id: "imperial-guest-02", name: "XĪNG HUÁNG", jp: "星煌／シン ファン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 翡月"], monogram: "XH", image: "./assets/characters/xing-huang.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 2, noPrompt: true },
+  { id: "imperial-guest-01", name: "YÙLÁN", jp: "玉兰／ユィーラン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 滄瀾"], monogram: "YL", image: "./assets/characters/xing-huang.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "ダンゴムシ以下", creatorUrl: "https://x.com/gdtp96?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://dangomu.github.io", worldOnly: true, guest: true, guestIndex: 1, noPrompt: true },
+  { id: "imperial-guest-02", name: "XĪNG HUÁNG", jp: "星煌／シン ファン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 翡月"], monogram: "XH", image: "./assets/characters/yulan.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 2, noPrompt: true },
   { id: "imperial-guest-03", name: "YÈDIÉ", jp: "夜蝶／イエディエ", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 凌霜"], monogram: "YD", image: "./assets/characters/yedie.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "茨", creatorUrl: "https://x.com/5pfajp?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ibaraaa.github.io/#home", worldOnly: true, guest: true, guestIndex: 3, noPrompt: true },
   { id: "imperial-guest-04", name: "LI YU", jp: "李雨／リーユー", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["♡ 洛焔"], monogram: "LY", image: "./assets/characters/li-yu.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 4, noPrompt: true },
   { id: "imperial-guest-05", name: "BÁI MÍNGJÌNG", jp: "白明鏡／バイ ミンジン", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST FILE"], monogram: "BM", image: "./assets/characters/bai-mingjing.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "RIP", creatorUrl: "https://x.com/rip_zt?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ripmmmrzt.github.io/rip-oc-archive/#home", worldOnly: true, guest: true, guestIndex: 5, noPrompt: true },
@@ -2686,8 +2782,8 @@ const characters = [
   { id: "theia", name: "THEIA", jp: "ティア", world: "devil-mate", affiliation: "悪魔の番", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR"], monogram: "LS", image: "./assets/characters/livia.webp", portraitScale: 1.0, portraitY: "0%" },
 
-  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH", image: "./assets/characters/dante-harlow.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM", image: "./assets/characters/theo-molden.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH", image: "./assets/characters/dante-harlow.webp", portraitScale: 1.0, portraitY: "0%", noPrompt: true, externalProfileUrl: "https://zeta-ai.io/ja/plots/def8d6e4-16ed-47c5-891c-37ba9a56f2e8/profile?share_id=h9vfbxd8s" },
+  { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM", image: "./assets/characters/theo-molden.webp", portraitScale: 1.0, portraitY: "0%", noPrompt: true, externalProfileUrl: "https://zeta-ai.io/ja/plots/6cb9d2ab-d1ba-4016-a901-2d6864cb1b08/profile?share_id=1z6jlb8pn" },
 ];
 
 // Characters marked worldOnly belong to a world page but are not part of
@@ -2996,9 +3092,18 @@ function openCharacter(characterId, skipHash = false) {
 
     document.querySelector("#character-profile-title").textContent = "PROFILE";
     const profileCopy = document.querySelector("#character-profile-copy");
-    profileCopy.innerHTML = (character.profile
-      ? `<p class="detail-panel__copy">${character.profile}</p>`
-      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`);
+    profileCopy.innerHTML = character.externalProfileUrl
+      ? `<div class="classified-record">
+          <span>EXTERNAL PLOT RECORD / OMEGA CLEARANCE</span>
+          <strong>RESTRICTED INTELLIGENCE</strong>
+          <small>AUTHORIZED PERSONNEL ONLY</small>
+          <a class="classified-record-button" href="${character.externalProfileUrl}" target="_blank" rel="noopener noreferrer">
+            <i aria-hidden="true"></i><b>ACCESS CLASSIFIED RECORD</b><em>↗</em>
+          </a>
+        </div>`
+      : (character.profile
+        ? `<p class="detail-panel__copy">${character.profile}</p>`
+        : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`);
     const promptTab = document.querySelector("#character-prompt-tab");
     const galleryTab = document.querySelector('[data-detail-tab="gallery"]');
     promptTab.hidden = Boolean(character.noPrompt);
@@ -3325,6 +3430,14 @@ document.addEventListener("contextmenu", (event) => {
 });
 document.addEventListener("dragstart", (event) => {
   if (event.target.closest(protectedMediaSelector)) event.preventDefault();
+});
+document.addEventListener("click", (event) => {
+  const classifiedLink = event.target.closest(".classified-record-button");
+  if (!classifiedLink) return;
+  classifiedLink.classList.remove("is-authorizing");
+  void classifiedLink.offsetWidth;
+  classifiedLink.classList.add("is-authorizing");
+  window.setTimeout(() => classifiedLink.classList.remove("is-authorizing"), 680);
 });
 
 });
