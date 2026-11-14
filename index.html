@@ -54,6 +54,10 @@ body.access-locked {
   overflow: hidden;
 }
 
+body.acheron-locked {
+  overflow: hidden;
+}
+
 .access-gate {
   position: fixed;
   z-index: 2000;
@@ -186,6 +190,20 @@ body.access-locked {
   cursor: wait;
 }
 
+.access-button.is-authorizing {
+  color: #050608;
+  border-color: var(--accent);
+  animation: authorize-pip 360ms steps(1, end) both;
+}
+
+@keyframes authorize-pip {
+  0%, 16% { color: #050608; background: var(--accent); box-shadow: 0 0 28px rgba(var(--accent-rgb), 0.62); }
+  17%, 34% { color: var(--accent); background: transparent; box-shadow: none; }
+  35%, 52% { color: #050608; background: var(--accent); box-shadow: 0 0 38px rgba(var(--accent-rgb), 0.78); }
+  53%, 70% { color: var(--accent); background: transparent; box-shadow: none; }
+  71%, 100% { color: #050608; background: var(--accent); box-shadow: 0 0 22px rgba(var(--accent-rgb), 0.48); }
+}
+
 .access-progress {
   padding-top: 18px;
   border-top: 1px solid var(--line);
@@ -224,6 +242,123 @@ body.access-locked {
   0%, 100% { box-shadow: 0 0 100px rgba(var(--accent-rgb), 0.08); }
   50% { box-shadow: 0 0 130px rgba(var(--accent-rgb), 0.18); }
 }
+
+.acheron-gate {
+  position: fixed;
+  z-index: 1900;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  overflow: hidden;
+  color: #f4f0f1;
+  background:
+    linear-gradient(90deg, rgba(88,0,16,0.16) 1px, transparent 1px),
+    linear-gradient(rgba(88,0,16,0.13) 1px, transparent 1px),
+    #020203;
+  background-size: 48px 48px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 280ms ease, visibility 280ms linear;
+}
+
+.acheron-gate[hidden] { display: none; }
+.acheron-gate.is-visible { opacity: 1; visibility: visible; }
+
+.acheron-gate__static {
+  position: absolute;
+  inset: -20%;
+  opacity: 0.16;
+  background:
+    repeating-radial-gradient(circle, rgba(255,255,255,0.46) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(150,0,28,0.32) 4px 5px);
+  background-size: 7px 6px, 100% 6px;
+  mix-blend-mode: screen;
+  animation: acheron-static 100ms steps(2, end) infinite;
+}
+
+.acheron-gate__seal {
+  position: absolute;
+  right: -0.08em;
+  bottom: -0.2em;
+  color: transparent;
+  font-family: var(--font-ui);
+  font-size: clamp(8rem, 25vw, 27rem);
+  font-weight: 900;
+  letter-spacing: -0.09em;
+  line-height: 0.64;
+  text-align: right;
+  -webkit-text-stroke: 1px rgba(191, 18, 49, 0.16);
+  transform: rotate(-5deg);
+}
+
+.acheron-gate__frame {
+  position: relative;
+  width: min(100%, 980px);
+  min-height: min(690px, calc(100svh - 36px));
+  display: flex;
+  flex-direction: column;
+  padding: clamp(24px, 5vw, 58px);
+  border: 1px solid rgba(215, 31, 63, 0.58);
+  background: rgba(4,3,4,0.92);
+  box-shadow: 0 0 0 8px rgba(126,0,22,0.08), 0 0 90px rgba(126,0,22,0.28);
+}
+
+.acheron-gate__frame::before {
+  content: "CLASSIFIED / EYES ONLY / CLASSIFIED / EYES ONLY / CLASSIFIED / EYES ONLY";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 5px 10px;
+  overflow: hidden;
+  color: #050203;
+  background: #b91236;
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+
+.acheron-gate__top,
+.acheron-gate__status {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: #c8314f;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+}
+
+.acheron-gate__top { margin-top: 12px; padding-bottom: 18px; border-bottom: 1px solid rgba(185,18,54,0.3); }
+.acheron-gate__body { margin-block: auto; }
+.acheron-gate__body > p:first-child { margin: 0 0 16px; color: #a92842; font-family: var(--font-mono); font-size: 0.54rem; letter-spacing: 0.18em; }
+
+.acheron-gate h2 {
+  margin: 0;
+  color: #f6f0f1;
+  font-family: var(--font-ui);
+  font-size: clamp(5rem, 14vw, 12rem);
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 0.69;
+}
+
+.acheron-gate__warning { margin: 34px 0 0; color: #ef365d; font-size: clamp(0.9rem, 2vw, 1.25rem); letter-spacing: 0.08em; }
+.acheron-gate__copy { max-width: 620px; margin: 14px 0 0; color: #81777a; font-size: 0.7rem; line-height: 1.9; }
+.acheron-gate__actions { display: grid; grid-template-columns: 0.32fr 0.68fr; gap: 10px; }
+.acheron-gate__actions button { padding: 16px 18px; border: 1px solid rgba(185,18,54,0.52); color: #8d7b80; background: transparent; font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.12em; cursor: pointer; }
+.acheron-gate__actions button:last-child { display: flex; justify-content: space-between; color: #f6f0f1; border-color: #c8193e; background: rgba(126,0,22,0.18); }
+.acheron-gate__actions button:hover:not(:disabled), .acheron-gate__actions button:focus-visible { color: #050203; background: #d51b45; outline: none; }
+.acheron-gate__actions button:disabled { cursor: wait; opacity: 0.72; }
+.acheron-gate__status { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(185,18,54,0.3); }
+.acheron-gate.is-verifying .acheron-gate__frame { animation: acheron-verify 160ms steps(2, end) infinite; }
+.acheron-gate.is-granted .acheron-gate__frame { border-color: #ff315a; box-shadow: 0 0 120px rgba(220,18,61,0.52); }
+
+@keyframes acheron-static { from { transform: translate(0,0); } to { transform: translate(3%, -2%); } }
+@keyframes acheron-verify { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(2px); } }
 
 button,
 input {
@@ -288,6 +423,11 @@ button {
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: linear-gradient(to bottom, black, transparent 88%);
+  animation: ambient-grid-drift 22s linear infinite;
+}
+
+@keyframes ambient-grid-drift {
+  to { background-position: 48px 48px, 48px 48px; }
 }
 
 .ambient__word {
@@ -402,6 +542,7 @@ button {
 }
 
 .intro h1 {
+  position: relative;
   display: flex;
   flex-direction: column;
   margin: clamp(34px, 5vh, 64px) 0;
@@ -410,6 +551,70 @@ button {
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.8;
+}
+
+.intro h1::before,
+.intro h1::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  left: -1.5%;
+  right: -1.5%;
+  height: 8%;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5px, rgba(255,255,255,0.5) 6px 7px, transparent 8px 13px),
+    linear-gradient(90deg, transparent, rgba(var(--accent-rgb),0.42), transparent);
+  mix-blend-mode: screen;
+}
+
+.intro h1::before {
+  animation: title-static-pass 5.6s steps(1, end) infinite;
+}
+
+.intro h1::after {
+  height: 2px;
+  opacity: 0.32;
+  background: linear-gradient(90deg, transparent 4%, rgba(var(--accent-rgb),0.9) 35%, transparent 72%);
+  animation: title-scanline 4.8s linear infinite;
+}
+
+@keyframes title-static-pass {
+  0%, 7%, 10%, 46%, 49%, 100% { opacity: 0; transform: translateY(0); }
+  8% { opacity: 0.38; transform: translateY(64%); }
+  9% { opacity: 0.16; transform: translate(1.5%, 390%); }
+  47% { opacity: 0.3; transform: translate(-1%, 710%); }
+  48% { opacity: 0.1; transform: translate(0.5%, 820%); }
+}
+
+@keyframes title-scanline {
+  from { transform: translateY(-10px); }
+  to { transform: translateY(390px); }
+}
+
+.intro__live {
+  align-self: flex-end;
+  margin-top: -20px;
+  color: rgba(255,255,255,0.4);
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.16em;
+}
+
+.intro__live span {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 7px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  animation: live-pulse 1.7s steps(1, end) infinite;
+}
+
+@keyframes live-pulse {
+  0%, 15%, 28%, 100% { opacity: 1; }
+  16%, 27% { opacity: 0.12; }
 }
 
 .intro h1 span:nth-child(2) {
@@ -887,6 +1092,32 @@ button {
   animation: static-rush-reverse 85ms steps(2, end) infinite;
 }
 
+.noise-transition.is-acheron {
+  background:
+    linear-gradient(90deg, transparent 0 8%, rgba(168,0,31,0.76) 8% 9%, transparent 9% 62%, rgba(255,35,75,0.34) 62% 66%, transparent 66%),
+    repeating-linear-gradient(0deg, #020203 0 7px, #210008 8px 10px, #020203 11px 15px);
+}
+
+.noise-transition.is-acheron::before {
+  opacity: 0.88;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(215,20,58,0.48) 29px 31px),
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.18) 3px 4px);
+}
+
+.noise-transition.is-acheron .noise-transition__bars {
+  background:
+    linear-gradient(transparent 18%, #cf1238 19% 23%, transparent 24%),
+    linear-gradient(transparent 72%, rgba(111,0,20,0.92) 73% 82%, transparent 83%);
+  animation-duration: 42ms;
+}
+
+.noise-transition.is-acheron .noise-transition__label {
+  border: 1px solid #d51b45;
+  color: #ff4167;
+  background: #050203;
+}
+
 .noise-transition__bars {
   position: absolute;
   inset: 0;
@@ -1143,27 +1374,6 @@ button {
   letter-spacing: 0.08em;
 }
 
-.character-detail__note {
-  margin-top: 28px;
-  padding-left: 16px;
-  border-left: 2px solid var(--detail-accent);
-}
-
-.character-detail__note span {
-  color: var(--detail-accent);
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.14em;
-}
-
-.character-detail__note p {
-  max-width: 620px;
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 0.74rem;
-  line-height: 1.8;
-}
-
 .character-detail__nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1250,6 +1460,54 @@ button {
   color: #b8bdc4;
   font-size: 0.82rem;
   line-height: 2;
+}
+
+.profile-pending-stamp {
+  position: relative;
+  width: min(100%, 610px);
+  margin: clamp(52px, 8vw, 94px) auto 18px;
+  padding: clamp(24px, 5vw, 46px);
+  border: 3px double rgba(var(--detail-rgb), 0.62);
+  color: rgba(var(--detail-rgb), 0.72);
+  text-align: center;
+  transform: rotate(-2deg);
+  filter: saturate(0.68);
+}
+
+.profile-pending-stamp::before,
+.profile-pending-stamp::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.profile-pending-stamp::before {
+  inset: 7px;
+  border: 1px dashed rgba(var(--detail-rgb), 0.38);
+}
+
+.profile-pending-stamp::after {
+  inset: 0;
+  opacity: 0.16;
+  background: repeating-radial-gradient(circle, currentColor 0 1px, transparent 1px 4px);
+  background-size: 7px 6px;
+  mix-blend-mode: screen;
+}
+
+.profile-pending-stamp span,
+.profile-pending-stamp small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+}
+
+.profile-pending-stamp strong {
+  display: block;
+  margin: 18px 0 16px;
+  font-size: clamp(1.6rem, 5vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .detail-panel__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
@@ -1386,6 +1644,100 @@ button {
 .yuakai-timeline li { padding: 28px 10px; border-bottom: 1px solid rgba(155,24,56,0.28); }
 .yuakai-timeline strong { display: block; margin-top: 12px; color: #f0e5e0; font-family: var(--font-display); font-size: clamp(1.7rem, 3vw, 3rem); font-weight: 400; }
 .yuakai-timeline p { margin: 10px 0 0; color: #8f8382; font-size: 0.72rem; }
+
+.world-card[data-world="acheron"] {
+  background:
+    linear-gradient(100deg, rgba(133,0,25,0.5), transparent 42%),
+    repeating-linear-gradient(135deg, transparent 0 16px, rgba(255,35,75,0.045) 17px 18px),
+    #040305;
+}
+
+.world-card[data-world="acheron"]::before {
+  content: "CLASSIFIED";
+  position: absolute;
+  right: 4%;
+  top: 14%;
+  color: transparent;
+  font-family: var(--font-ui);
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  -webkit-text-stroke: 1px rgba(255,54,93,0.16);
+  transform: rotate(-7deg);
+}
+
+.world-view--acheron {
+  --accent: #ff315a;
+  --accent-rgb: 255, 49, 90;
+  background:
+    linear-gradient(90deg, rgba(91,0,17,0.08) 1px, transparent 1px),
+    linear-gradient(rgba(91,0,17,0.08) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+.world-view--acheron .world-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,49,90,0.2);
+  background:
+    radial-gradient(circle at 74% 30%, rgba(134,0,27,0.3), transparent 35%),
+    repeating-linear-gradient(135deg, transparent 0 30px, rgba(255,49,90,0.025) 31px 32px),
+    #050405;
+}
+
+.world-view--acheron .world-hero::before {
+  content: "TOP SECRET";
+  position: absolute;
+  right: -0.05em;
+  top: 0.4em;
+  color: transparent;
+  font-family: var(--font-ui);
+  font-size: clamp(6rem, 19vw, 18rem);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  -webkit-text-stroke: 1px rgba(255,49,90,0.12);
+  transform: rotate(-5deg);
+}
+
+.world-view--acheron .world-hero::after {
+  content: "EYES ONLY  /  LEVEL 9  /  DO NOT DUPLICATE";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 14px;
+  overflow: hidden;
+  color: #090204;
+  background: #d0183e;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+
+.world-view--acheron .world-hero h1 {
+  position: relative;
+  z-index: 1;
+  color: #f6f0f1;
+  text-shadow: 14px 0 0 rgba(143,0,28,0.34);
+}
+
+.world-view--acheron .world-notice {
+  border: 1px solid rgba(255,49,90,0.5);
+  border-left-width: 5px;
+  background: rgba(109,0,21,0.22);
+  font-family: var(--font-mono);
+  letter-spacing: 0.07em;
+}
+
+.world-view--acheron .world-cast .section-heading::after {
+  content: "CLASSIFIED SUBJECTS";
+  color: rgba(255,49,90,0.54);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+}
 
 .world-view {
   min-height: 100vh;
@@ -1578,6 +1930,11 @@ button {
     font-size: 0.72rem;
   }
 
+  .intro__live {
+    margin-top: -8px;
+    font-size: 0.46rem;
+  }
+
   .worlds,
   .characters,
   .world-cast {
@@ -1726,6 +2083,15 @@ button {
   .detail-panel__heading { align-items: flex-start; flex-direction: column; }
   .character-gallery { grid-template-columns: 1fr; }
   .yuakai-story { grid-template-columns: 1fr; }
+
+  .acheron-gate { padding: 9px; }
+  .acheron-gate__frame { min-height: calc(100svh - 18px); padding: 32px 20px 22px; }
+  .acheron-gate__top span:last-child { display: none; }
+  .acheron-gate h2 { font-size: clamp(4.7rem, 24vw, 7.5rem); }
+  .acheron-gate__warning { margin-top: 26px; font-size: 0.8rem; }
+  .acheron-gate__actions { grid-template-columns: 0.3fr 0.7fr; }
+  .acheron-gate__actions button { padding: 15px 10px; font-size: 0.48rem; }
+  .world-view--acheron .world-hero::before { top: 1em; }
 
   .site-footer {
     flex-direction: column;
@@ -2072,6 +2438,8 @@ const worlds = [
     rgb: "255, 54, 93",
     description:
       "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
+    status: "OMEGA CLEARANCE / LEVEL 9",
+    notice: "TOP SECRET — 記録の複製・転送・外部共有を禁ずる。アクセス履歴はすべて監査対象となる。",
     facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
   },
 ];
@@ -2092,8 +2460,8 @@ const characters = [
   { id: "unknown-galaxy", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["GALAXY"], monogram: "??", image: "./assets/characters/unknown-galaxy.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "lin-junheng", name: "LIN JUNHENG", jp: "リン・ジュンホン", world: "independent", affiliation: "所属なし", tags: ["GLASSES", "MOLE"], monogram: "LJ", image: "./assets/characters/lin-junheng.webp", portraitScale: 1.0, portraitY: "0%" },
 
-  { id: "tsanglan", name: "TSANGLAN", jp: "ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
-  { id: "feiyue", name: "FEIYUE", jp: "フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "tsanglan", name: "TSANGLAN", jp: "滄瀾／ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
+  { id: "feiyue", name: "FEIYUE", jp: "翡月／フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
   { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
 
@@ -2128,47 +2496,58 @@ const accessButton = document.querySelector("#access-button");
 const accessStatus = document.querySelector("#access-status");
 const accessPercent = document.querySelector("#access-percent");
 const accessProgressBar = document.querySelector("#access-progress-bar");
+const acheronGate = document.querySelector("#acheron-gate");
+const acheronAuthorize = document.querySelector("#acheron-authorize");
+const acheronCancel = document.querySelector("#acheron-cancel");
+const acheronStatus = document.querySelector("#acheron-status");
 const detailTabButtons = [...document.querySelectorAll("[data-detail-tab]")];
 const detailTabPanels = [...document.querySelectorAll("[data-detail-panel]")];
 const promptList = document.querySelector("#character-prompt-list");
 const promptVariantCount = document.querySelector("#prompt-variant-count");
 let activeWorldId = worlds[0].id;
 let activeCharacter = null;
+let acheronAuthorized = false;
 
 function authorizeAccess() {
   if (accessGate.classList.contains("is-loading")) return;
 
   accessGate.classList.add("is-loading");
+  accessButton.classList.add("is-authorizing");
   accessButton.disabled = true;
-  accessStatus.textContent = "VERIFYING ARCHIVE";
-  const startedAt = performance.now();
-  const duration = 1850;
+  accessStatus.textContent = "SIGNAL CONFIRMED";
 
-  function updateProgress(now) {
-    const elapsed = Math.min((now - startedAt) / duration, 1);
-    const eased = 1 - Math.pow(1 - elapsed, 2.4);
-    const progress = Math.min(100, Math.floor(eased * 100));
-    accessPercent.textContent = `${String(progress).padStart(3, "0")}%`;
-    accessProgressBar.style.transform = `scaleX(${progress / 100})`;
+  window.setTimeout(() => {
+    accessButton.classList.remove("is-authorizing");
+    accessStatus.textContent = "VERIFYING ARCHIVE";
+    const startedAt = performance.now();
+    const duration = 1500;
 
-    if (elapsed < 1) {
-      window.requestAnimationFrame(updateProgress);
-      return;
+    function updateProgress(now) {
+      const elapsed = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - elapsed, 2.4);
+      const progress = Math.min(100, Math.floor(eased * 100));
+      accessPercent.textContent = `${String(progress).padStart(3, "0")}%`;
+      accessProgressBar.style.transform = `scaleX(${progress / 100})`;
+
+      if (elapsed < 1) {
+        window.requestAnimationFrame(updateProgress);
+        return;
+      }
+
+      accessStatus.textContent = "ACCESS GRANTED";
+      accessPercent.textContent = "100%";
+      accessProgressBar.style.transform = "scaleX(1)";
+      window.setTimeout(() => {
+        accessGate.classList.add("is-complete");
+        document.body.classList.remove("access-locked");
+        window.setTimeout(() => {
+          accessGate.hidden = true;
+        }, 440);
+      }, 120);
     }
 
-    accessStatus.textContent = "ACCESS GRANTED";
-    accessPercent.textContent = "100%";
-    accessProgressBar.style.transform = "scaleX(1)";
-    window.setTimeout(() => {
-      accessGate.classList.add("is-complete");
-      document.body.classList.remove("access-locked");
-      window.setTimeout(() => {
-        accessGate.hidden = true;
-      }, 440);
-    }, 120);
-  }
-
-  window.requestAnimationFrame(updateProgress);
+    window.requestAnimationFrame(updateProgress);
+  }, 360);
 }
 
 function getWorld(id) {
@@ -2329,8 +2708,11 @@ function runTransition(world, callback) {
   transitionLayer.style.setProperty("--noise-color", theme.accent);
   transitionLayer.style.setProperty("--noise-rgb", theme.rgb);
   transitionLayer.style.setProperty("--noise-secondary", theme.secondary);
-  transitionLayer.classList.remove("is-active");
+  transitionLayer.querySelector(".noise-transition__label").textContent =
+    theme.id === "acheron" ? "TOP SECRET // OPENING CLASSIFIED FILE" : "ACCESSING WORLD FILE";
+  transitionLayer.classList.remove("is-active", "is-acheron");
   void transitionLayer.offsetWidth;
+  transitionLayer.classList.toggle("is-acheron", theme.id === "acheron");
   transitionLayer.classList.add("is-active");
   window.setTimeout(callback, 155);
 }
@@ -2365,7 +2747,7 @@ function openCharacter(characterId, skipHash = false) {
       ? "YUAN × KAI / GUEST FILE"
       : `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
     document.querySelector("#character-affiliation").textContent = character.affiliation ?? getWorldLabel(character.world);
-    document.querySelector("#character-detail-name").textContent = character.name;
+    document.querySelector("#character-detail-name").innerHTML = character.id === "lingshuang" ? "LING<br>SHUANG" : character.name;
     document.querySelector("#character-detail-jp").textContent = character.jp;
     document.querySelector("#character-detail-tags").innerHTML = character.tags.map((tag) => `<span>${tag}</span>`).join("");
     const detailImage = character.detailImage ?? character.image;
@@ -2374,8 +2756,11 @@ function openCharacter(characterId, skipHash = false) {
       ? `<img src="${detailImage}" alt="${character.jp}" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "50%"}" />`
       : `<span class="character-detail__monogram">${character.monogram}</span>`;
 
-    document.querySelector("#character-profile-title").textContent = `${character.name} / PROFILE`;
-    document.querySelector("#character-profile-copy").textContent = character.profile ?? "プロフィールデータは準備中です。設定を受け取り次第、このページへ追加します。";
+    document.querySelector("#character-profile-title").textContent = "PROFILE";
+    const profileCopy = document.querySelector("#character-profile-copy");
+    profileCopy.innerHTML = character.profile
+      ? `<p class="detail-panel__copy">${character.profile}</p>`
+      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>《データ準備中》</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`;
     renderCharacterPrompts(character);
     const gallery = document.querySelector("#character-gallery-grid");
     gallery.innerHTML = detailImage
@@ -2400,18 +2785,60 @@ function openCharacter(characterId, skipHash = false) {
   });
 }
 
-function openWorld(worldId, skipHash = false) {
+function showAcheronGate() {
+  acheronGate.hidden = false;
+  acheronGate.classList.remove("is-closing", "is-verifying");
+  acheronStatus.textContent = "CLEARANCE REQUIRED / LEVEL 9";
+  acheronAuthorize.disabled = false;
+  document.body.classList.add("acheron-locked");
+  window.requestAnimationFrame(() => acheronGate.classList.add("is-visible"));
+}
+
+function closeAcheronGate() {
+  acheronGate.classList.add("is-closing");
+  acheronGate.classList.remove("is-visible");
+  document.body.classList.remove("acheron-locked");
+  window.setTimeout(() => {
+    acheronGate.hidden = true;
+    acheronGate.classList.remove("is-closing");
+  }, 360);
+}
+
+function authorizeAcheron() {
+  if (acheronGate.classList.contains("is-verifying")) return;
+  acheronGate.classList.add("is-verifying");
+  acheronAuthorize.disabled = true;
+  acheronStatus.textContent = "VERIFYING BIOMETRIC SIGNATURE...";
+  window.setTimeout(() => {
+    acheronAuthorized = true;
+    acheronStatus.textContent = "Ω CLEARANCE ACCEPTED / ACCESS GRANTED";
+    acheronGate.classList.add("is-granted");
+    window.setTimeout(() => {
+      closeAcheronGate();
+      openWorld("acheron", false, true);
+      window.setTimeout(() => acheronGate.classList.remove("is-granted"), 500);
+    }, 520);
+  }, 760);
+}
+
+function openWorld(worldId, skipHash = false, bypassClearance = false) {
   const world = getWorld(worldId);
   if (!world) return;
+  if (world.id === "acheron" && !acheronAuthorized && !bypassClearance) {
+    showAcheronGate();
+    return;
+  }
 
   runTransition(world, () => {
     activeWorldId = world.id;
     worldView.classList.toggle("world-view--yuakai", world.id === "yuakai");
+    worldView.classList.toggle("world-view--acheron", world.id === "acheron");
     setTheme(world);
     homeView.hidden = true;
     characterView.hidden = true;
     worldView.hidden = false;
     document.querySelector("#world-file-number").textContent = `WORLD FILE ${world.index}`;
+    document.querySelector("#world-status").textContent = world.status ?? "ACCESS GRANTED";
     document.querySelector("#world-title").textContent = world.title;
     document.querySelector("#world-description").textContent = world.description;
     const worldNotice = document.querySelector("#world-notice");
@@ -2608,6 +3035,8 @@ document.querySelector("#character-next").addEventListener("click", (event) => o
 detailTabButtons.forEach((button) => button.addEventListener("click", () => setCharacterTab(button.dataset.detailTab)));
 promptList.addEventListener("click", copyCharacterPrompt);
 accessButton.addEventListener("click", authorizeAccess);
+acheronAuthorize.addEventListener("click", authorizeAcheron);
+acheronCancel.addEventListener("click", closeAcheronGate);
 window.addEventListener("popstate", handleHash);
 
 });
@@ -2653,6 +3082,28 @@ window.addEventListener("popstate", handleHash);
       <div class="noise-transition__label">ACCESSING WORLD FILE</div>
     </div>
 
+    <div class="acheron-gate" id="acheron-gate" role="dialog" aria-modal="true" aria-labelledby="acheron-gate-title" hidden>
+      <div class="acheron-gate__static" aria-hidden="true"></div>
+      <div class="acheron-gate__seal" aria-hidden="true">TOP<br />SECRET</div>
+      <div class="acheron-gate__frame">
+        <div class="acheron-gate__top">
+          <span>ACHERON // RESTRICTED NETWORK</span>
+          <span>SECURITY CLASS Ω</span>
+        </div>
+        <div class="acheron-gate__body">
+          <p>UNAUTHORIZED ACCESS WILL BE LOGGED</p>
+          <h2 id="acheron-gate-title">TOP<br />SECRET</h2>
+          <p class="acheron-gate__warning">《閲覧には最高クラスの許可が必要です》</p>
+          <p class="acheron-gate__copy">この記録には組織構成員・執行記録・機密系統情報が含まれます。</p>
+        </div>
+        <div class="acheron-gate__actions">
+          <button type="button" id="acheron-cancel">ABORT</button>
+          <button type="button" id="acheron-authorize">REQUEST Ω CLEARANCE <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="acheron-gate__status" id="acheron-status">CLEARANCE REQUIRED / LEVEL 9</div>
+      </div>
+    </div>
+
     <div class="character-shutter" id="character-shutter" aria-hidden="true">
       <div class="character-shutter__panel"></div>
       <div class="character-shutter__scan"></div>
@@ -2683,6 +3134,7 @@ window.addEventListener("popstate", handleHash);
           <span>CHARACTER</span>
           <span class="title-accent">ARCHIVE<span class="title-dot">.</span></span>
         </h1>
+        <div class="intro__live" aria-hidden="true"><span></span> LIVE ARCHIVE SIGNAL / INDEX 021</div>
         <div class="intro__footer">
           <p>世界と人物、その間にある物語の記録。</p>
           <span class="scroll-cue">SCROLL TO EXPLORE ↓</span>
@@ -2780,10 +3232,6 @@ window.addEventListener("popstate", handleHash);
           <h1 id="character-detail-name">CHARACTER</h1>
           <p class="character-detail__jp" id="character-detail-jp">キャラクター</p>
           <div class="character-detail__tags" id="character-detail-tags"></div>
-          <div class="character-detail__note">
-            <span>ARCHIVE NOTE</span>
-            <p>人物紹介・プロフィール・関係性・ギャラリーを追加するためのキャラクターファイル。</p>
-          </div>
         </div>
       </section>
       <section class="character-detail__tabs section-shell">
@@ -2795,8 +3243,8 @@ window.addEventListener("popstate", handleHash);
         <div class="detail-tabs__body">
           <section class="detail-panel" role="tabpanel" data-detail-panel="profile">
             <p class="detail-panel__index">SUBJECT INFORMATION</p>
-            <h2 id="character-profile-title">CHARACTER / PROFILE</h2>
-            <p class="detail-panel__copy" id="character-profile-copy">プロフィールデータは準備中です。</p>
+            <h2 id="character-profile-title">PROFILE</h2>
+            <div id="character-profile-copy"></div>
           </section>
           <section class="detail-panel detail-panel--prompt" role="tabpanel" data-detail-panel="prompt" hidden>
             <div class="detail-panel__heading">
