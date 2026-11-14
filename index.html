@@ -275,6 +275,7 @@ body.acheron-locked {
   background-size: 7px 6px, 100% 6px;
   mix-blend-mode: screen;
   animation: acheron-static 100ms steps(2, end) infinite;
+  transition: opacity 180ms linear, filter 180ms linear;
 }
 
 .acheron-gate__seal {
@@ -282,11 +283,11 @@ body.acheron-locked {
   right: -0.08em;
   bottom: -0.2em;
   color: transparent;
-  font-family: var(--font-ui);
-  font-size: clamp(8rem, 25vw, 27rem);
-  font-weight: 900;
-  letter-spacing: -0.09em;
-  line-height: 0.64;
+  font-family: var(--font-mono);
+  font-size: clamp(7rem, 21vw, 23rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 0.72;
   text-align: right;
   -webkit-text-stroke: 1px rgba(191, 18, 49, 0.16);
   transform: rotate(-5deg);
@@ -302,6 +303,7 @@ body.acheron-locked {
   border: 1px solid rgba(215, 31, 63, 0.58);
   background: rgba(4,3,4,0.92);
   box-shadow: 0 0 0 8px rgba(126,0,22,0.08), 0 0 90px rgba(126,0,22,0.28);
+  transition: filter 180ms linear, opacity 180ms linear, border-color 180ms linear, box-shadow 180ms linear;
 }
 
 .acheron-gate__frame::before {
@@ -317,7 +319,7 @@ body.acheron-locked {
   font-family: var(--font-mono);
   font-size: 0.48rem;
   font-weight: 900;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.07em;
   white-space: nowrap;
 }
 
@@ -339,14 +341,14 @@ body.acheron-locked {
 .acheron-gate h2 {
   margin: 0;
   color: #f6f0f1;
-  font-family: var(--font-ui);
-  font-size: clamp(5rem, 14vw, 12rem);
-  font-weight: 900;
-  letter-spacing: -0.075em;
-  line-height: 0.69;
+  font-family: var(--font-mono);
+  font-size: clamp(4.4rem, 11vw, 9.6rem);
+  font-weight: 300;
+  letter-spacing: 0.035em;
+  line-height: 0.76;
 }
 
-.acheron-gate__warning { margin: 34px 0 0; color: #d73555; font-family: var(--font-mono); font-size: clamp(0.68rem, 1.4vw, 0.92rem); font-weight: 400; letter-spacing: 0.19em; }
+.acheron-gate__warning { margin: 34px 0 0; color: #d73555; font-family: var(--font-mono); font-size: clamp(0.68rem, 1.4vw, 0.92rem); font-weight: 400; letter-spacing: 0.08em; }
 .acheron-gate__copy { max-width: 620px; margin: 14px 0 0; color: #81777a; font-size: 0.7rem; line-height: 1.9; }
 .acheron-gate__actions { display: grid; grid-template-columns: 0.32fr 0.68fr; gap: 10px; }
 .acheron-gate__actions button { padding: 16px 18px; border: 1px solid rgba(185,18,54,0.52); color: #8d7b80; background: transparent; font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.12em; cursor: pointer; }
@@ -354,11 +356,72 @@ body.acheron-locked {
 .acheron-gate__actions button:hover:not(:disabled), .acheron-gate__actions button:focus-visible { color: #050203; background: #d51b45; outline: none; }
 .acheron-gate__actions button:disabled { cursor: wait; opacity: 0.72; }
 .acheron-gate__status { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(185,18,54,0.3); }
-.acheron-gate.is-verifying .acheron-gate__frame { animation: acheron-verify 160ms steps(2, end) infinite; }
-.acheron-gate.is-granted .acheron-gate__frame { border-color: #ff315a; box-shadow: 0 0 120px rgba(220,18,61,0.52); }
+.acheron-gate__actions button:last-child.is-authorizing {
+  color: #050203;
+  border-color: #ff315a;
+  animation: acheron-authorize-pip 360ms steps(1, end) both;
+}
+.acheron-gate.is-denied .acheron-gate__frame { border-color: #ff214e; box-shadow: 0 0 80px rgba(220,18,61,0.38); }
+.acheron-gate.is-denied .acheron-gate__status,
+.acheron-gate.is-denied .acheron-authorize__label { color: #ff315a; }
+.acheron-gate.is-blackout { background-color: #000; }
+.acheron-gate.is-blackout::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(0,0,0,.38);
+}
+.acheron-gate.is-blackout .acheron-gate__frame,
+.acheron-gate.is-blackout .acheron-gate__seal,
+.acheron-gate.is-blackout .acheron-gate__static {
+  filter: grayscale(1) saturate(0.04) brightness(0.28) contrast(1.35);
+}
+.acheron-gate.is-breached .acheron-gate__frame {
+  filter: grayscale(0.88) saturate(0.2) brightness(0.38) contrast(1.42);
+}
+
+.acheron-gate__impacts {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+.acheron-gate__impacts span {
+  position: absolute;
+  width: clamp(58px, 7vw, 92px);
+  aspect-ratio: 1;
+  opacity: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #020203 0 7%, #d7d4d4 8% 10%, #171516 11% 17%, transparent 18%),
+    conic-gradient(from 14deg, transparent 0 7%, rgba(245,240,241,.75) 8% 9%, transparent 10% 21%, rgba(245,240,241,.48) 22% 23%, transparent 24% 42%, rgba(245,240,241,.6) 43% 44%, transparent 45% 66%, rgba(245,240,241,.46) 67% 68%, transparent 69%);
+  filter: drop-shadow(0 0 9px rgba(255,255,255,.36)) drop-shadow(0 0 26px rgba(187,0,35,.54));
+  transform: scale(1.8);
+}
+.acheron-gate__impacts span:nth-child(1) { left: 22%; top: 24%; }
+.acheron-gate__impacts span:nth-child(2) { right: 18%; top: 42%; }
+.acheron-gate__impacts span:nth-child(3) { left: 48%; bottom: 15%; }
+.acheron-gate__impacts span.is-hit {
+  opacity: .96;
+  transform: scale(1);
+  animation: bullet-impact 180ms cubic-bezier(.12,.8,.2,1) both;
+}
 
 @keyframes acheron-static { from { transform: translate(0,0); } to { transform: translate(3%, -2%); } }
-@keyframes acheron-verify { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(2px); } }
+@keyframes acheron-authorize-pip {
+  0%, 16% { color: #050203; background: #ff315a; box-shadow: 0 0 28px rgba(255,49,90,.62); }
+  17%, 34% { color: #ff315a; background: transparent; box-shadow: none; }
+  35%, 52% { color: #050203; background: #ff315a; box-shadow: 0 0 38px rgba(255,49,90,.78); }
+  53%, 70% { color: #ff315a; background: transparent; box-shadow: none; }
+  71%, 100% { color: #050203; background: #ff315a; box-shadow: 0 0 22px rgba(255,49,90,.48); }
+}
+@keyframes bullet-impact {
+  0% { transform: scale(2.2); filter: brightness(4) drop-shadow(0 0 46px #fff); }
+  34% { transform: scale(.72); filter: brightness(2.2) drop-shadow(0 0 28px rgba(255,255,255,.8)); }
+  100% { transform: scale(1); filter: brightness(.92) drop-shadow(0 0 14px rgba(187,0,35,.58)); }
+}
 
 button,
 input {
@@ -1047,7 +1110,7 @@ button {
 
 .noise-transition {
   position: fixed;
-  z-index: 999;
+  z-index: 2200;
   inset: 0;
   display: grid;
   place-items: center;
@@ -1424,6 +1487,7 @@ button {
   text-align: left;
   cursor: pointer;
 }
+.detail-tabs__nav button[hidden] { display: none; }
 
 .detail-tabs__nav button span { color: rgba(var(--detail-rgb), 0.56); }
 .detail-tabs__nav button:hover,
@@ -1509,6 +1573,75 @@ button {
   font-weight: 700;
   letter-spacing: 0.08em;
 }
+
+.contributor-credit {
+  width: min(100%, 610px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 28px;
+  margin: 28px auto 0;
+  padding: 20px 22px;
+  border: 1px solid rgba(var(--detail-rgb), .34);
+  background: rgba(var(--detail-rgb), .045);
+  font-family: var(--font-mono);
+}
+.contributor-credit > span { color: var(--detail-accent); font-size: .52rem; letter-spacing: .12em; }
+.contributor-credit > strong { grid-column: 1 / -1; color: #d5d8dc; font-size: .92rem; font-weight: 400; letter-spacing: .08em; }
+.contributor-credit > small,
+.contributor-credit > a { color: #747a82; font-size: .54rem; letter-spacing: .1em; }
+.contributor-credit > a:hover { color: var(--detail-accent); }
+
+.project-participants {
+  display: grid;
+  grid-template-columns: minmax(280px, .72fr) minmax(0, 1.28fr);
+  gap: clamp(38px, 7vw, 110px);
+  padding-block: clamp(64px, 8vw, 110px);
+  border-bottom: 1px solid var(--line);
+}
+.project-participants[hidden] { display: none; }
+.project-participants__heading > span,
+.project-participants__list span,
+.project-participants__list small {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: .54rem;
+  letter-spacing: .1em;
+}
+.project-participants__heading h2 {
+  margin: 20px 0 24px;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 5.8rem);
+  font-weight: 400;
+  letter-spacing: -.05em;
+  line-height: .86;
+}
+.project-participants__heading p { max-width: 480px; color: #8e949b; font-size: .75rem; line-height: 1.9; }
+.project-participants__list { border-top: 1px solid rgba(var(--accent-rgb), .35); }
+.project-participants__list > div {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: 22px;
+  padding: 24px 10px;
+  border-bottom: 1px solid rgba(var(--accent-rgb), .24);
+}
+.project-participants__list strong { color: #d7dbe0; font-family: var(--font-mono); font-size: .78rem; font-weight: 400; letter-spacing: .08em; }
+.project-participants__list small { color: #5f666e; }
+
+.world-guests {
+  padding-block: clamp(72px, 9vw, 130px);
+  border-top: 1px solid rgba(var(--accent-rgb), .3);
+}
+.world-guests[hidden] { display: none; }
+.world-guests__note {
+  max-width: 760px;
+  margin: -14px 0 34px;
+  color: #777e86;
+  font-size: .72rem;
+  line-height: 1.9;
+}
+.world-guests .character-card { border-color: rgba(var(--accent-rgb), .24); }
+.world-guests .character-card__visual { filter: saturate(.42); }
 
 .detail-panel__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .prompt-variant-count {
@@ -1661,7 +1794,7 @@ button {
   font-family: var(--font-mono);
   font-size: clamp(2rem, 5.6vw, 4.8rem);
   font-weight: 300;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.075em;
   -webkit-text-stroke: 1px rgba(255,54,93,0.22);
   transform: rotate(-4deg);
 }
@@ -1694,7 +1827,7 @@ button {
   font-family: var(--font-mono);
   font-size: clamp(3.8rem, 11vw, 10rem);
   font-weight: 300;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.065em;
   -webkit-text-stroke: 1px rgba(255,49,90,0.18);
   transform: rotate(-3deg);
 }
@@ -1712,7 +1845,7 @@ button {
   font-family: var(--font-mono);
   font-size: 0.5rem;
   font-weight: 900;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
@@ -2091,11 +2224,16 @@ button {
   .acheron-gate { padding: 9px; }
   .acheron-gate__frame { min-height: calc(100svh - 18px); padding: 32px 20px 22px; }
   .acheron-gate__top span:last-child { display: none; }
-  .acheron-gate h2 { font-size: clamp(4.7rem, 24vw, 7.5rem); }
+  .acheron-gate h2 { font-size: clamp(3.8rem, 18vw, 6rem); }
   .acheron-gate__warning { margin-top: 26px; font-size: 0.8rem; }
   .acheron-gate__actions { grid-template-columns: 0.3fr 0.7fr; }
   .acheron-gate__actions button { padding: 15px 10px; font-size: 0.48rem; }
   .world-view--acheron .world-hero::before { top: 1em; }
+
+  .project-participants { grid-template-columns: 1fr; }
+  .project-participants__list > div { grid-template-columns: 1fr; gap: 9px; }
+  .contributor-credit { grid-template-columns: 1fr; }
+  .contributor-credit > strong { grid-column: auto; }
 
   .site-footer {
     flex-direction: column;
@@ -2451,7 +2589,7 @@ const worlds = [
 const characters = [
   { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.16, portraitY: "-2%" },
   { id: "kai", name: "KAI", jp: "カイ", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", worldOnly: true },
+  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", worldOnly: true, noPrompt: true },
   { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
@@ -2468,6 +2606,14 @@ const characters = [
   { id: "feiyue", name: "FEIYUE", jp: "翡月／フェイユエ", world: "imperial-court", affiliation: "王宮", tags: ["COURT", "LOTUS"], monogram: "FY", image: "./assets/characters/feiyue.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "lingshuang", name: "LINGSHUANG", jp: "凌霜／リンシュアン", world: "imperial-court", affiliation: "王宮", tags: ["WARRIOR", "MOON WHITE"], monogram: "LS", image: "./assets/characters/lingshuang.webp", portraitScale: 1.04, portraitY: "-1%" },
   { id: "luoyan", name: "LUOYAN", jp: "洛焔／ルォイェン", world: "imperial-court", affiliation: "王宮", tags: ["PHYSICIAN", "PHOENIX"], monogram: "LY", image: "./assets/characters/luoyan.webp", portraitScale: 1.0, portraitY: "0%" },
+
+  { id: "imperial-guest-01", name: "GUEST FILE 01", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "01", worldOnly: true, guest: true, guestIndex: 1, noPrompt: true },
+  { id: "imperial-guest-02", name: "GUEST FILE 02", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "02", worldOnly: true, guest: true, guestIndex: 2, noPrompt: true },
+  { id: "imperial-guest-03", name: "GUEST FILE 03", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "03", worldOnly: true, guest: true, guestIndex: 3, noPrompt: true },
+  { id: "imperial-guest-04", name: "GUEST FILE 04", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "04", worldOnly: true, guest: true, guestIndex: 4, noPrompt: true },
+  { id: "imperial-guest-05", name: "GUEST FILE 05", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "05", worldOnly: true, guest: true, guestIndex: 5, noPrompt: true },
+  { id: "imperial-guest-06", name: "GUEST FILE 06", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "06", worldOnly: true, guest: true, guestIndex: 6, noPrompt: true },
+  { id: "imperial-guest-07", name: "GUEST FILE 07", jp: "情報準備中", world: "imperial-court", affiliation: "PROJECT GUEST", tags: ["GUEST", "PENDING"], monogram: "07", worldOnly: true, guest: true, guestIndex: 7, noPrompt: true },
 
   { id: "theia", name: "THEIA", jp: "ティア", world: "devil-mate", affiliation: "悪魔の番", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR"], monogram: "LS", image: "./assets/characters/livia.webp", portraitScale: 1.0, portraitY: "0%" },
@@ -2486,6 +2632,10 @@ const characterView = document.querySelector("#character-view");
 const worldRail = document.querySelector("#world-rail");
 const characterGrid = document.querySelector("#character-grid");
 const worldCharacterGrid = document.querySelector("#world-character-grid");
+const worldGuestSection = document.querySelector("#world-guest-section");
+const worldGuestGrid = document.querySelector("#world-guest-grid");
+const worldGuestCount = document.querySelector("#world-guest-count");
+const projectParticipants = document.querySelector("#project-participants");
 const searchInput = document.querySelector("#character-search");
 const resultCount = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
@@ -2504,6 +2654,7 @@ const acheronGate = document.querySelector("#acheron-gate");
 const acheronAuthorize = document.querySelector("#acheron-authorize");
 const acheronCancel = document.querySelector("#acheron-cancel");
 const acheronStatus = document.querySelector("#acheron-status");
+const acheronAuthorizeLabel = document.querySelector(".acheron-authorize__label");
 const detailTabButtons = [...document.querySelectorAll("[data-detail-tab]")];
 const detailTabPanels = [...document.querySelectorAll("[data-detail-panel]")];
 const promptList = document.querySelector("#character-prompt-list");
@@ -2611,7 +2762,9 @@ function renderWorlds() {
 function characterCard(character, index) {
   const color = getCharacterColor(character);
   const archiveIndex = archiveCharacters.indexOf(character);
-  const fileLabel = character.worldOnly
+  const fileLabel = character.guest
+    ? `GUEST FILE ${String(character.guestIndex).padStart(2, "0")}`
+    : character.worldOnly
     ? "GUEST FILE"
     : `FILE ${String(archiveIndex + 1).padStart(3, "0")}`;
   const portrait = character.image
@@ -2747,7 +2900,9 @@ function openCharacter(characterId, skipHash = false) {
     characterView.hidden = false;
     characterView.style.setProperty("--detail-accent", color.accent);
     characterView.style.setProperty("--detail-rgb", color.rgb);
-    document.querySelector("#character-file-number").textContent = character.worldOnly
+    document.querySelector("#character-file-number").textContent = character.guest
+      ? `IMPERIAL COURT / GUEST FILE ${String(character.guestIndex).padStart(2, "0")}`
+      : character.worldOnly
       ? "YUAN × KAI / GUEST FILE"
       : `CHARACTER FILE ${String(index + 1).padStart(3, "0")}`;
     document.querySelector("#character-affiliation").textContent = character.affiliation ?? getWorldLabel(character.world);
@@ -2762,9 +2917,21 @@ function openCharacter(characterId, skipHash = false) {
 
     document.querySelector("#character-profile-title").textContent = "PROFILE";
     const profileCopy = document.querySelector("#character-profile-copy");
-    profileCopy.innerHTML = character.profile
+    const contributorCredit = character.guest
+      ? `<aside class="contributor-credit">
+          <span>CREATOR CREDIT</span>
+          <strong>${character.creatorName ?? "USERNAME PENDING"}</strong>
+          ${character.creatorUrl ? `<a href="${character.creatorUrl}" target="_blank" rel="noopener noreferrer">CREATOR PROFILE ↗</a>` : `<small>CREATOR PROFILE / LINK PENDING</small>`}
+          ${character.projectUrl ? `<a href="${character.projectUrl}" target="_blank" rel="noopener noreferrer">PROJECT SITE ↗</a>` : `<small>PROJECT SITE / LINK PENDING</small>`}
+        </aside>`
+      : "";
+    profileCopy.innerHTML = (character.profile
       ? `<p class="detail-panel__copy">${character.profile}</p>`
-      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`;
+      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`) + contributorCredit;
+    const promptTab = document.querySelector("#character-prompt-tab");
+    const galleryTab = document.querySelector('[data-detail-tab="gallery"]');
+    promptTab.hidden = Boolean(character.noPrompt);
+    galleryTab.querySelector("span").textContent = character.noPrompt ? "02" : "03";
     renderCharacterPrompts(character);
     const gallery = document.querySelector("#character-gallery-grid");
     gallery.innerHTML = detailImage
@@ -2791,9 +2958,13 @@ function openCharacter(characterId, skipHash = false) {
 
 function showAcheronGate() {
   acheronGate.hidden = false;
-  acheronGate.classList.remove("is-closing", "is-verifying");
+  acheronGate.classList.remove("is-closing", "is-verifying", "is-denied", "is-blackout", "is-breached");
   acheronStatus.textContent = "CLEARANCE REQUIRED / LEVEL 9";
+  acheronAuthorizeLabel.textContent = "REQUEST Ω CLEARANCE";
+  acheronAuthorize.classList.remove("is-authorizing");
+  acheronGate.querySelectorAll(".acheron-gate__impacts span").forEach((impact) => impact.classList.remove("is-hit"));
   acheronAuthorize.disabled = false;
+  acheronCancel.disabled = false;
   document.body.classList.add("acheron-locked");
   window.requestAnimationFrame(() => acheronGate.classList.add("is-visible"));
 }
@@ -2811,18 +2982,38 @@ function closeAcheronGate() {
 function authorizeAcheron() {
   if (acheronGate.classList.contains("is-verifying")) return;
   acheronGate.classList.add("is-verifying");
+  acheronAuthorize.classList.add("is-authorizing");
   acheronAuthorize.disabled = true;
+  acheronCancel.disabled = true;
   acheronStatus.textContent = "VERIFYING BIOMETRIC SIGNATURE...";
   window.setTimeout(() => {
+    acheronAuthorize.classList.remove("is-authorizing");
+    acheronAuthorizeLabel.textContent = "AUTHENTICATION FAILED";
+    acheronStatus.textContent = "ACCESS DENIED / BIOMETRIC MISMATCH";
+    acheronGate.classList.add("is-denied");
+  }, 360);
+  window.setTimeout(() => {
+    acheronGate.classList.add("is-blackout");
+    acheronStatus.textContent = "SYSTEM POWER FAILURE";
+  }, 720);
+  window.setTimeout(() => {
+    acheronGate.querySelector(".acheron-gate__impacts span:nth-child(1)").classList.add("is-hit");
+  }, 900);
+  window.setTimeout(() => {
+    acheronGate.classList.add("is-breached");
+    acheronGate.querySelector(".acheron-gate__impacts span:nth-child(2)").classList.add("is-hit");
+    acheronStatus.textContent = "SECURITY BREACH DETECTED";
+  }, 1050);
+  window.setTimeout(() => {
+    acheronGate.querySelector(".acheron-gate__impacts span:nth-child(3)").classList.add("is-hit");
+  }, 1200);
+  window.setTimeout(() => {
     acheronAuthorized = true;
-    acheronStatus.textContent = "Ω CLEARANCE ACCEPTED / ACCESS GRANTED";
-    acheronGate.classList.add("is-granted");
     window.setTimeout(() => {
       closeAcheronGate();
       openWorld("acheron", false, true);
-      window.setTimeout(() => acheronGate.classList.remove("is-granted"), 500);
-    }, 520);
-  }, 760);
+    }, 80);
+  }, 1420);
 }
 
 function openWorld(worldId, skipHash = false, bypassClearance = false) {
@@ -2849,16 +3040,22 @@ function openWorld(worldId, skipHash = false, bypassClearance = false) {
     worldNotice.textContent = world.notice ?? "";
     worldNotice.hidden = !world.notice;
     document.querySelector("#yuakai-story").hidden = world.id !== "yuakai";
+    projectParticipants.hidden = world.id !== "imperial-court";
     document.querySelector("#world-facts").innerHTML = Object.entries(world.facts)
       .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
       .join("");
-    const cast = characters.filter((character) => character.world === world.id);
+    const cast = characters.filter((character) => character.world === world.id && !character.guest);
+    const guests = characters.filter((character) => character.world === world.id && character.guest);
     if (world.id === "yuakai") {
       cast.sort((a, b) => ["yuan", "kai"].indexOf(a.id) - ["yuan", "kai"].indexOf(b.id));
     }
     worldCharacterGrid.innerHTML = cast.map(characterCard).join("");
     bindCharacterCards(worldCharacterGrid);
     document.querySelector("#world-count").textContent = `${String(cast.length).padStart(2, "0")} REGISTERED CHARACTERS`;
+    worldGuestSection.hidden = guests.length === 0;
+    worldGuestGrid.innerHTML = guests.map(characterCard).join("");
+    if (guests.length) bindCharacterCards(worldGuestGrid);
+    worldGuestCount.textContent = `${String(guests.length).padStart(2, "0")} INVITED CHARACTERS`;
     window.scrollTo({ top: 0, behavior: "instant" });
     if (!skipHash) history.pushState({ world: world.id }, "", `#world-${world.id}`);
   });
@@ -3092,6 +3289,9 @@ window.addEventListener("popstate", handleHash);
     <div class="acheron-gate" id="acheron-gate" role="dialog" aria-modal="true" aria-labelledby="acheron-gate-title" hidden>
       <div class="acheron-gate__static" aria-hidden="true"></div>
       <div class="acheron-gate__seal" aria-hidden="true">TOP<br />SECRET</div>
+      <div class="acheron-gate__impacts" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
       <div class="acheron-gate__frame">
         <div class="acheron-gate__top">
           <span>ACHERON // RESTRICTED NETWORK</span>
@@ -3105,7 +3305,7 @@ window.addEventListener("popstate", handleHash);
         </div>
         <div class="acheron-gate__actions">
           <button type="button" id="acheron-cancel">ABORT</button>
-          <button type="button" id="acheron-authorize">REQUEST Ω CLEARANCE <span aria-hidden="true">↗</span></button>
+          <button type="button" id="acheron-authorize"><span class="acheron-authorize__label">REQUEST Ω CLEARANCE</span><span aria-hidden="true">↗</span></button>
         </div>
         <div class="acheron-gate__status" id="acheron-status">CLEARANCE REQUIRED / LEVEL 9</div>
       </div>
@@ -3202,6 +3402,18 @@ window.addEventListener("popstate", handleHash);
           <dl id="world-facts"></dl>
         </div>
       </section>
+      <section class="project-participants section-shell" id="project-participants" hidden aria-labelledby="project-participants-title">
+        <div class="project-participants__heading">
+          <span>COLLABORATIVE PROJECT / PARTICIPANTS 03</span>
+          <h2 id="project-participants-title">PROJECT<br />PARTICIPANTS</h2>
+          <p>この世界観には、3名の企画参加者によるゲストキャラクターが含まれます。</p>
+        </div>
+        <div class="project-participants__list" id="project-participant-list">
+          <div><span>PARTICIPANT 01</span><strong>USERNAME PENDING</strong><small>PROJECT LINK / PENDING</small></div>
+          <div><span>PARTICIPANT 02</span><strong>USERNAME PENDING</strong><small>PROJECT LINK / PENDING</small></div>
+          <div><span>PARTICIPANT 03</span><strong>USERNAME PENDING</strong><small>PROJECT LINK / PENDING</small></div>
+        </div>
+      </section>
       <section class="yuakai-story section-shell" id="yuakai-story" hidden>
         <div class="yuakai-story__heading">
           <span>PRIVATE RECORD / 02</span>
@@ -3224,6 +3436,17 @@ window.addEventListener("popstate", handleHash);
         </div>
         <div class="character-grid" id="world-character-grid"></div>
       </section>
+      <section class="world-guests section-shell" id="world-guest-section" hidden aria-labelledby="world-guest-title">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">GUEST</span>
+            <h2 id="world-guest-title">GUEST FILES</h2>
+          </div>
+          <p id="world-guest-count">07 INVITED CHARACTERS</p>
+        </div>
+        <p class="world-guests__note">企画参加者によるゲストキャラクターの記録。プロンプトデータは非公開です。</p>
+        <div class="character-grid" id="world-guest-grid"></div>
+      </section>
     </main>
 
     <main id="character-view" class="character-detail" hidden aria-live="polite">
@@ -3244,7 +3467,7 @@ window.addEventListener("popstate", handleHash);
       <section class="character-detail__tabs section-shell">
         <div class="detail-tabs__nav" role="tablist" aria-label="キャラクター詳細">
           <button class="is-active" type="button" role="tab" aria-selected="true" data-detail-tab="profile"><span>01</span>PROFILE</button>
-          <button type="button" role="tab" aria-selected="false" data-detail-tab="prompt"><span>02</span>PROMPT</button>
+          <button type="button" role="tab" aria-selected="false" data-detail-tab="prompt" id="character-prompt-tab"><span>02</span>PROMPT</button>
           <button type="button" role="tab" aria-selected="false" data-detail-tab="gallery"><span>03</span>GALLERY</button>
         </div>
         <div class="detail-tabs__body">
