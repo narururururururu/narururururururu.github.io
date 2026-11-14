@@ -1253,6 +1253,35 @@ button {
 }
 
 .detail-panel__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.prompt-variant-count {
+  color: var(--detail-accent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+}
+.prompt-list {
+  display: grid;
+  gap: 18px;
+  margin-top: 38px;
+}
+.prompt-variant {
+  border: 1px solid var(--line);
+  background: #050608;
+}
+.prompt-variant__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.prompt-variant__label {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.13em;
+}
 .prompt-copy {
   display: flex;
   align-items: center;
@@ -1268,18 +1297,26 @@ button {
 }
 .prompt-copy:hover:not(:disabled) { color: #050608; background: var(--detail-accent); }
 .prompt-copy:disabled { opacity: 0.38; cursor: not-allowed; }
-.detail-panel pre {
+.prompt-variant pre {
   max-height: 390px;
-  margin: 38px 0 0;
+  margin: 0;
   padding: 24px;
   overflow: auto;
-  border: 1px solid var(--line);
   color: #cdd1d6;
   background: #050608;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   line-height: 1.8;
   white-space: pre-wrap;
+}
+.prompt-pending {
+  padding: 28px;
+  border: 1px solid var(--line);
+  color: #555b63;
+  background: #050608;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
 }
 
 .character-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 34px; }
@@ -1748,6 +1785,257 @@ button {
 
 </style>
     <script>
+const characterPrompts = {
+  kuon: {
+    base: `male, mature handsome man, tall muscular man, broad shoulders, white cat ears, white cat tail, half-lidded black eyes, dignified face, short messy layered white hair,
+slightly wolf-cut silhouette, pink and light-blue underlayer-color hair, symmetrical hairstyle, long bangs, pink and light blue highlights,`,
+  },
+  kai: {
+    variants: [
+      {
+        label: "NORMAL",
+        prompt: `man, adult male, tall, muscular, toned body, broad shoulders, long blonde hair, messy layered hair, black eyes, sunglasses, black cat ears, black cat tail, red collar, black nail polish, black turtleneck, black suit, tailored suit, open suit jacket, sharp jawline, cool expression, aloof, confident, slight smirk,`,
+      },
+      {
+        label: "BLUSH",
+        prompt: `man, adult male, tall, muscular, toned body, broad shoulders, long blonde hair, messy layered hair, black eyes, sunglasses pushed up on head, black cat ears, black cat tail, red collar, black nail polish, black turtleneck, black suit, tailored suit, loosened suit jacket, flushed cheeks, blissful expression, ecstatic expression, half-lidded eyes, parted lips, obedient expression,`,
+      },
+    ],
+  },
+  yixing: {
+    base: `boy, handsome adult man, muscular build, broad chest, defined pectorals,
+short white hair, slightly tousled hair, icy blue eyes,
+cool downer expression, half-lidded eyes,
+black sunglasses, cigarette,
+black office shirt stretched over his chest, top button undone,
+gray suit jacket, gray slacks, black belt, silver thin necklace, silver piercing,`,
+  },
+  azor: {
+    base: `muscular adult man, broad shoulders, defined arms,
+asymmetrical layered wolf cut, short hair on one side, long jagged side bangs on the other side, dramatic spiky nape resembling raptor feathers, windswept hair,
+raven black hair with warm tawny brown roots and pale platinum tips, feather-like color gradient,
+sharp amber eyes, burn scar across the cheek,
+
+fitted black tactical blazer with structured shoulders, dark bold patterned shirt with abstract wing and claw motifs,
+leather harness over the suit, tactical waist belt, utility straps,
+thigh-high black platform boots connected to a waist harness with leather straps,
+multiple silver rings, dangling silver earring, silver ear piercings,
+black industrial gas mask hanging from his belt,
+cyberpunk hunter fashion, wild and alluring, dangerous smile, predatory aura,`,
+    additions: [{ label: "WITH WINGS", prompt: `huge hawk wings,` }],
+  },
+  seva: {
+    base: `male, handsome, tall man, muscular, strong build,
+1.4::very long hair::, blight brown hair, side-swept slicked-back hair, one side of the hair neatly combed back,
+rimless sharp glasses, pale skin, subtle freckles across nose and cheeks,
+green eyes, droopy eyes, soft downturned eyes, prominent long lower eyelashes, delicate long eyelashes,
+refined sharp facial features, high cheekbones, straight nose, cool expression,
+
+black Russian military-inspired double-breasted greatcoat,
+long black fur-trimmed coat, soft charcoal gray fur collar and cuffs,
+structured shoulders, tailored waist, silver metal buttons, subtle black embroidery,
+black leather gloves, dark turtleneck, black trousers, polished leather boots,`,
+    additions: [{ label: "WITH RIFLE", prompt: `sniper rifle slung across his back, long sniper rifle carried diagonally over one shoulder, rifle strap crossing his chest, black leather rifle sling,` }],
+  },
+  nox: {
+    base: `boy, handsome adult male, tall and broad-shouldered, muscular build, 1.4::long legs::, pale skin, long pale silver-blond hair tied in a low ponytail, deep wine-red eyes with vertical slit pupils, sharp eyes, human ears, subtle burn scar on the neck, beauty mark beneath the right eye, slightly visible fangs, black ram horns sweeping backward, gold luxury decorating the horns, multiple small hoop gold earrings on one ear,
+
+formal dark fantasy attire, black high-neck shirt, silver-gray double-breasted suit, long black tailored overcoat, black leather gloves, elegant intimidating aura,
+
+from the ankles down, black furred goat legs, split cloven hooves instead of human feet, clearly visible animal lower legs, slender goat-like ankles, elegant black cloven hooves, clear transition from tailored trousers to furred animal legs,
+1.8::black cloven hooves visible beneath the trousers::,
+1.4::no shoes::,`,
+  },
+  yumekui: {
+    base: `young boy, humanoid dream-eating beast, tall and slender, muted dusty blue hair, soft messy medium-length hair, faint dark circles under the eyes, oversized charcoal gray knit sweater, loose dark slacks, 1.8::very thick long tail made of black smoke emerging from his lower back::, 1.4::tiny glowing stars and fragments of dreams floating inside the smoke::, narrowed golden eyes, sharp fangs revealed, lips parted, soft content expression, glowing dream fragments being drawn into the smoke, smoke curling around his face and body, dreamlike haze, dark fantasy,
+
+voluminous flowing black smoke, luminous star fragments inside the smoke, dream particles drifting through the air, ethereal glow, surreal atmosphere,`,
+    additions: [{ label: "MOUTH SMOKE", prompt: `black smoke flooding from corner of his mouth,` }],
+  },
+  onero: {
+    base: `male, handsome adult male, tall, muscular, broad shoulder,
+ash white hair, smoky silver hair, messy layered short hair, asymmetric parted bangs, black hair tips,
+golden eyes, narrow pupils, half-lidded eyes, smirk, small fangs, human ears, black nails,
+
+sly smile, smug expression, teasing gaze, relaxed eyebrows, casually arrogant expression,
+
+black high-neck clerical shirt, black cassock, asymmetrical long black coat, loose sleeves, 1.4::short black shoulder cape draped over both shoulders, thin gold trim along the edges::,
+tarnished silver clasps, black embroidery on coat, black fitted trousers, gothic religious fashion, dark fantasy, elegant and predatory, slightly disheveled,
+
+1.8::very thick long tail made of black smoke emerging from his lower back::, 1.7::tiny glowing stars and fragments of dreams floating inside the smoke::, glowing dream fragments being drawn into the smoke, smoke curling around his body,`,
+  },
+  unknown: {
+    base: `boy, beautiful and androgynous young man, pale ash-pink long hair, thin braid in front of one ear, long bangs, deep ultramarine blue eyes, lower half of irises filled with tiny silver stardust, translucent pale skin, faint blue-violet veins visible around collarbones, slender but subtly muscular back and wrists,black formal attire, fitted black high-collar dress shirt, black waistcoat with subtle dark embroidery, tailored black long coat with satin lapels, slim black trousers, polished black leather dress shoes, one dangling earring with a small glass bead, translucent pale blue nails, silver rings,
+subtle pearly white scales emerging along the side of the neck and collarbone, delicate semi-translucent scales, faint iridescent blue-violet sheen, blending naturally into pale skin, elegant non-human trait,
+calm distant expression, elegant, mysterious, ethereal, dark fantasy atmosphere,`,
+  },
+  zelv: {
+    base: `boy, handsome adult male, mature male, very tall, 1.8::extremely muscular body::, broad shoulders, thick chest, powerful arms, long limbs, large hands, imposing physique,
+
+light neutral beige human skin, natural skin tone,
+
+1.7::genuine reticulated python scales growing directly from his exposed bare skin::, 1.6::irregular fragmented patches of scales embedded in the skin of his bare right shoulder and bare right upper arm::, several smaller scale clusters on the bare right side of his neck and collarbone, human skin clearly visible between each scale patch, varied patch sizes, uneven organic distribution, broken irregular edges, dense scales near the center of the shoulder, sparse isolated scales around the edges, intricate dark brown and muted black and warm ochre and grayish beige reticulated python coloration, glossy overlapping reptile scales following the contours of his muscles,
+
+plain solid black sleeveless high-neck shirt made of smooth matte fabric, deep armholes exposing his shoulders and upper arms, clean fabric surface, dark brown wide-leg trousers, plain black leather belt, matte gold buckle, dark brown nail polished, black and antique gold hoop earrings, several thick dark metal rings,
+
+long dark brownish-black hair, subtle dark olive sheen, slightly messy straight hair, low loose ponytail, long uneven bangs falling over one side of his face, amber-gold eyes, vertical slit pupils, heavy-lidded eyes, long narrow face, strong jawline, slightly visible sharp canine teeth, calm expression, intimidating gaze, languid expression,
+
+dark elegant color palette, subtle reptilian beauty, quiet menace, mysterious atmosphere, masculine, cool,`,
+  },
+  milo: {
+    base: `boy,  {{young boy}}, child, short, small body, slender limbs, round cheeks, youthful face, light tan skin, short eyebrows, small fang,
+
+{milk tea beige hair}, pale blue inner hair, fluffy short hair, messy hair, uneven bangs, {{single large ahoge}},
+
+{{large coral pink eyes}}, round eyes,
+2::coral pink rabit ears and tail::,
+
+cream sailor collar shirt, oversized sailor collar, long sleeves covering hands, pale blue short overalls, loose shorts, coral pink neckerchief, {single striped arm warmer}, pale blue and cream striped arm warmer,
+cream knee socks, coral pink ankle boots, round-toe boots,
+cream and pale blue color scheme, coral pink accents, cute,`,
+  },
+  "unknown-galaxy": {
+    base: `girl, beautiful adult woman, mature female, elegant, ethereal dream spirit, curvy body, large breasts, pale skin,
+
+1.6::very long pastel lavender hair::, soft wavy hair, voluminous hair, loose side braid, swept bangs, long sidelocks, low braided ponytail, black ribbon hair ornament, small star-shaped hair ornaments, subtle pale blue and pink iridescent highlights in hair,
+
+1.5::large glossy pale blue eyes::, pink and lavender gradient eyes, sparkling eyes, dreamlike eyes, long eyelashes, soft eyebrows, gentle melancholic expression, slightly parted lips, faint blush,
+
+dark gray ribbed knit blouse, high neckline, fitted bodice, long sleeves, flared cape sleeves, delicate white lace collar, white floral lace trim, small silver star ornaments, pale blue gemstone pendant at throat,
+
+1.4::high-waisted navy blue long skirt::, fitted waist, black ornamental waist clasps, floor-length mermaid skirt, subtle star pattern, starry night gradient, scattered tiny glowing stars,
+
+{lower half dissolving into fluffy sparkling smoke}, smoky skirt hem, pastel purple smoke, pale blue mist, navy mist, blurred translucent lower body, floating slightly above the ground, pointed black shoes emerging from smoke, tiny colorful dream sparkles swirling inside the mist,
+
+large silver drop earrings, pale blue crystal earrings, elegant hands, long slender fingers,
+
+whimsical dark fantasy, dreamlike atmosphere, ethereal, delicate, soft pastel colors, lavender and navy color palette, subtle magical glow,`,
+  },
+  "lin-junheng": {
+    base: `boy, adult man, tall, broad shoulders, lean muscular build, pale skin, handsome mature man, glossy black hair, neat center-parted hair, long parted bangs framing his face, narrow smoky gray eyes, sharp eyes, small mole near mouth,
+
+thin silver-framed rectangular glasses, silver glasses chain on one side, multiple silver earrings, multiple ear piercings, silver hoop earrings, silver studs, silver ear cuffs, dangling chain earring,
+
+{tight-fitting black three-piece suit}, fitted black suit jacket, defined chest through clothing, narrow waist, black dress shirt, black necktie, black waistcoat, tailored trousers, silver tie bar, silver cufflinks, luxury silver wristwatch, all-black formalwear,
+
+cool expression, composed, intelligent, intimidating elegance, refined, sophisticated, subtle smirk,`,
+  },
+  tsanglan: {
+    base: `man, adult male, tall, muscular, broad shoulders, well-defined chest, cool and composed expression, pale skin, handsome mature face, sharp narrow eyes, straight eyebrows, defined nose, small mole beside the right corner of his mouth,
+
+long straight hair reaching chest, deep ink-black hair with subtle blue undertones, dull silver gradient hair tips, side-swept bangs, half-up hairstyle, silver Chinese hair crown,
+
+cold jade-green eyes, thin golden rings around pupils,
+
+{{dark blue-green Chinese-style long jacket}}, fitted silhouette, high mandarin collar, asymmetric overlapping front, long sleeves, deep side slit on one side, silver wave embroidery along the hem, delicate silver dragon-scale embroidery, black inner shirt, fitted black trousers, black leather waist belt, silver tassel ornament,
+
+single long earring, thin silver chains, jade circular pendant,
+
+{{small silver-white fish scales growing naturally on his throat and collarbones}}, irregular patches of fine scales on bare skin, scales visible only through the opening of his collar, subtle nonhuman features,
+
+elegant Chinese fantasy fashion, cool color palette, ink black, deep teal, dull silver, jade green accents, refined details, dignified warrior, quiet intimidating presence,`,
+  },
+  feiyue: {
+    base: `girl, beautiful young woman, curvy and slender body, elegant appearance,
+
+pale lavender hair, black inner hair, two-tone hair, very long straight hair, waist-length hair, half updo, thin side braid, neat long bangs,
+
+clear turquoise eyes, pale golden rings around pupils, narrow eyes, calm expression, mysterious gentle smile,
+
+moon-white sleeveless Chinese mini dress, high mandarin collar, form-fitting silhouette, plunging keyhole cutout at chest, open back, exposed shoulders, high-cut sides, extremely high side slit, asymmetrical short hem, dark indigo-purple lining visible through slit,
+
+short indigo-purple underbust bolero, open front, fitted silhouette, sheer black detached sleeves, long translucent fabric panels hanging from waist, flowing side drapes,
+
+gold Chinese knot closures, delicate golden piping, intricate golden epiphyllum flower embroidery along collar and hem, thin golden waist chain with turquoise teardrop ornaments,
+
+moon white, indigo purple, pale lavender, turquoise and soft gold color palette, harmonious colors, refined Chinese-inspired fashion, elegant intricate clothing, ethereal atmosphere,`,
+  },
+  lingshuang: {
+    base: `girl, adult woman, beautiful Chinese court military officer, elegant female warrior, commander of the imperial guard,
+
+tall woman, long legs, slender athletic body, lean toned physique, narrow waist, graceful upright posture, refined commanding presence,
+
+cool delicate facial features, slender face, straight nose, calm dignified expression, composed gaze, quiet and courteous atmosphere,
+
+1.4::bluish ink-black hair::, subtle blue sheen,
+1.3::dull silver inner hair::, silver underlayer clearly visible beneath the dark outer hair,
+1.5::very long high ponytail::, sleek high ponytail flowing down her back, short straight sidelocks beside both cheeks, neat wispy bangs,
+
+1.4::clear white eyes::, white silver irises, clear luminous eyes,
+
+1.4::pale moon-white Chinese military uniform::, cool pale bluish-white fabric, elegant fitted court uniform, high structured collar, long split coat panels, fitted narrow sleeves, layered garment, formal yet practical silhouette,
+
+black and silver lightweight armor, fitted black-silver shoulder guards, slim engraved metallic bracers, refined silver waist armor, subtle armored hip panels, elegant practical protection,
+
+1.4::white-silver qilin embroidery across the front of the uniform::,
+a large elegant auspicious qilin embroidered diagonally from one shoulder across the torso, the flowing qilin tail continuing onto the opposite lower skirt panel,
+shimmering white and silver embroidery thread, stylized ruyi clouds surrounding the qilin,
+delicate silver cloud-scroll embroidery along the collar, cuffs and outer hems,
+refined raised metallic threadwork, ornate yet restrained decoration,
+
+1.3::very dark grape-purple lining::, near-black purple inner lining, rich muted purple visible through the front slits and moving coat panels,
+subtle celadon-green accents, small jade-green knots and tassels,
+silver, celadon-green and deep purple braided cords hanging from her waist,
+small protective talisman attached to the waist,
+
+thin delicate silver guan crown, minimalist silver crown ornament securing the high ponytail,
+
+cool graceful beauty, restrained elegance, refined Chinese fantasy palace aesthetic,`,
+    additions: [{ label: "WITH SPEAR", prompt: `holding a slender long spear, narrow polished silver spearhead, long dark shaft with subtle silver fittings,
+one hand resting on the spear, disciplined warrior stance, serene authority,` }],
+  },
+  luoyan: {
+    base: `boy, adult male, mature handsome man, imperial court physician, elegant mysterious man,
+
+tall man, muscular body, broad shoulders, long limbs, thick chest, thick neck,
+
+deep wine-red hair, dark burgundy hair, shoulder-length layered hair, loose low ponytail, loosely gathered hair at the nape, tousled wavy ends, deep side part, long asymmetrical bangs sweeping across one side of his face, long loose face-framing strand,
+
+1.3::vermilion inner hair at the nape::, a few vermilion strands showing around the low ponytail,
+
+sharp narrow eyes, half-lidded amber-gold eyes, luminous golden irises, slightly downturned outer corners, long eyelashes, refined mature masculine facial features, straight nose, defined jawline, small beauty mark beneath right eye, single delicate mole directly under the outer corner of right eye,
+
+1.3::seductive knowing smile::, faint confident smirk, relaxed flirtatious gaze, gently lowered eyelids, calm self-assured expression, mature masculine charm, sensual composed atmosphere, effortlessly alluring presence,
+
+dark burgundy traditional Chinese court robe, layered black inner robe, loosely crossed collar, slightly exposed collarbone, broad flowing sleeves, long layered robe panels, structured dark sash, antique-gold phoenix embroidery along the shoulders and outer robe,
+
+1.4::crimson gradient at the sleeve ends::,
+1.4::vermilion-red gradient along the lower robe hem::,
+dark wine-red fabric gradually transitioning into scarlet and glowing red-orange only at the cuffs and bottom edges, subtle gold embroidery over the red gradient,
+
+ornate antique-gold hair ornament, delicate curved metalwork, small dangling red gemstone, the feather motif entirely incorporated into the metallic hair ornament,
+
+elegant antique-gold waist ornament, dark red braided cord, carved jade pendant, long decorative tassel, small embroidered herbal sachet, one tiny medicine vial discreetly hanging among the waist ornaments, one small decorative medicine container,`,
+  },
+  livia: {
+    base: `girl, nature adult beautiful woman, sophisticated female investigator, tall slender figure, long limbs, curvy body, fair skin, healthy natural complexion, subtle warm blush, clear skin,
+
+sharp half-lidded eyes, slightly lowered eyebrows,reserved observant gaze, {clear orange-amber eyes}, rich saturated amber irises, copper-orange center, subtle golden outer ring,
+
+{smoky blue-gray hair}, muted medium blue-gray outer hair, deep navy-blue inner hair, dark navy underlayer, {short layered bob}, rounded jaw-length outer bob, 1.6::two long straight sidelocks reaching chest::, blunt eye-length bangs, softly curved bangs, one side tucked behind ear,
+
+1.3::structured deep navy-blue trench coat::, sharp lapels, long coat, 1.2::subtle burnt-orange inner lining::, small copper buttons, charcoal black ribbed turtleneck, black high-waisted tailored trousers, dark navy fitted leather gloves, polished black ankle boots,
+
+amber gemstone drop earrings, small copper ear cuff, thin copper belt buckle,
+
+dark navy and charcoal color palette, restrained burnt-orange accents, elegant noir fashion,`,
+  },
+  theia: {
+    base: `girl, young adult girl, curvy and slender figure, youthful appearance, long fluffy milk-tea brown hair reaching below her chest, white hair tips,
+soft voluminous wavy hair, wispy bangs, fluffy face-framing strands, 1.3::soft brown deer ears on head::, -3::human ears::, small round deer tail, no antlers, slightly upturned almond-shaped amber eyes, bright strong-willed gaze, gently straight eyebrows, faintly displeased expression, small firm mouth, pale warm-toned skin, 1.4::delicate white-gold freckles scattered across her nose and cheeks like fawn spots::,
+
+1.7::the outer thin rim of only her left deer ear is lined with dark-redr::, a narrow clean crimson border following the entire edge of the ear, flat natural coat coloration, sharply defined fur pattern,
+
+1.8::elaborate flat white-ink botanical tattoo spreading from the neck down::, numerous fine vine motifs with tiny leaves and delicate branching stems, forming an elegant lace-like ornamental pattern, beginning behind her left deer ear, covering one side of her neck, collarbones and shoulders, asymmetrical composition,
+
+thin gold necklace with a small garnet teardrop pendant,
+
+a fluffy ivory off-shoulder knit dress, wide folded neckline showing the collarbones, long oversized sleeves with fitted cuffs, softly body-hugging silhouette, defined waist, hem reaching above the knees, delicate cable-knit texture,`,
+  },
+};
+
+</script>
+    <script>
 document.addEventListener("DOMContentLoaded", () => {
 const worlds = [
   {
@@ -1842,8 +2130,8 @@ const accessPercent = document.querySelector("#access-percent");
 const accessProgressBar = document.querySelector("#access-progress-bar");
 const detailTabButtons = [...document.querySelectorAll("[data-detail-tab]")];
 const detailTabPanels = [...document.querySelectorAll("[data-detail-panel]")];
-const promptCopyButton = document.querySelector("#prompt-copy");
-const promptCode = document.querySelector("#character-prompt-code");
+const promptList = document.querySelector("#character-prompt-list");
+const promptVariantCount = document.querySelector("#prompt-variant-count");
 let activeWorldId = worlds[0].id;
 let activeCharacter = null;
 
@@ -2088,9 +2376,7 @@ function openCharacter(characterId, skipHash = false) {
 
     document.querySelector("#character-profile-title").textContent = `${character.name} / PROFILE`;
     document.querySelector("#character-profile-copy").textContent = character.profile ?? "プロフィールデータは準備中です。設定を受け取り次第、このページへ追加します。";
-    promptCode.textContent = character.prompt || "PROMPT DATA PENDING";
-    promptCopyButton.disabled = !character.prompt;
-    promptCopyButton.querySelector("span").textContent = character.prompt ? "COPY ALL" : "NOT REGISTERED";
+    renderCharacterPrompts(character);
     const gallery = document.querySelector("#character-gallery-grid");
     gallery.innerHTML = detailImage
       ? `<figure><img src="${detailImage}" alt="${character.jp}"><figcaption>PORTRAIT / 001</figcaption></figure><div class="gallery-placeholder">MORE FILES<br>COMING SOON</div>`
@@ -2166,14 +2452,75 @@ function setCharacterTab(tabId) {
   });
 }
 
-async function copyCharacterPrompt() {
-  const prompt = activeCharacter?.prompt;
-  if (!prompt) return;
+function getPromptVariants(character) {
+  const data = characterPrompts[character.id];
+  if (!data) return [];
+  if (data.variants) {
+    return data.variants.map((variant) => ({
+      label: variant.label,
+      prompt: variant.prompt.trim(),
+    }));
+  }
+
+  const base = data.base.trim();
+  const variants = [{ label: "BASE PROMPT", prompt: base }];
+  (data.additions ?? []).forEach((addition) => {
+    variants.push({
+      label: `BASE + ${addition.label}`,
+      prompt: `${base}\n\n${addition.prompt.trim()}`,
+    });
+  });
+  return variants;
+}
+
+function renderCharacterPrompts(character) {
+  const variants = getPromptVariants(character);
+  promptList.replaceChildren();
+  promptVariantCount.textContent = variants.length
+    ? `${String(variants.length).padStart(2, "0")} REGISTERED`
+    : "DATA PENDING";
+
+  if (!variants.length) {
+    const pending = document.createElement("p");
+    pending.className = "prompt-pending";
+    pending.textContent = "PROMPT DATA PENDING";
+    promptList.append(pending);
+    return;
+  }
+
+  variants.forEach((variant, index) => {
+    const article = document.createElement("article");
+    article.className = "prompt-variant";
+
+    const header = document.createElement("div");
+    header.className = "prompt-variant__header";
+
+    const label = document.createElement("span");
+    label.className = "prompt-variant__label";
+    label.textContent = `VARIANT ${String(index + 1).padStart(2, "0")} / ${variant.label}`;
+
+    const button = document.createElement("button");
+    button.className = "prompt-copy";
+    button.type = "button";
+    button.dataset.promptIndex = String(index);
+    button.innerHTML = "<span>COPY THIS</span><b aria-hidden=\"true\">▣</b>";
+
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    code.textContent = variant.prompt;
+    pre.append(code);
+    header.append(label, button);
+    article.append(header, pre);
+    promptList.append(article);
+  });
+}
+
+async function copyText(text) {
   try {
-    await navigator.clipboard.writeText(prompt);
+    await navigator.clipboard.writeText(text);
   } catch {
     const textarea = document.createElement("textarea");
-    textarea.value = prompt;
+    textarea.value = text;
     textarea.style.position = "fixed";
     textarea.style.opacity = "0";
     document.body.append(textarea);
@@ -2181,9 +2528,17 @@ async function copyCharacterPrompt() {
     document.execCommand("copy");
     textarea.remove();
   }
-  promptCopyButton.querySelector("span").textContent = "COPIED";
+}
+
+async function copyCharacterPrompt(event) {
+  const button = event.target.closest("[data-prompt-index]");
+  if (!button || !activeCharacter) return;
+  const variant = getPromptVariants(activeCharacter)[Number(button.dataset.promptIndex)];
+  if (!variant) return;
+  await copyText(variant.prompt);
+  button.querySelector("span").textContent = "COPIED";
   window.setTimeout(() => {
-    if (activeCharacter?.prompt) promptCopyButton.querySelector("span").textContent = "COPY ALL";
+    if (button.isConnected) button.querySelector("span").textContent = "COPY THIS";
   }, 1400);
 }
 
@@ -2251,7 +2606,7 @@ document.querySelector("#character-back").addEventListener("click", () => showHo
 document.querySelector("#character-previous").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
 document.querySelector("#character-next").addEventListener("click", (event) => openCharacter(event.currentTarget.dataset.character));
 detailTabButtons.forEach((button) => button.addEventListener("click", () => setCharacterTab(button.dataset.detailTab)));
-promptCopyButton.addEventListener("click", copyCharacterPrompt);
+promptList.addEventListener("click", copyCharacterPrompt);
 accessButton.addEventListener("click", authorizeAccess);
 window.addEventListener("popstate", handleHash);
 
@@ -2446,9 +2801,9 @@ window.addEventListener("popstate", handleHash);
           <section class="detail-panel detail-panel--prompt" role="tabpanel" data-detail-panel="prompt" hidden>
             <div class="detail-panel__heading">
               <div><p class="detail-panel__index">GENERATION DATA</p><h2>CHARACTER PROMPT</h2></div>
-              <button class="prompt-copy" id="prompt-copy" type="button"><span>COPY ALL</span><b aria-hidden="true">▣</b></button>
+              <span class="prompt-variant-count" id="prompt-variant-count">DATA PENDING</span>
             </div>
-            <pre><code id="character-prompt-code">PROMPT DATA PENDING</code></pre>
+            <div class="prompt-list" id="character-prompt-list"></div>
           </section>
           <section class="detail-panel" role="tabpanel" data-detail-panel="gallery" hidden>
             <p class="detail-panel__index">VISUAL ARCHIVE</p>
