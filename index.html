@@ -390,23 +390,34 @@ body.acheron-locked {
 }
 .acheron-gate__impacts span {
   position: absolute;
-  width: clamp(58px, 7vw, 92px);
+  width: clamp(118px, 13vw, 190px);
   aspect-ratio: 1;
   opacity: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle, #020203 0 7%, #d7d4d4 8% 10%, #171516 11% 17%, transparent 18%),
-    conic-gradient(from 14deg, transparent 0 7%, rgba(245,240,241,.75) 8% 9%, transparent 10% 21%, rgba(245,240,241,.48) 22% 23%, transparent 24% 42%, rgba(245,240,241,.6) 43% 44%, transparent 45% 66%, rgba(245,240,241,.46) 67% 68%, transparent 69%);
-  filter: drop-shadow(0 0 9px rgba(255,255,255,.36)) drop-shadow(0 0 26px rgba(187,0,35,.54));
+    radial-gradient(circle, #000 0 3.5%, #c9c5c5 4% 5%, #171315 5.5% 9%, rgba(72,58,61,.9) 9.5% 11%, transparent 12%),
+    repeating-conic-gradient(from 8deg, transparent 0 11deg, rgba(237,231,232,.72) 11.5deg 12deg, transparent 12.5deg 34deg),
+    radial-gradient(circle, transparent 0 22%, rgba(232,226,228,.32) 22.5% 23%, transparent 23.8% 38%, rgba(232,226,228,.2) 38.5% 39%, transparent 40%);
+  filter: drop-shadow(0 0 3px rgba(255,255,255,.75)) drop-shadow(0 0 18px rgba(187,0,35,.56));
   transform: scale(1.8);
 }
-.acheron-gate__impacts span:nth-child(1) { left: 22%; top: 24%; }
-.acheron-gate__impacts span:nth-child(2) { right: 18%; top: 42%; }
-.acheron-gate__impacts span:nth-child(3) { left: 48%; bottom: 15%; }
+.acheron-gate__impacts span::before,
+.acheron-gate__impacts span::after {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 21deg, transparent 0 17deg, rgba(245,240,241,.4) 17.4deg 17.9deg, transparent 18.4deg 41deg);
+  mask-image: radial-gradient(circle, transparent 0 9%, #000 10% 64%, transparent 76%);
+}
+.acheron-gate__impacts span::after { inset: -5%; opacity: .62; transform: rotate(13deg); }
+.acheron-gate__impacts span:nth-child(1) { left: 17%; top: 17%; transform: scale(1.8) rotate(-8deg); }
+.acheron-gate__impacts span:nth-child(2) { right: 13%; top: 36%; transform: scale(1.8) rotate(17deg); }
+.acheron-gate__impacts span:nth-child(3) { left: 43%; bottom: 8%; transform: scale(1.8) rotate(-21deg); }
 .acheron-gate__impacts span.is-hit {
   opacity: .96;
   transform: scale(1);
-  animation: bullet-impact 180ms cubic-bezier(.12,.8,.2,1) both;
+  animation: bullet-impact 260ms cubic-bezier(.12,.8,.2,1) both;
 }
 
 @keyframes acheron-static { from { transform: translate(0,0); } to { transform: translate(3%, -2%); } }
@@ -1593,9 +1604,9 @@ button {
 
 .project-participants {
   display: grid;
-  grid-template-columns: minmax(280px, .72fr) minmax(0, 1.28fr);
-  gap: clamp(38px, 7vw, 110px);
-  padding-block: clamp(64px, 8vw, 110px);
+  grid-template-columns: minmax(230px, .42fr) minmax(0, 1.58fr);
+  gap: clamp(22px, 4vw, 58px);
+  padding-block: 28px;
   border-bottom: 1px solid var(--line);
 }
 .project-participants[hidden] { display: none; }
@@ -1608,23 +1619,26 @@ button {
   letter-spacing: .1em;
 }
 .project-participants__heading h2 {
-  margin: 20px 0 24px;
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 5vw, 5.8rem);
+  margin: 8px 0 7px;
+  font-family: var(--font-mono);
+  font-size: clamp(.82rem, 1.2vw, 1.08rem);
   font-weight: 400;
-  letter-spacing: -.05em;
-  line-height: .86;
+  letter-spacing: .08em;
+  line-height: 1.2;
 }
-.project-participants__heading p { max-width: 480px; color: #8e949b; font-size: .75rem; line-height: 1.9; }
-.project-participants__list { border-top: 1px solid rgba(var(--accent-rgb), .35); }
+.project-participants__heading p { max-width: 360px; color: #767d84; font-size: .64rem; line-height: 1.55; }
+.project-participants__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid rgba(var(--accent-rgb), .35); }
 .project-participants__list > div {
-  display: grid;
-  grid-template-columns: 120px 1fr auto;
-  align-items: center;
-  gap: 22px;
-  padding: 24px 10px;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 13px 14px;
+  border-right: 1px solid rgba(var(--accent-rgb), .2);
   border-bottom: 1px solid rgba(var(--accent-rgb), .24);
 }
+.project-participants__list > div:last-child { border-right: 0; }
 .project-participants__list strong { color: #d7dbe0; font-family: var(--font-mono); font-size: .78rem; font-weight: 400; letter-spacing: .08em; }
 .project-participants__list small { color: #5f666e; }
 
@@ -1642,6 +1656,23 @@ button {
 }
 .world-guests .character-card { border-color: rgba(var(--accent-rgb), .24); }
 .world-guests .character-card__visual { filter: saturate(.42); }
+
+.character-detail__credit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--detail-rgb), .3);
+  font-family: var(--font-mono);
+}
+.character-detail__credit[hidden] { display: none; }
+.character-detail__credit > span { color: var(--detail-accent); font-size: .5rem; letter-spacing: .12em; }
+.character-detail__credit > strong { color: #d7dbe0; font-size: .78rem; font-weight: 400; letter-spacing: .08em; }
+.character-detail__credit > small,
+.character-detail__credit > a { color: #747a82; font-size: .52rem; letter-spacing: .1em; }
+.character-detail__credit > a:hover { color: var(--detail-accent); }
 
 .detail-panel__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .prompt-variant-count {
@@ -2230,8 +2261,10 @@ button {
   .acheron-gate__actions button { padding: 15px 10px; font-size: 0.48rem; }
   .world-view--acheron .world-hero::before { top: 1em; }
 
-  .project-participants { grid-template-columns: 1fr; }
-  .project-participants__list > div { grid-template-columns: 1fr; gap: 9px; }
+  .project-participants { grid-template-columns: 1fr; padding-block: 24px; }
+  .project-participants__list { grid-template-columns: 1fr; }
+  .project-participants__list > div { gap: 5px; border-right: 0; }
+  .character-detail__credit { grid-template-columns: 1fr; gap: 7px; }
   .contributor-credit { grid-template-columns: 1fr; }
   .contributor-credit > strong { grid-column: auto; }
 
@@ -2788,7 +2821,7 @@ function characterCard(character, index) {
     >
       <div class="character-card__visual">
         <span class="character-card__number">${fileLabel}</span>
-        <span class="character-card__world">${getWorldLabel(character.world)}</span>
+        ${character.guest ? "" : `<span class="character-card__world">${getWorldLabel(character.world)}</span>`}
         ${portrait}
       </div>
       <div class="character-card__body">
@@ -2909,6 +2942,13 @@ function openCharacter(characterId, skipHash = false) {
     document.querySelector("#character-detail-name").innerHTML = character.id === "lingshuang" ? "LING<br>SHUANG" : character.name;
     document.querySelector("#character-detail-jp").textContent = character.jp;
     document.querySelector("#character-detail-tags").innerHTML = character.tags.map((tag) => `<span>${tag}</span>`).join("");
+    const contributorCredit = document.querySelector("#character-contributor-credit");
+    contributorCredit.hidden = !character.guest;
+    contributorCredit.innerHTML = character.guest
+      ? `<span>PROJECT PARTICIPANT</span>
+          <strong>${character.creatorName ?? "USERNAME PENDING"}</strong>
+          ${character.projectUrl ? `<a href="${character.projectUrl}" target="_blank" rel="noopener noreferrer">VISIT PARTICIPANT SITE ↗</a>` : `<small>SITE LINK / PENDING</small>`}`
+      : "";
     const detailImage = character.detailImage ?? character.image;
     const visual = document.querySelector("#character-detail-visual");
     visual.innerHTML = detailImage
@@ -2917,17 +2957,9 @@ function openCharacter(characterId, skipHash = false) {
 
     document.querySelector("#character-profile-title").textContent = "PROFILE";
     const profileCopy = document.querySelector("#character-profile-copy");
-    const contributorCredit = character.guest
-      ? `<aside class="contributor-credit">
-          <span>CREATOR CREDIT</span>
-          <strong>${character.creatorName ?? "USERNAME PENDING"}</strong>
-          ${character.creatorUrl ? `<a href="${character.creatorUrl}" target="_blank" rel="noopener noreferrer">CREATOR PROFILE ↗</a>` : `<small>CREATOR PROFILE / LINK PENDING</small>`}
-          ${character.projectUrl ? `<a href="${character.projectUrl}" target="_blank" rel="noopener noreferrer">PROJECT SITE ↗</a>` : `<small>PROJECT SITE / LINK PENDING</small>`}
-        </aside>`
-      : "";
     profileCopy.innerHTML = (character.profile
       ? `<p class="detail-panel__copy">${character.profile}</p>`
-      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`) + contributorCredit;
+      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`);
     const promptTab = document.querySelector("#character-prompt-tab");
     const galleryTab = document.querySelector('[data-detail-tab="gallery"]');
     promptTab.hidden = Boolean(character.noPrompt);
@@ -2995,25 +3027,30 @@ function authorizeAcheron() {
   window.setTimeout(() => {
     acheronGate.classList.add("is-blackout");
     acheronStatus.textContent = "SYSTEM POWER FAILURE";
-  }, 720);
+  }, 880);
   window.setTimeout(() => {
     acheronGate.querySelector(".acheron-gate__impacts span:nth-child(1)").classList.add("is-hit");
-  }, 900);
+    acheronStatus.textContent = "BALLISTIC IMPACT DETECTED / 01";
+  }, 1900);
   window.setTimeout(() => {
-    acheronGate.classList.add("is-breached");
     acheronGate.querySelector(".acheron-gate__impacts span:nth-child(2)").classList.add("is-hit");
-    acheronStatus.textContent = "SECURITY BREACH DETECTED";
-  }, 1050);
+    acheronStatus.textContent = "BALLISTIC IMPACT DETECTED / 02";
+  }, 2820);
   window.setTimeout(() => {
     acheronGate.querySelector(".acheron-gate__impacts span:nth-child(3)").classList.add("is-hit");
-  }, 1200);
+    acheronStatus.textContent = "BALLISTIC IMPACT DETECTED / 03";
+  }, 3780);
+  window.setTimeout(() => {
+    acheronGate.classList.add("is-breached");
+    acheronStatus.textContent = "SECURITY BREACH DETECTED";
+  }, 4240);
   window.setTimeout(() => {
     acheronAuthorized = true;
     window.setTimeout(() => {
       closeAcheronGate();
       openWorld("acheron", false, true);
     }, 80);
-  }, 1420);
+  }, 4900);
 }
 
 function openWorld(worldId, skipHash = false, bypassClearance = false) {
@@ -3405,7 +3442,7 @@ window.addEventListener("popstate", handleHash);
       <section class="project-participants section-shell" id="project-participants" hidden aria-labelledby="project-participants-title">
         <div class="project-participants__heading">
           <span>COLLABORATIVE PROJECT / PARTICIPANTS 03</span>
-          <h2 id="project-participants-title">PROJECT<br />PARTICIPANTS</h2>
+          <h2 id="project-participants-title">PROJECT PARTICIPANTS</h2>
           <p>この世界観には、3名の企画参加者によるゲストキャラクターが含まれます。</p>
         </div>
         <div class="project-participants__list" id="project-participant-list">
@@ -3462,6 +3499,7 @@ window.addEventListener("popstate", handleHash);
           <h1 id="character-detail-name">CHARACTER</h1>
           <p class="character-detail__jp" id="character-detail-jp">キャラクター</p>
           <div class="character-detail__tags" id="character-detail-tags"></div>
+          <div class="character-detail__credit" id="character-contributor-credit" hidden></div>
         </div>
       </section>
       <section class="character-detail__tabs section-shell">
