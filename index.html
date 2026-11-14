@@ -3097,7 +3097,7 @@ function openCharacter(characterId, skipHash = false) {
           <span>EXTERNAL PLOT RECORD / OMEGA CLEARANCE</span>
           <strong>RESTRICTED INTELLIGENCE</strong>
           <small>AUTHORIZED PERSONNEL ONLY</small>
-          <a class="classified-record-button" href="${character.externalProfileUrl}" target="_blank" rel="noopener noreferrer">
+          <a class="classified-record-button" href="${character.externalProfileUrl}" rel="noopener noreferrer">
             <i aria-hidden="true"></i><b>ACCESS CLASSIFIED RECORD</b><em>↗</em>
           </a>
         </div>`
@@ -3434,10 +3434,19 @@ document.addEventListener("dragstart", (event) => {
 document.addEventListener("click", (event) => {
   const classifiedLink = event.target.closest(".classified-record-button");
   if (!classifiedLink) return;
+  event.preventDefault();
+  if (classifiedLink.classList.contains("is-navigating")) return;
+  classifiedLink.classList.add("is-navigating");
   classifiedLink.classList.remove("is-authorizing");
   void classifiedLink.offsetWidth;
   classifiedLink.classList.add("is-authorizing");
-  window.setTimeout(() => classifiedLink.classList.remove("is-authorizing"), 680);
+  const label = classifiedLink.querySelector("b");
+  window.setTimeout(() => {
+    if (label) label.textContent = "CLEARANCE VERIFIED";
+  }, 190);
+  window.setTimeout(() => {
+    window.location.assign(classifiedLink.href);
+  }, 720);
 });
 
 });
