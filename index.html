@@ -346,7 +346,7 @@ body.acheron-locked {
   line-height: 0.69;
 }
 
-.acheron-gate__warning { margin: 34px 0 0; color: #ef365d; font-size: clamp(0.9rem, 2vw, 1.25rem); letter-spacing: 0.08em; }
+.acheron-gate__warning { margin: 34px 0 0; color: #d73555; font-family: var(--font-mono); font-size: clamp(0.68rem, 1.4vw, 0.92rem); font-weight: 400; letter-spacing: 0.19em; }
 .acheron-gate__copy { max-width: 620px; margin: 14px 0 0; color: #81777a; font-size: 0.7rem; line-height: 1.9; }
 .acheron-gate__actions { display: grid; grid-template-columns: 0.32fr 0.68fr; gap: 10px; }
 .acheron-gate__actions button { padding: 16px 18px; border: 1px solid rgba(185,18,54,0.52); color: #8d7b80; background: transparent; font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.12em; cursor: pointer; }
@@ -1658,12 +1658,12 @@ button {
   right: 4%;
   top: 14%;
   color: transparent;
-  font-family: var(--font-ui);
-  font-size: clamp(3.5rem, 9vw, 8rem);
-  font-weight: 900;
-  letter-spacing: -0.06em;
-  -webkit-text-stroke: 1px rgba(255,54,93,0.16);
-  transform: rotate(-7deg);
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 5.6vw, 4.8rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  -webkit-text-stroke: 1px rgba(255,54,93,0.22);
+  transform: rotate(-4deg);
 }
 
 .world-view--acheron {
@@ -1691,12 +1691,12 @@ button {
   right: -0.05em;
   top: 0.4em;
   color: transparent;
-  font-family: var(--font-ui);
-  font-size: clamp(6rem, 19vw, 18rem);
-  font-weight: 900;
-  letter-spacing: -0.08em;
-  -webkit-text-stroke: 1px rgba(255,49,90,0.12);
-  transform: rotate(-5deg);
+  font-family: var(--font-mono);
+  font-size: clamp(3.8rem, 11vw, 10rem);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  -webkit-text-stroke: 1px rgba(255,49,90,0.18);
+  transform: rotate(-3deg);
 }
 
 .world-view--acheron .world-hero::after {
@@ -1720,7 +1720,11 @@ button {
   position: relative;
   z-index: 1;
   color: #f6f0f1;
-  text-shadow: 14px 0 0 rgba(143,0,28,0.34);
+  text-shadow: none;
+}
+
+.world-view--acheron .world-hero__copy > p:first-child {
+  color: #888185;
 }
 
 .world-view--acheron .world-notice {
@@ -2437,7 +2441,7 @@ const worlds = [
     secondary: "#7a0f28",
     rgb: "255, 54, 93",
     description:
-      "ニューヨークの地下を流れる巨大犯罪組織。神曲の階層を思わせる部門が、それぞれの役割と掟を抱えて暗闇を統治している。",
+      "ニューヨークの地下を流れる巨大犯罪組織についての記録。",
     status: "OMEGA CLEARANCE / LEVEL 9",
     notice: "TOP SECRET — 記録の複製・転送・外部共有を禁ずる。アクセス履歴はすべて監査対象となる。",
     facts: { LOCATION: "NEW YORK", GENRE: "CRIME / NOIR", STATUS: "ONGOING" },
@@ -2760,7 +2764,7 @@ function openCharacter(characterId, skipHash = false) {
     const profileCopy = document.querySelector("#character-profile-copy");
     profileCopy.innerHTML = character.profile
       ? `<p class="detail-panel__copy">${character.profile}</p>`
-      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>《データ準備中》</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`;
+      : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`;
     renderCharacterPrompts(character);
     const gallery = document.querySelector("#character-gallery-grid");
     gallery.innerHTML = detailImage
@@ -2849,6 +2853,9 @@ function openWorld(worldId, skipHash = false, bypassClearance = false) {
       .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
       .join("");
     const cast = characters.filter((character) => character.world === world.id);
+    if (world.id === "yuakai") {
+      cast.sort((a, b) => ["yuan", "kai"].indexOf(a.id) - ["yuan", "kai"].indexOf(b.id));
+    }
     worldCharacterGrid.innerHTML = cast.map(characterCard).join("");
     bindCharacterCards(worldCharacterGrid);
     document.querySelector("#world-count").textContent = `${String(cast.length).padStart(2, "0")} REGISTERED CHARACTERS`;
@@ -3093,7 +3100,7 @@ window.addEventListener("popstate", handleHash);
         <div class="acheron-gate__body">
           <p>UNAUTHORIZED ACCESS WILL BE LOGGED</p>
           <h2 id="acheron-gate-title">TOP<br />SECRET</h2>
-          <p class="acheron-gate__warning">《閲覧には最高クラスの許可が必要です》</p>
+          <p class="acheron-gate__warning">TOP-LEVEL CLEARANCE REQUIRED</p>
           <p class="acheron-gate__copy">この記録には組織構成員・執行記録・機密系統情報が含まれます。</p>
         </div>
         <div class="acheron-gate__actions">
