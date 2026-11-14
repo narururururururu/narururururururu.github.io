@@ -2719,7 +2719,7 @@ const worlds = [
     secondary: "#697dff",
     rgb: "185, 239, 255",
     description:
-      "月白の宮廷に集う武官、医官、人ならざる者たち。静かな回廊の奥で、忠誠と恋情がひそやかに交差する。",
+      "月白の王宮。静かな回廊の奥で、忠誠と恋情がひそやかに交差する。",
     facts: { LOCATION: "ROYAL PALACE", GENRE: "EASTERN FANTASY", STATUS: "ONGOING" },
   },
   {
@@ -2753,7 +2753,7 @@ const worlds = [
 const characters = [
   { id: "kuon", name: "KUON", jp: "久遠", world: "independent", affiliation: "所属なし", tags: ["代理", "CAT"], monogram: "KU", image: "./assets/characters/kuon.webp", portraitScale: 1.16, portraitY: "-2%" },
   { id: "kai", name: "KAI", jp: "カイ", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CAT", "GOLD HAIR"], monogram: "KA", image: "./assets/characters/kai.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", image: "./assets/characters/yuan.webp", portraitScale: 1.0, portraitY: "0%", worldOnly: true, noPrompt: true },
+  { id: "yuan", name: "YUAN", jp: "ユアン", world: "yuakai", affiliation: "YUAN × KAI", tags: ["CASINO", "RED HAIR"], monogram: "YU", image: "./assets/characters/yuan.webp", portraitScale: 1.0, portraitY: "0%", creatorName: "茨", creatorUrl: "https://x.com/5pfajp?s=11&t=6iOo4PdUWuRILwVbg6hoPQ", projectUrl: "https://ibaraaa.github.io/#home", worldOnly: true, noPrompt: true },
   { id: "yixing", name: "YIXING", jp: "イーシン", world: "independent", affiliation: "所属なし", tags: ["BLUE EYES", "SUIT"], monogram: "YX", image: "./assets/characters/yixing.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "azor", name: "AZOR", jp: "アゾール", world: "independent", affiliation: "所属なし", tags: ["HAWK"], monogram: "AZ", image: "./assets/characters/azor.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "seva", name: "SEVA", jp: "セヴァ", world: "independent", affiliation: "所属なし", tags: ["RUSSIAN", "SNIPER"], monogram: "SE", image: "./assets/characters/seva.webp", portraitScale: 1.0, portraitY: "0%" },
@@ -3075,8 +3075,9 @@ function openCharacter(characterId, skipHash = false) {
     document.querySelector("#character-detail-jp").textContent = character.jp;
     document.querySelector("#character-detail-tags").innerHTML = character.tags.map((tag) => `<span>${tag}</span>`).join("");
     const contributorCredit = document.querySelector("#character-contributor-credit");
-    contributorCredit.hidden = !character.guest;
-    contributorCredit.innerHTML = character.guest
+    const hasContributor = Boolean(character.guest || character.creatorName);
+    contributorCredit.hidden = !hasContributor;
+    contributorCredit.innerHTML = hasContributor
       ? `<span>PROJECT PARTICIPANT</span>
           <strong>${character.creatorName ?? "USERNAME PENDING"}</strong>
           <div class="character-detail__credit-links">
