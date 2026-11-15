@@ -741,6 +741,36 @@ button {
   letter-spacing: 0.08em;
 }
 
+
+.usage-policy { padding-top: 28px; }
+.usage-policy details { border-block: 1px solid var(--line); }
+.usage-policy summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 54px;
+  padding: 15px 0;
+  color: #c3c7cc;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  list-style: none;
+  cursor: pointer;
+}
+.usage-policy summary::-webkit-details-marker { display: none; }
+.usage-policy summary::after { content: "+"; flex: none; color: var(--muted); font-family: var(--font-mono); font-size: 1rem; }
+.usage-policy details[open] summary::after { content: "−"; }
+.usage-policy summary:hover { color: var(--text); }
+.usage-policy summary:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+.usage-policy__body { max-width: 900px; padding: 0 0 24px; color: #aab0b7; font-size: 0.78rem; line-height: 2; overflow-wrap: anywhere; }
+.usage-policy__body p { margin: 0 0 12px; }
+.usage-policy__body ul { margin: 0; padding-left: 1.4em; }
+.usage-policy__body li + li { margin-top: 7px; }
+.usage-policy__body a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.acheron-disclaimer { margin-top: 0; margin-bottom: 40px; color: #84777b; font-size: 0.68rem; letter-spacing: 0.025em; line-height: 1.9; }
+.acheron-disclaimer[hidden] { display: none; }
+
 .worlds,
 .characters,
 .world-cast {
@@ -3309,6 +3339,7 @@ function openWorld(worldId, skipHash = false, bypassClearance = false) {
     worldNotice.textContent = world.notice ?? "";
     worldNotice.hidden = !world.notice;
     document.querySelector("#yuakai-story").hidden = world.id !== "yuakai";
+    document.querySelector("#acheron-disclaimer").hidden = world.id !== "acheron";
     projectParticipants.hidden = world.id !== "imperial-court";
     document.querySelector("#world-facts").innerHTML = Object.entries(world.facts)
       .map(([key, value]) => `<dt>${key}</dt><dd>${value}</dd>`)
@@ -3645,6 +3676,22 @@ document.addEventListener("click", (event) => {
         </div>
       </section>
 
+      <section class="usage-policy section-shell" aria-label="サイト上のデータ利用について">
+        <details>
+          <summary>・サイト上のデータ利用について</summary>
+          <div class="usage-policy__body">
+            <p>サイト上の画像・文章・キャラクターデータ等の無断転載・無断利用を禁止します。プロンプトを使用する際は、以下のルールをお守りください。</p>
+            <ul>
+              <li>プロンプトを使用する際は、<a href="https://x.com/zt_0422" target="_blank" rel="noopener noreferrer">naru（@zt_0422）</a>へのメンション、またはタグ付けを必ず行ってください。</li>
+              <li>服装や表情の改変は自由です。</li>
+              <li>R18Gの内容を含む作品は、公開アカウントへの掲載を禁止します。</li>
+              <li>多量の出血や身体の欠損を含む内容での使用は禁止します。</li>
+              <li>サイト内の画像はすべてAI生成画像です。</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
       <section class="worlds section-shell" aria-labelledby="worlds-title">
         <div class="section-heading">
           <div>
@@ -3744,6 +3791,7 @@ document.addEventListener("click", (event) => {
         <p class="world-guests__note">企画参加者によるゲストキャラクターの記録。プロンプトデータは非公開です。</p>
         <div class="character-grid" id="world-guest-grid"></div>
       </section>
+      <p class="acheron-disclaimer section-shell" id="acheron-disclaimer" hidden>※ 掲載内容および認証・機密表示は、創作上の演出です。</p>
     </main>
 
     <main id="character-view" class="character-detail" hidden aria-live="polite">
