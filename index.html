@@ -1811,6 +1811,21 @@ button {
   font-size: 0.58rem;
   letter-spacing: 0.12em;
 }
+.prompt-registration-meta {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+  flex: 0 0 auto;
+  text-align: right;
+}
+.character-relationship-note {
+  color: #777d85;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.character-relationship-note[hidden] { display: none; }
 .prompt-list {
   display: grid;
   gap: 18px;
@@ -2790,6 +2805,22 @@ const characters = [
 // NARU ARCHIVE's main collection or its continuous file numbering.
 const archiveCharacters = characters.filter((character) => !character.worldOnly);
 
+const relationshipNotes = {
+  kai: "※ うちよそ相手有",
+  yixing: "※ うちよそ相手有",
+  onero: "※ うちよそ相手有",
+  zelv: "※ うちよそ相手有",
+  milo: "※ うちよそ相手有",
+  "unknown-galaxy": "※ うちよそ相手有",
+  "lin-junheng": "※ うちよそNG",
+  tsanglan: "※ うちよそ相手有",
+  feiyue: "※ うちよそ相手有",
+  lingshuang: "※ うちよそ相手有",
+  luoyan: "※ うちよそ相手有",
+  theia: "※ うちよそ相手有",
+  livia: "※ うちよそ相手有",
+};
+
 const homeView = document.querySelector("#home-view");
 const worldView = document.querySelector("#world-view");
 const characterView = document.querySelector("#character-view");
@@ -2823,6 +2854,7 @@ const detailTabButtons = [...document.querySelectorAll("[data-detail-tab]")];
 const detailTabPanels = [...document.querySelectorAll("[data-detail-panel]")];
 const promptList = document.querySelector("#character-prompt-list");
 const promptVariantCount = document.querySelector("#prompt-variant-count");
+const relationshipNote = document.querySelector("#character-relationship-note");
 let activeWorldId = worlds[0].id;
 let activeCharacter = null;
 let acheronAuthorized = false;
@@ -3292,6 +3324,9 @@ function renderCharacterPrompts(character) {
   promptVariantCount.textContent = variants.length
     ? `${String(variants.length).padStart(2, "0")} REGISTERED`
     : "DATA PENDING";
+  const note = relationshipNotes[character.id];
+  relationshipNote.hidden = !note;
+  relationshipNote.textContent = note ?? "";
 
   if (!variants.length) {
     const pending = document.createElement("p");
@@ -3687,7 +3722,10 @@ document.addEventListener("click", (event) => {
           <section class="detail-panel detail-panel--prompt" role="tabpanel" data-detail-panel="prompt" hidden>
             <div class="detail-panel__heading">
               <div><p class="detail-panel__index">GENERATION DATA</p><h2>CHARACTER PROMPT</h2></div>
-              <span class="prompt-variant-count" id="prompt-variant-count">DATA PENDING</span>
+              <div class="prompt-registration-meta">
+                <span class="prompt-variant-count" id="prompt-variant-count">DATA PENDING</span>
+                <span class="character-relationship-note" id="character-relationship-note" hidden></span>
+              </div>
             </div>
             <div class="prompt-list" id="character-prompt-list"></div>
           </section>
