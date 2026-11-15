@@ -525,7 +525,7 @@ button {
   z-index: 50;
   top: 0;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   align-items: center;
   height: var(--header-height);
   border-bottom: 1px solid var(--line);
@@ -574,6 +574,26 @@ button {
   font-size: 0.62rem;
   letter-spacing: 0.1em;
 }
+
+.header-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  gap: 5px;
+  padding-inline: 20px;
+  border-left: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.header-social:hover,
+.header-social:focus-visible {
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.header-social:focus-visible { outline: 1px solid var(--accent); outline-offset: -4px; }
 
 .menu-button {
   width: 72px;
@@ -2243,8 +2263,11 @@ button {
   }
 
   .site-header {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
+
+  .header-social { padding-inline: 13px; font-size: 0.64rem; }
+  .header-social__label { display: none; }
 
   .menu-button {
     width: 58px;
@@ -3601,6 +3624,7 @@ document.addEventListener("click", (event) => {
         <span id="clock" aria-label="現在時刻">00:00:00</span>
         <span>JP</span>
       </div>
+      <a class="header-social" href="https://x.com/zt_0422" target="_blank" rel="noopener noreferrer" aria-label="なるのXプロフィール（新しいタブで開く）">X<span class="header-social__label"> PROFILE</span><span aria-hidden="true">↗</span></a>
       <button class="menu-button" type="button" aria-label="検索欄へ移動">⌕</button>
     </header>
 
