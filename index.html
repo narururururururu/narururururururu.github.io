@@ -1906,6 +1906,37 @@ button {
   background: linear-gradient(90deg, transparent, rgba(155,24,56,0.26), transparent);
 }
 
+
+.world-card__stamp {
+  position: absolute;
+  z-index: 3;
+  top: 36%;
+  right: clamp(24px, 5vw, 68px);
+  display: grid;
+  gap: 5px;
+  padding: 10px 16px 9px;
+  border: 2px solid currentColor;
+  outline: 1px solid rgba(204, 77, 102, 0.45);
+  outline-offset: 4px;
+  color: #cc4d66;
+  background: rgba(16, 4, 8, 0.72);
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 2.2vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-align: center;
+  transform: rotate(-9deg);
+  pointer-events: none;
+}
+.world-card__stamp small {
+  padding-top: 5px;
+  border-top: 1px solid rgba(204, 77, 102, 0.5);
+  font-size: 0.42em;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+}
+
 .world-view--yuakai {
   --accent: #a81e42;
   --accent-rgb: 168, 30, 66;
@@ -2934,6 +2965,7 @@ function renderWorlds() {
           aria-label="${world.title}の世界観ページを開く"
         >
           <span class="world-card__number">${world.index.slice(-1)}</span>
+          ${world.id === "yuakai" ? '<span class="world-card__stamp" aria-label="コンテンツ準備中">COMING SOON<small>PRIVATE RECORD / IN PREPARATION</small></span>' : ""}
           <span class="world-card__top">
             <span>WORLD FILE / ${world.index}</span>
             <span>${String(characters.filter((character) => character.world === world.id).length).padStart(2, "0")} CHARACTERS</span>
@@ -3656,6 +3688,16 @@ document.addEventListener("click", (event) => {
           <div><span>PARTICIPANT 03</span><strong>茨</strong><nav><a href="https://x.com/5pfajp?s=11&amp;t=6iOo4PdUWuRILwVbg6hoPQ" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://ibaraaa.github.io/#home" target="_blank" rel="noopener noreferrer">OC SITE ↗</a></nav></div>
         </div>
       </section>
+      <section class="world-cast section-shell">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">CAST</span>
+            <h2>CHARACTER FILES</h2>
+          </div>
+          <p id="world-count"></p>
+        </div>
+        <div class="character-grid" id="world-character-grid"></div>
+      </section>
       <section class="yuakai-story section-shell" id="yuakai-story" hidden>
         <div class="yuakai-story__heading">
           <span>PRIVATE RECORD / 02</span>
@@ -3667,16 +3709,6 @@ document.addEventListener("click", (event) => {
           <li><span>02 / HOME</span><strong>保護と共同生活</strong><p>同じ家で暮らし、互いが日常の一部になっていく。</p></li>
           <li><span>03 / NOW</span><strong>恋人として</strong><p>甘く穏やかな、ふたりだけの毎日へ。</p></li>
         </ol>
-      </section>
-      <section class="world-cast section-shell">
-        <div class="section-heading">
-          <div>
-            <span class="section-index">CAST</span>
-            <h2>CHARACTER FILES</h2>
-          </div>
-          <p id="world-count"></p>
-        </div>
-        <div class="character-grid" id="world-character-grid"></div>
       </section>
       <section class="world-guests section-shell" id="world-guest-section" hidden aria-labelledby="world-guest-title">
         <div class="section-heading">
