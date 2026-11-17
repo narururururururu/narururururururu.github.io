@@ -1627,6 +1627,72 @@ button {
   line-height: 2;
 }
 
+.character-profile-record {
+  width: min(100%, 760px);
+  margin: 42px 0 0;
+  border-top: 1px solid rgba(var(--detail-rgb), 0.44);
+  font-family: var(--font-mono);
+}
+
+.character-profile-record dl {
+  margin: 0;
+}
+
+.character-profile-record dl > div {
+  display: grid;
+  grid-template-columns: minmax(92px, 0.24fr) 1fr;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.character-profile-record dt,
+.character-profile-record__background > span {
+  color: var(--detail-accent);
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+}
+
+.character-profile-record dd {
+  margin: 0;
+  color: #eef1f4;
+  font-family: var(--font-ui);
+  font-size: 0.86rem;
+  letter-spacing: 0.03em;
+}
+
+.character-profile-record dd span {
+  margin-left: 0.55em;
+  color: #858c94;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.character-profile-record__background {
+  padding-top: 26px;
+}
+
+.character-profile-record__background p {
+  max-width: 720px;
+  margin: 14px 0 0;
+  color: #b8bdc4;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  line-height: 2;
+}
+
+@media (max-width: 560px) {
+  .character-profile-record dl > div {
+    grid-template-columns: 74px 1fr;
+    gap: 12px;
+  }
+
+  .character-profile-record dd span {
+    display: block;
+    margin: 4px 0 0;
+  }
+}
+
 .profile-pending-stamp {
   position: relative;
   width: min(100%, 610px);
@@ -2903,7 +2969,16 @@ const characters = [
   { id: "unknown", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["SCALES", "STAR"], monogram: "??", image: "./assets/characters/unknown.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "zelv", name: "ZELV", jp: "ゼルヴ", world: "independent", affiliation: "所属なし", tags: ["SNAKE", "LONG HAIR"], monogram: "ZE", image: "./assets/characters/zelv.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "milo", name: "MILO", jp: "ミロ", world: "independent", affiliation: "所属なし", tags: ["RABBIT", "BOY"], monogram: "MI", image: "./assets/characters/milo.webp", portraitScale: 1.0, portraitY: "0%" },
-  { id: "unknown-galaxy", name: "UNKNOWN", jp: "＿＿＿", world: "independent", affiliation: "所属なし", tags: ["GALAXY"], monogram: "??", image: "./assets/characters/unknown-galaxy.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "unknown-galaxy", name: "NOA VEIL", jp: "ノア・ヴェイル", world: "independent", affiliation: "所属なし", tags: ["GALAXY"], monogram: "NV", image: "./assets/characters/unknown-galaxy.webp", portraitScale: 1.0, portraitY: "0%", profileHtml: `<div class="character-profile-record">
+      <dl>
+        <div><dt>NAME</dt><dd>ノア・ヴェイル <span>/ Noa Veil</span></dd></div>
+        <div><dt>AGE</dt><dd>不詳</dd></div>
+      </dl>
+      <div class="character-profile-record__background">
+        <span>BACKGROUND</span>
+        <p>宇宙の終焉後、次なる宇宙を生み出す「創世の種」を宿す女性。宇宙では《第零星》、古い文献では《最後の揺籃》と呼ばれている。彼女の最後の願いと記憶が新宇宙の原型になるため、その力を求める国家や組織から狙われている。本人は壮大な運命を望まず、ただ一人の女性として「ノア」と呼ばれることを大切にしている。</p>
+      </div>
+    </div>` },
   { id: "lin-junheng", name: "LIN JUNHENG", jp: "リン・ジュンホン", world: "independent", affiliation: "所属なし", tags: ["GLASSES", "MOLE"], monogram: "LJ", image: "./assets/characters/lin-junheng.webp", portraitScale: 1.0, portraitY: "0%" },
 
   { id: "tsanglan", name: "TSANGLAN", jp: "滄瀾／ツァンラン", world: "imperial-court", affiliation: "王宮", tags: ["PALACE", "WARRIOR"], monogram: "TL", image: "./assets/characters/tsanglan.webp", portraitScale: 1.03, portraitY: "-1%" },
@@ -3260,9 +3335,11 @@ function openCharacter(characterId, skipHash = false) {
             <i aria-hidden="true"></i><b>ACCESS CLASSIFIED RECORD</b><em>↗</em>
           </a>
         </div>`
-      : (character.profile
-        ? `<p class="detail-panel__copy">${character.profile}</p>`
-        : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`);
+      : (character.profileHtml
+        ? character.profileHtml
+        : (character.profile
+          ? `<p class="detail-panel__copy">${character.profile}</p>`
+          : `<div class="profile-pending-stamp"><span>PROFILE FILE / STANDBY</span><strong>RECORD PENDING</strong><small>INFORMATION WILL BE ADDED LATER</small></div>`));
     const promptTab = document.querySelector("#character-prompt-tab");
     const galleryTab = document.querySelector('[data-detail-tab="gallery"]');
     promptTab.hidden = Boolean(character.noPrompt);
