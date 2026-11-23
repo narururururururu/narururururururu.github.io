@@ -3013,11 +3013,11 @@ const characters = [
   { id: "theia", name: "THEIA", jp: "ティア", world: "devil-mate", affiliation: "悪魔の番", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR"], monogram: "LS", image: "./assets/characters/livia.webp", portraitScale: 1.0, portraitY: "0%" },
 
-  { id: "gino", name: "GINO", jp: "ジーノ", world: "casino", affiliation: "カジノ", tags: ["二面性"], monogram: "GI", image: "./assets/characters/gino-on.webp", portraitScale: 1.0, portraitY: "0%", appearances: [
+  { id: "gino", name: "GINO", jp: "ジーノ", world: "casino", affiliation: "CASINO", tags: ["DUALITY"], monogram: "GI", image: "./assets/characters/gino-on.webp", portraitScale: 1.0, portraitY: "0%", appearances: [
     { id: "on", label: "ON DUTY", jp: "オン", image: "./assets/characters/gino-on.webp" },
     { id: "off", label: "OFF DUTY", jp: "オフ", image: "./assets/characters/gino-off.webp" }
   ] },
-  { id: "adira", name: "ADIRA", jp: "アディラ", world: "desert-palace", affiliation: "砂漠の王宮", tags: ["エネルギッシュ"], monogram: "AD", image: "./assets/characters/adira.webp", portraitScale: 1.0, portraitY: "0%" },
+  { id: "adira", name: "ADIRA", jp: "アディラ", world: "desert-palace", affiliation: "砂漠の王宮", tags: ["ENERGETIC"], monogram: "AD", image: "./assets/characters/adira.webp", portraitScale: 1.0, portraitY: "0%" },
 
   { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH", image: "./assets/characters/dante-harlow.webp", portraitScale: 1.0, portraitY: "0%", noPrompt: true, externalProfileUrl: "https://zeta-ai.io/ja/plots/def8d6e4-16ed-47c5-891c-37ba9a56f2e8/profile?share_id=h9vfbxd8s" },
   { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM", image: "./assets/characters/theo-molden.webp", portraitScale: 1.0, portraitY: "0%", noPrompt: true, externalProfileUrl: "https://zeta-ai.io/ja/plots/6cb9d2ab-d1ba-4016-a901-2d6864cb1b08/profile?share_id=1z6jlb8pn" },
@@ -3129,7 +3129,7 @@ function getWorld(id) {
 }
 
 function getWorldLabel(id) {
-  if (id === "casino") return "カジノ";
+  if (id === "casino") return "CASINO";
   if (id === "desert-palace") return "砂漠の王宮";
   if (id === "nocturne") return "夜想教徒";
   if (id === "devil-mate") return "悪魔の番";
