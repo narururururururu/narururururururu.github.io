@@ -2640,6 +2640,22 @@ button {
   }
 }
 
+
+.character-card__mode { position: absolute; z-index: 3; bottom: 14px; left: 14px; padding: 6px 9px; border: 1px solid rgba(var(--character-rgb), .45); color: #ded7db; background: rgba(6,7,9,.8); font-family: var(--font-mono); font-size: .5rem; letter-spacing: .12em; pointer-events: none; }
+.character-appearance { margin-top: 26px; padding-top: 20px; border-top: 1px solid rgba(var(--detail-rgb), .25); }
+.character-appearance[hidden] { display: none; }
+.character-appearance__label { display: block; margin-bottom: 12px; color: #969099; font-family: var(--font-mono); font-size: .52rem; letter-spacing: .12em; }
+.character-appearance__buttons { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; max-width: 400px; }
+.character-appearance__buttons button { display: flex; flex-direction: column; gap: 6px; min-height: 62px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.16); color: #9e979e; background: transparent; text-align: left; cursor: pointer; transition: color 180ms ease, background 180ms ease, border-color 180ms ease; }
+.character-appearance__buttons strong { font-family: var(--font-mono); font-size: .65rem; font-weight: 400; letter-spacing: .12em; }
+.character-appearance__buttons small { font-size: .62rem; }
+.character-appearance__buttons button[aria-pressed="true"] { color: #f1e5eb; border-color: var(--detail-accent); background: rgba(var(--detail-rgb), .16); box-shadow: inset 0 2px 0 var(--detail-accent); }
+.character-appearance__buttons button:hover { color: #f1e5eb; border-color: var(--detail-accent); }
+.character-appearance__buttons button:focus-visible { outline: 1px solid var(--detail-accent); outline-offset: 3px; }
+.character-appearance__status { position: absolute; z-index: 3; right: 22px; bottom: 24px; color: #e2d4db; background: rgba(5,6,8,.85); border: 1px solid rgba(var(--detail-rgb),.5); padding: 8px 10px; font-family: var(--font-mono); font-size: .56rem; letter-spacing: .14em; }
+.appearance-portrait { animation: appearance-enter 320ms ease both; }
+@keyframes appearance-enter { from { opacity: 0; } to { opacity: 1; } }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -2997,6 +3013,12 @@ const characters = [
   { id: "theia", name: "THEIA", jp: "ティア", world: "devil-mate", affiliation: "悪魔の番", tags: ["DEER", "FLECKLE"], monogram: "TH", image: "./assets/characters/theia.webp", portraitScale: 1.0, portraitY: "0%" },
   { id: "livia", name: "LIVIA SLOANE", jp: "リヴィア・スローン", world: "devil-mate", affiliation: "悪魔の番", tags: ["INVESTIGATOR"], monogram: "LS", image: "./assets/characters/livia.webp", portraitScale: 1.0, portraitY: "0%" },
 
+  { id: "gino", name: "GINO", jp: "ジーノ", world: "casino", affiliation: "カジノ", tags: ["二面性"], monogram: "GI", image: "./assets/characters/gino-on.webp", portraitScale: 1.0, portraitY: "0%", appearances: [
+    { id: "on", label: "ON DUTY", jp: "オン", image: "./assets/characters/gino-on.webp" },
+    { id: "off", label: "OFF DUTY", jp: "オフ", image: "./assets/characters/gino-off.webp" }
+  ] },
+  { id: "adira", name: "ADIRA", jp: "アディラ", world: "desert-palace", affiliation: "砂漠の王宮", tags: ["エネルギッシュ"], monogram: "AD", image: "./assets/characters/adira.webp", portraitScale: 1.0, portraitY: "0%" },
+
   { id: "dante", name: "DANTE HARLOW", jp: "ダンテ・ハーロウ", world: "acheron", affiliation: "ACHERON", tags: ["THE NINTH", "CAPO"], monogram: "DH", image: "./assets/characters/dante-harlow.webp", portraitScale: 1.0, portraitY: "0%", noPrompt: true, externalProfileUrl: "https://zeta-ai.io/ja/plots/def8d6e4-16ed-47c5-891c-37ba9a56f2e8/profile?share_id=h9vfbxd8s" },
   { id: "theo", name: "THEO MOLDEN", jp: "テオ・モールデン", world: "acheron", affiliation: "ACHERON", tags: ["MALEBOLGE", "SCORPION"], monogram: "TM", image: "./assets/characters/theo-molden.webp", portraitScale: 1.0, portraitY: "0%", noPrompt: true, externalProfileUrl: "https://zeta-ai.io/ja/plots/6cb9d2ab-d1ba-4016-a901-2d6864cb1b08/profile?share_id=1z6jlb8pn" },
 ];
@@ -3019,6 +3041,7 @@ const relationshipNotes = {
   luoyan: "※ うちよそ相手有",
   theia: "※ うちよそ相手有",
   livia: "※ うちよそ相手有",
+  adira: "※ うちよそ相手有",
 };
 
 const homeView = document.querySelector("#home-view");
@@ -3106,6 +3129,8 @@ function getWorld(id) {
 }
 
 function getWorldLabel(id) {
+  if (id === "casino") return "カジノ";
+  if (id === "desert-palace") return "砂漠の王宮";
   if (id === "nocturne") return "夜想教徒";
   if (id === "devil-mate") return "悪魔の番";
   if (id === "independent") return "NO AFFILIATION";
@@ -3113,6 +3138,8 @@ function getWorldLabel(id) {
 }
 
 function getCharacterColor(character) {
+  if (character.world === "casino") return { accent: "#a63752", rgb: "166, 55, 82" };
+  if (character.world === "desert-palace") return { accent: "#c57650", rgb: "197, 118, 80" };
   const world = getWorld(character.world);
   if (character.world === "nocturne") return { accent: "#a68cff", rgb: "166, 140, 255" };
   if (character.world === "devil-mate") return { accent: "#ff62b0", rgb: "255, 98, 176" };
@@ -3188,6 +3215,7 @@ function characterCard(character, index) {
         <span class="character-card__number">${fileLabel}</span>
         ${character.guest ? "" : `<span class="character-card__world">${getWorldLabel(character.world)}</span>`}
         ${portrait}
+        ${character.appearances ? '<span class="character-card__mode">ON / OFF</span>' : ""}
       </div>
       <div class="character-card__body">
         <div class="character-card__name">
@@ -3283,6 +3311,14 @@ function runCharacterTransition(character, callback) {
   window.setTimeout(callback, 420);
 }
 
+function renderCharacterVisual(character, appearance = character.appearances?.[0]) {
+  const source = appearance?.image ?? character.detailImage ?? character.image;
+  const visual = document.querySelector("#character-detail-visual");
+  visual.innerHTML = source
+    ? `<img class="${appearance ? "appearance-portrait" : ""}" src="${source}" alt="${character.jp}${appearance ? `／${appearance.jp}` : ""}" draggable="false" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "50%"}" />${appearance ? `<span class="character-appearance__status">${appearance.label}</span>` : ""}`
+    : `<span class="character-detail__monogram">${character.monogram}</span>`;
+}
+
 function openCharacter(characterId, skipHash = false) {
   const character = characters.find((item) => item.id === characterId);
   if (!character) return;
@@ -3320,9 +3356,19 @@ function openCharacter(characterId, skipHash = false) {
       : "";
     const detailImage = character.detailImage ?? character.image;
     const visual = document.querySelector("#character-detail-visual");
-    visual.innerHTML = detailImage
-      ? `<img src="${detailImage}" alt="${character.jp}" draggable="false" style="--detail-scale:${character.detailScale ?? 1};--detail-y:${character.detailY ?? "50%"}" />`
-      : `<span class="character-detail__monogram">${character.monogram}</span>`;
+    renderCharacterVisual(character);
+    const appearanceControls = document.querySelector("#character-appearance-controls");
+    appearanceControls.hidden = !character.appearances;
+    appearanceControls.innerHTML = character.appearances
+      ? `<span class="character-appearance__label">TWO SIDES / SELECT MODE</span><div class="character-appearance__buttons" role="group" aria-label="ジーノのオン・オフ切替">${character.appearances.map((appearance, index) => `<button type="button" data-appearance="${appearance.id}" aria-pressed="${index === 0}"><strong>${appearance.label}</strong><small>${appearance.jp}</small></button>`).join("")}</div>`
+      : "";
+    appearanceControls.querySelectorAll("[data-appearance]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const appearance = character.appearances.find((item) => item.id === button.dataset.appearance);
+        renderCharacterVisual(character, appearance);
+        appearanceControls.querySelectorAll("[data-appearance]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      });
+    });
 
     document.querySelector("#character-profile-title").textContent = "PROFILE";
     const profileCopy = document.querySelector("#character-profile-copy");
@@ -3346,7 +3392,9 @@ function openCharacter(characterId, skipHash = false) {
     galleryTab.querySelector("span").textContent = character.noPrompt ? "02" : "03";
     renderCharacterPrompts(character);
     const gallery = document.querySelector("#character-gallery-grid");
-    gallery.innerHTML = detailImage
+    gallery.innerHTML = character.appearances
+      ? character.appearances.map((appearance) => `<figure><img src="${appearance.image}" alt="${character.jp}／${appearance.jp}" draggable="false"><figcaption>${appearance.label} / ${appearance.jp}</figcaption></figure>`).join("")
+      : detailImage
       ? `<figure><img src="${detailImage}" alt="${character.jp}" draggable="false"><figcaption>PORTRAIT / 001</figcaption></figure><div class="gallery-placeholder">MORE FILES<br>COMING SOON</div>`
       : `<div class="gallery-placeholder">GALLERY DATA PENDING</div>`;
     setCharacterTab("profile");
@@ -3788,7 +3836,7 @@ document.addEventListener("click", (event) => {
           <span>CHARACTER</span>
           <span class="title-accent">ARCHIVE<span class="title-dot">.</span></span>
         </h1>
-        <div class="intro__live" aria-hidden="true"><span></span> LIVE ARCHIVE SIGNAL / INDEX 021</div>
+        <div class="intro__live" aria-hidden="true"><span></span> LIVE ARCHIVE SIGNAL / INDEX 023</div>
         <div class="intro__footer">
           <span class="scroll-cue">SCROLL TO EXPLORE ↓</span>
         </div>
@@ -3930,6 +3978,7 @@ document.addEventListener("click", (event) => {
           <p class="character-detail__jp" id="character-detail-jp">キャラクター</p>
           <div class="character-detail__tags" id="character-detail-tags"></div>
           <div class="character-detail__credit" id="character-contributor-credit" hidden></div>
+          <div class="character-appearance" id="character-appearance-controls" hidden></div>
         </div>
       </section>
       <section class="character-detail__tabs section-shell">
